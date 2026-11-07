@@ -6,6 +6,7 @@ import App from './App.vue'
 import { showExternalPlayerUnsupportedActionToast, showToast } from './helpers/utils'
 import { library } from './fontawesome-minimal'
 import './yutu.css'
+import { initSpatialNavigation } from './helpers/spatialNavigation'
 // import the styles
 import '@fortawesome/fontawesome-svg-core/styles.css'
 
@@ -287,6 +288,10 @@ app
 
 router.isReady().then(() => {
   app.mount('#app')
+
+  if (process.env.YUTU_TV) {
+    initSpatialNavigation()
+  }
 })
 
 // to avoid accessing electron api from web app build

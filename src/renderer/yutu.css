@@ -154,11 +154,11 @@ a {
 }
 
 /* ---------- Modo Android TV (control remoto con flechas) ---------- */
-.yutu-tv a:focus-visible,
-.yutu-tv button:focus-visible,
-.yutu-tv input:focus-visible,
-.yutu-tv select:focus-visible,
-.yutu-tv [tabindex]:focus-visible {
+.yutu-tv a:focus,
+.yutu-tv button:focus,
+.yutu-tv input:focus,
+.yutu-tv select:focus,
+.yutu-tv [tabindex]:focus {
   outline: 4px solid #fff !important;
   outline-offset: 3px !important;
   border-radius: 12px;
