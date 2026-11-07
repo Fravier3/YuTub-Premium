@@ -2,6 +2,7 @@ package app.yutupremium.tv;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputConnectionWrapper;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -51,7 +56,7 @@ public class MainActivity extends Activity {
         root = new FrameLayout(this);
         root.setBackgroundColor(Color.parseColor("#0F0F0F"));
 
-        web = new WebView(this);
+        web = new TvWebView(this);
         web.setBackgroundColor(Color.parseColor("#0F0F0F"));
         web.setFocusable(true);
         web.setFocusableInTouchMode(true);
@@ -81,6 +86,49 @@ public class MainActivity extends Activity {
             web.loadUrl(HOME_URL);
         }
         web.requestFocus();
+    }
+
+    /**
+     * WebView que atrapa el Enter / "Buscar" del teclado de pantalla. Sin esto, el teclado de Android TV
+     * manda la tecla como acción del sistema y la página no hace la búsqueda ni oculta el teclado.
+     */
+    private class TvWebView extends WebView {
+        TvWebView(Context context) {
+            super(context);
+        }
+
+        @Override
+        public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+            InputConnection base = super.onCreateInputConnection(outAttrs);
+            if (base == null) return null;
+            return new InputConnectionWrapper(base, true) {
+                @Override
+                public boolean performEditorAction(int actionCode) {
+                    submitTextField();
+                    return true;
+                }
+
+                @Override
+                public boolean sendKeyEvent(KeyEvent event) {
+                    int code = event.getKeyCode();
+                    if (code == KeyEvent.KEYCODE_ENTER || code == KeyEvent.KEYCODE_NUMPAD_ENTER) {
+                        if (event.getAction() == KeyEvent.ACTION_UP) submitTextField();
+                        return true;
+                    }
+                    return super.sendKeyEvent(event);
+                }
+            };
+        }
+    }
+
+    /** Envía el campo enfocado (busca) y oculta el teclado de pantalla. */
+    private void submitTextField() {
+        web.post(() -> {
+            web.evaluateJavascript("(function(){return !!(window.yutuTvSubmitInput && window.yutuTvSubmitInput());})()", null);
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (imm != null) imm.hideSoftInputFromWindow(web.getWindowToken(), 0);
+            web.requestFocus();
+        });
     }
 
     private class TvWebViewClient extends WebViewClient {

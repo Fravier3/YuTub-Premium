@@ -174,7 +174,7 @@ const state = {
   defaultProfile: MAIN_PROFILE_ID,
   defaultQuality: '720',
   defaultSkipInterval: 5,
-  defaultViewingMode: 'default',
+  defaultViewingMode: process.env.YUTU_TV ? 'fullwindow_always_on' : 'default',
   defaultVideoFormat: 'dash',
   disableSmoothScrolling: false,
   disableChannelLinks: false,
