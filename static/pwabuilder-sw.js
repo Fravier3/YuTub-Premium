@@ -1,5 +1,5 @@
 // Service worker de Yutu Premium. Sube VERSION en cada publicación.
-const VERSION = '1.0.3'
+const VERSION = '1.0.4'
 const CACHE = `yutu-premium-${VERSION}`
 
 self.addEventListener('install', (event) => {
