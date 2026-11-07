@@ -1,4 +1,4 @@
-import { defineComponent, shallowRef, markRaw } from 'vue'
+import { defineComponent, shallowRef } from 'vue'
 import { isNavigationFailure, NavigationFailureType } from 'vue-router'
 import { mapActions, mapMutations } from 'vuex'
 import shaka from 'shaka-player'
@@ -14,13 +14,6 @@ import WatchVideoPlaylist from '../../components/WatchVideoPlaylist/WatchVideoPl
 import WatchVideoRecommendations from '../../components/WatchVideoRecommendations/WatchVideoRecommendations.vue'
 import FtAgeRestricted from '../../components/FtAgeRestricted/FtAgeRestricted.vue'
 import { calculateColorLuminance } from '../../helpers/colors'
-import {
-  isBackgroundAudioActive,
-  pickAudioSources,
-  startBackgroundAudio,
-  stopBackgroundAudio,
-  connectContinuousAudio
-} from '../../helpers/backgroundAudio'
 import {
   buildChaptersVttFile,
   buildVTTFileLocally,
@@ -125,13 +118,6 @@ export default defineComponent({
       upcomingTimeLeft: null,
       /** @type {'dash' | 'audio' | 'legacy'} */
       activeFormat: 'legacy',
-      backgroundAudioController: null,
-      continuousAudioReady: false,
-      backgroundAudioUrl: null,
-      backgroundAudioSources: [],
-      backgroundAudioOn: false,
-      /** true si se activó solo al minimizar (al volver se regresa al video) */
-      backgroundAudioAuto: false,
       thumbnail: '',
       videoId: '',
       videoTitle: '',
@@ -374,111 +360,8 @@ export default defineComponent({
   },
   mounted: function () {
     this.onMountedDependOnLocalStateLoading()
-
-    // Audio en segundo plano (web): desbloquear el <audio> con el primer toque y reaccionar al minimizar
-    if (!process.env.IS_ELECTRON) {
-      document.addEventListener('visibilitychange', this.handleVisibilityChange)
-    }
-  },
-  beforeUnmount: function () {
-    this.disposeContinuousAudio()
-    document.removeEventListener('visibilitychange', this.handleVisibilityChange)
-    if (this.backgroundAudioOn) {
-      stopBackgroundAudio()
-      this.backgroundAudioOn = false
-    }
   },
   methods: {
-
-    /**
-     * iOS pausa el <video> al minimizar pero deja sonar un <audio> nativo.
-     * Al minimizar con un video sonando, pasamos el sonido al <audio> en la misma posición;
-     * al volver (si fue automático) regresamos al video.
-     */
-    handleVisibilityChange: function () {
-      if (this.backgroundAudioController) return
-      const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
-
-      if (document.visibilityState === 'hidden') {
-        if (!isTouchDevice || this.backgroundAudioOn) return
-        const video = document.querySelector('video')
-        if (!video || video.paused || video.ended) return
-        this.startBackgroundAudioPlayback(true)
-      } else if (this.backgroundAudioOn && this.backgroundAudioAuto) {
-        this.stopBackgroundAudioPlayback(true)
-      }
-    },
-
-    activateContinuousAudio: async function () {
-      const started = await this.backgroundAudioController?.start()
-      if (!started) showToast(this.t('Video.Background Audio Not Available'))
-    },
-
-    toggleBackgroundAudio: async function () {
-      if (this.backgroundAudioController) {
-        const next = !this.backgroundAudioOn
-        this.backgroundAudioOn = next
-        const started = await this.backgroundAudioController.setAudioOnly(next)
-        if (!started) {
-          this.backgroundAudioOn = false
-          showToast(this.t('Video.Background Audio Not Available'))
-        }
-        return
-      }
-      if (this.backgroundAudioOn) {
-        this.stopBackgroundAudioPlayback(true)
-      } else {
-        this.startBackgroundAudioPlayback(false)
-      }
-    },
-
-    startBackgroundAudioPlayback: async function (auto) {
-      if (!this.backgroundAudioUrl || this.isLive || this.isPostLiveDvr) {
-        if (!auto) showToast(this.t('Video.Background Audio Not Available'))
-        return
-      }
-
-      const video = document.querySelector('video')
-      const started = await startBackgroundAudio({
-        url: this.backgroundAudioUrl,
-        time: video?.currentTime ?? 0,
-        title: this.videoTitle,
-        artist: this.channelName,
-        artwork: this.thumbnail,
-        onEnded: () => {
-          this.backgroundAudioOn = false
-          this.handleVideoEnded()
-        },
-        onError: () => {
-          this.backgroundAudioOn = false
-          if (video) video.play().catch(() => {})
-        }
-      })
-
-      if (!started) {
-        if (!auto) showToast(this.t('Video.Background Audio Not Available'))
-        return
-      }
-
-      video?.pause()
-      this.backgroundAudioOn = true
-      this.backgroundAudioAuto = auto
-      if (!auto) showToast(this.t('Video.Background Audio On'))
-    },
-
-    stopBackgroundAudioPlayback: function (resumeVideo) {
-      if (!isBackgroundAudioActive() && !this.backgroundAudioOn) return
-      const time = stopBackgroundAudio()
-      this.backgroundAudioOn = false
-      this.backgroundAudioAuto = false
-
-      const video = document.querySelector('video')
-      if (video) {
-        try { video.currentTime = time } catch { /* se ignora si aún no hay metadatos */ }
-        if (resumeVideo) video.play().catch(() => {})
-      }
-    },
-
     async reloadView() {
       await this.handleRouteChange()
 
@@ -509,7 +392,6 @@ export default defineComponent({
     },
 
     resetVideoState: function () {
-      this.disposeContinuousAudio()
       this.isLoading = true
       this.isFamilyFriendly = false
       this.isLive = false
@@ -544,12 +426,6 @@ export default defineComponent({
       this.manifestMimeType = MANIFEST_TYPE_DASH
       this.sabrData = null
       this.legacyFormats = []
-      this.backgroundAudioUrl = null
-      this.backgroundAudioSources = []
-      if (this.backgroundAudioOn) {
-        stopBackgroundAudio()
-        this.backgroundAudioOn = false
-      }
       this.captions = []
       this.vrProjection = null
       this.recommendedVideos = []
@@ -1246,10 +1122,6 @@ export default defineComponent({
               })
             }
 
-            this.backgroundAudioSources = pickAudioSources(result.adaptiveFormats, result.formatStreams)
-              .map(url => (!process.env.SUPPORTS_LOCAL_API || this.proxyVideos) ? getProxyUrl(url) : url)
-            this.backgroundAudioUrl = this.backgroundAudioSources[0] ?? null
-
             this.vrProjection = result.adaptiveFormats
               .find(stream => {
                 return typeof stream.projectionType === 'string' &&
@@ -1450,39 +1322,7 @@ export default defineComponent({
       return Object.hasOwn(this.$store.getters.getHistoryCacheById, videoId)
     },
 
-    disposeContinuousAudio: function () {
-      this.backgroundAudioController?.dispose()
-      this.backgroundAudioController = null
-      this.continuousAudioReady = false
-    },
-
-    handlePlaybackEnded: function () {
-      if (!this.backgroundAudioController?.ownsAudio()) this.handleVideoEnded()
-    },
-
     handleVideoLoaded: function () {
-      if (!process.env.IS_ELECTRON && !process.env.YUTU_TV && this.backgroundAudioUrl && !this.isLive && !this.isPostLiveDvr) {
-        this.$nextTick(() => {
-          const video = this.$el.querySelector('video')
-          if (!video) return
-          this.disposeContinuousAudio()
-          this.backgroundAudioController = markRaw(connectContinuousAudio(video, {
-            url: this.backgroundAudioUrl,
-            urls: this.backgroundAudioSources,
-            host: this.$refs.backgroundAudioHost,
-            title: this.videoTitle,
-            artist: this.channelName,
-            artwork: this.thumbnail,
-            isAudioOnly: () => this.backgroundAudioOn,
-            onReady: ready => {
-              this.continuousAudioReady = ready
-              if (!ready) this.backgroundAudioOn = false
-            },
-            onEnded: () => this.handleVideoEnded(),
-            onError: () => showToast(this.t('Video.Background Audio Not Available'))
-          }))
-        })
-      }
       // Only used one time = remove after use
       this.oneTimeTimestamp = null
 

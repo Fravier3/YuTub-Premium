@@ -134,13 +134,6 @@
             @click="changeFormat"
           />
           <FtIconButton
-            v-if="backgroundAudioAvailable && !isUpcoming"
-            :title="t('Video.Background Audio')"
-            :icon="['fas', 'headphones']"
-            :theme="backgroundAudioActive ? 'base' : 'secondary'"
-            @click="emit('toggle-background-audio')"
-          />
-          <FtIconButton
             :title="t('Video.Reload Page')"
             :icon="['fas', 'rotate-right']"
             theme="secondary"
@@ -173,14 +166,6 @@ import store from '../../store'
 import { formatNumber, showToast, getLocalesWithFallback } from '../../helpers/utils'
 
 const props = defineProps({
-  backgroundAudioAvailable: {
-    type: Boolean,
-    default: false
-  },
-  backgroundAudioActive: {
-    type: Boolean,
-    default: false
-  },
   id: {
     type: String,
     required: true
@@ -281,7 +266,6 @@ const emit = defineEmits([
   'pause-player',
   'save-watched-progress',
   'reload-player',
-  'toggle-background-audio',
 ])
 
 const USING_ELECTRON = process.env.IS_ELECTRON
