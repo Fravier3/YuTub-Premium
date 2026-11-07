@@ -3,7 +3,6 @@ import shaka from 'shaka-player'
 import { useI18n } from 'vue-i18n'
 
 import store from '../../store/index'
-import { getVideoAudioState, setVideoAudioMuted, repairStoredMutePreference, setVideoMediaSessionPlaybackState } from '../../helpers/backgroundAudio'
 import { KeyboardShortcuts } from '../../../constants'
 import { AudioTrackSelection } from './player-components/AudioTrackSelection'
 import { FullWindowButton } from './player-components/FullWindowButton'
@@ -1215,7 +1214,7 @@ export default defineComponent({
       startPowerSaveBlocker()
 
       if ('mediaSession' in navigator) {
-        setVideoMediaSessionPlaybackState('playing')
+        navigator.mediaSession.playbackState = 'playing'
       }
     }
 
@@ -1223,7 +1222,7 @@ export default defineComponent({
       stopPowerSaveBlocker()
 
       if ('mediaSession' in navigator) {
-        setVideoMediaSessionPlaybackState('paused')
+        navigator.mediaSession.playbackState = 'paused'
       }
     }
 
@@ -1231,7 +1230,7 @@ export default defineComponent({
       stopPowerSaveBlocker()
 
       if ('mediaSession' in navigator) {
-        setVideoMediaSessionPlaybackState('none')
+        navigator.mediaSession.playbackState = 'none'
       }
 
       emit('ended')
@@ -1247,9 +1246,8 @@ export default defineComponent({
 
     function updateVolume() {
       const video_ = video.value
-      const userAudio = getVideoAudioState(video_)
       // https://docs.videojs.com/html5#volume
-      if (sessionStorage.getItem('muted') === 'false' && userAudio.volume === 0) {
+      if (sessionStorage.getItem('muted') === 'false' && video_.volume === 0) {
         // If video is muted by dragging volume slider, it doesn't change 'muted' in sessionStorage to true
         // hence compare it with 'false' and set volume to defaultVolume.
         const volume = parseFloat(sessionStorage.getItem('defaultVolume'))
@@ -1258,14 +1256,14 @@ export default defineComponent({
         sessionStorage.setItem('muted', String(muted))
       } else {
         // If volume isn't muted by dragging the slider, muted and volume values are carried over to next video.
-        const volume = userAudio.volume
-        const muted = userAudio.muted
+        const volume = video_.volume
+        const muted = video_.muted
         sessionStorage.setItem('volume', volume.toString())
         sessionStorage.setItem('muted', String(muted))
       }
 
       if (showStats.value) {
-        stats.volume = (userAudio.volume * 100).toFixed(1)
+        stats.volume = (video_.volume * 100).toFixed(1)
       }
     }
 
@@ -2064,7 +2062,7 @@ export default defineComponent({
     function changeVolume(step) {
       const volumeBar = container.value.querySelector('.shaka-volume-bar')
 
-      const oldValue = getVideoAudioState(video.value).volume * 100
+      const oldValue = parseFloat(volumeBar.value)
       const newValue = oldValue + (step * 100)
 
       if (newValue < 0) {
@@ -2249,12 +2247,12 @@ export default defineComponent({
     function mouseScrollVolume(event) {
       const video_ = video.value
 
-      if (getVideoAudioState(video_).muted && (event.deltaY < 0 || event.deltaX > 0)) {
-        setVideoAudioMuted(video_, false)
+      if (video_.muted && (event.deltaY < 0 || event.deltaX > 0)) {
+        video_.muted = false
         video_.volume = 0
       }
 
-      if (!getVideoAudioState(video_).muted) {
+      if (!video_.muted) {
         if ((event.deltaY < 0 || event.deltaX > 0)) {
           changeVolume(0.05)
         } else if ((event.deltaY > 0 || event.deltaX < 0)) {
@@ -2438,8 +2436,8 @@ export default defineComponent({
           // Toggle mute only if metakey is not pressed
           if (!event.metaKey) {
             event.preventDefault()
-            const isMuted = !getVideoAudioState(video_).muted
-            setVideoAudioMuted(video_, isMuted)
+            const isMuted = !video_.muted
+            video_.muted = isMuted
 
             const messageIcon = isMuted ? 'volume-mute' : 'volume-high'
             const message = isMuted ? '0%' : `${Math.round(video_.volume * 100)}%`
@@ -2678,7 +2676,7 @@ export default defineComponent({
         stopPowerSaveBlocker()
 
         if ('mediaSession' in navigator) {
-          setVideoMediaSessionPlaybackState('none')
+          navigator.mediaSession.playbackState = 'none'
         }
       }
     }
@@ -2792,7 +2790,13 @@ export default defineComponent({
 
     onMounted(async () => {
       const videoElement = video.value
-      if (!process.env.IS_ELECTRON && !process.env.YUTU_TV) repairStoredMutePreference(sessionStorage)
+      // Clear mute/zero volume left by the removed secondary audio player once.
+      if (!process.env.IS_ELECTRON && !process.env.YUTU_TV && sessionStorage.getItem('yutu-normal-audio-v1') !== '1') {
+        sessionStorage.setItem('muted', 'false')
+        const savedVolume = parseFloat(sessionStorage.getItem('volume'))
+        if (!Number.isFinite(savedVolume) || savedVolume <= 0) sessionStorage.setItem('volume', '1')
+        sessionStorage.setItem('yutu-normal-audio-v1', '1')
+      }
 
       const volume = sessionStorage.getItem('volume')
       if (volume !== null) {
@@ -3303,7 +3307,7 @@ export default defineComponent({
       window.removeEventListener('beforeunload', stopPowerSaveBlocker)
 
       if ('mediaSession' in navigator) {
-        setVideoMediaSessionPlaybackState('none')
+        navigator.mediaSession.playbackState = 'none'
       }
 
       skippedSponsorBlockSegments.value.forEach(segment => clearTimeout(segment.timeoutId))

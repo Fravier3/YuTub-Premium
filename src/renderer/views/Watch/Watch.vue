@@ -3,7 +3,6 @@
     class="videoLayout"
     :class="{
       isLoading,
-      continuousAudioReady,
       useTheatreMode: useTheatreMode && !isLoading,
       noSidebar: !theatrePossible
     }"
@@ -51,7 +50,7 @@
           @error="handlePlayerError"
           @loaded="handleVideoLoaded"
           @timeupdate="updateCurrentChapter"
-          @ended="handlePlaybackEnded"
+          @ended="handleVideoEnded"
           @toggle-theatre-mode="useTheatreMode = !useTheatreMode"
           @toggle-autoplay="toggleAutoplay"
           @playback-rate-updated="updatePlaybackRate"
@@ -59,24 +58,6 @@
           @skip-to-prev="handleSkipToPrev"
           @player-reload-requested="onSabrReloadRequested"
         />
-        <div
-          v-if="backgroundAudioController && !continuousAudioReady"
-          class="backgroundAudioBar"
-        >
-          <button
-            type="button"
-            @click="activateContinuousAudio"
-          >
-            {{ $t('Activate Continuous Audio') }}
-          </button>
-        </div>
-        <div
-          v-show="continuousAudioReady"
-          class="backgroundAudioBar"
-        >
-          <span>{{ $t('Continuous Audio') }}</span>
-          <div ref="backgroundAudioHost" />
-        </div>
         <div
           v-if="!isLoading && (isUpcoming || errorMessage)"
           class="videoPlayer"
@@ -174,12 +155,9 @@
         :is-unlisted="isUnlisted"
         :content-disclosures="contentDisclosures"
         :can-save-watched-progress="canSaveWatchProgress"
-        :background-audio-available="!!backgroundAudioUrl"
-        :background-audio-active="backgroundAudioOn"
         class="watchVideo"
         :class="{ theatreWatchVideo: useTheatreMode }"
         @change-format="handleFormatChange"
-        @toggle-background-audio="toggleBackgroundAudio"
         @pause-player="pausePlayer"
         @save-watched-progress="handleWatchProgressManualSave"
         @reload-player="onManualReloadRequested"
