@@ -42,6 +42,8 @@ export function prepareSearchInput() {
   const input = getTvSearchInput()
   if (!input) return
   input.setAttribute('inputmode', 'none')
+  // Solo lectura: para Android deja de ser un campo editable y OK llega como una tecla normal (el texto se escribe con el teclado propio)
+  input.setAttribute('readonly', '')
   input.setAttribute('data-tv-search', '')
 }
 
@@ -217,6 +219,7 @@ export function closeTvSearch(restoreFocus) {
   overlay.remove()
   overlay = null
   if (restoreFocus) getTvSearchInput()?.focus({ preventScroll: true })
+  reportSearchFocus()
 }
 
 /**
@@ -229,10 +232,12 @@ function isSearchTrigger(target) {
   return Boolean(target.closest('.searchContainer')) && !target.closest('.clearInputTextButton, .navFilterButton, ul, li')
 }
 
+const isSelectKey = (event) => event.key === 'Enter' || event.key === 'Select' || event.keyCode === 13 || event.keyCode === 23
+
 /** OK en cualquier parte de la barra de búsqueda abre el teclado propio. */
 function handleKeyDown(event) {
   // Solo teclas reales del usuario: el Enter que enviamos por código es para que la app haga la búsqueda
-  if (!event.isTrusted || overlay || event.key !== 'Enter') return
+  if (!event.isTrusted || overlay || !isSelectKey(event)) return
   if (!isSearchTrigger(event.target)) return
   event.preventDefault()
   event.stopImmediatePropagation()
@@ -255,7 +260,17 @@ function handleVoiceResult(spoken) {
   submit(query)
 }
 
+/** Le dice al APK si el foco está en la barra de búsqueda: así él atiende el OK aunque el navegador no lo entregue. */
+function reportSearchFocus() {
+  try {
+    window.YutuTV?.setSearchFocused?.(!overlay && isSearchTrigger(document.activeElement))
+  } catch { /* sin puente (navegador normal) */ }
+}
+
 export function initTvSearch() {
+  window.yutuTvOpenSearch = openTvSearch
+  document.addEventListener('focusin', reportSearchFocus, true)
+  document.addEventListener('focusout', () => setTimeout(reportSearchFocus, 0), true)
   window.yutuTvVoiceResult = handleVoiceResult
   // Marcar la caja de búsqueda en cuanto aparezca (antes de que nadie la enfoque)
   let scheduled = false
