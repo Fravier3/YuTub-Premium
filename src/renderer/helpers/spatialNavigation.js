@@ -192,6 +192,33 @@ function handleKeyDown(event) {
   }
 }
 
+/**
+ * Lo llama el APK cuando el teclado de pantalla pulsa Enter/Buscar: el teclado de Android manda esa
+ * tecla como "acción del sistema" y la caja de búsqueda no la reconoce, así que se envía un Enter real.
+ * @returns {boolean} true si había un campo de texto enfocado
+ */
+function submitFocusedInput() {
+  const active = document.activeElement
+  if (!(active instanceof HTMLInputElement)) return false
+
+  active.dispatchEvent(new KeyboardEvent('keydown', {
+    key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true, cancelable: true
+  }))
+  active.blur() // al perder el foco, el teclado de pantalla se oculta
+  return true
+}
+
+/** Para que el teclado muestre la tecla "Buscar" en la caja de búsqueda. */
+function setEnterKeyHints() {
+  document.querySelectorAll('input.ft-input').forEach((input) => {
+    input.setAttribute('enterkeyhint', input.closest('.searchContainer') ? 'search' : 'done')
+  })
+}
+
 export function initSpatialNavigation() {
   document.addEventListener('keydown', handleKeyDown, true)
+  document.addEventListener('focusin', setEnterKeyHints, true)
+  window.addEventListener('hashchange', () => setTimeout(setEnterKeyHints, 300))
+  setTimeout(setEnterKeyHints, 500)
+  window.yutuTvSubmitInput = submitFocusedInput
 }
