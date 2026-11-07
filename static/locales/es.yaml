@@ -765,6 +765,9 @@ Channel:
     This channel does not currently have any courses: Este canal no tiene actualmente ningún curso
   View All: Ver todo
 Video:
+  Background Audio: 'Audio en segundo plano'
+  Background Audio On: 'Audio en segundo plano activado: sigue sonando al minimizar'
+  Background Audio Not Available: 'El audio en segundo plano no está disponible para este video'
   Mark As Watched: 'Marcar como visto'
   Remove From History: 'Quitar del historial'
   Video has been marked as watched: 'Se marcó el vídeo como visto'
