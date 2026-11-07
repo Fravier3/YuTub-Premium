@@ -6,6 +6,8 @@
  * flechas y OK abre el video elegido, sin salir de la pantalla completa.
  */
 
+import { showToast } from './utils'
+
 const MAX_ITEMS = 24
 
 /** @type {HTMLElement | null} */
@@ -27,8 +29,42 @@ function el(tag, className, text) {
   return node
 }
 
-/** Lee los relacionados que la página ya cargó. */
-function collectRelated() {
+/** @param {number} seconds */
+function formatDuration(seconds) {
+  const total = Number(seconds)
+  if (!Number.isFinite(total) || total <= 0) return ''
+  const h = Math.floor(total / 3600)
+  const m = Math.floor((total % 3600) / 60)
+  const sec = String(Math.floor(total % 60)).padStart(2, '0')
+  return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${sec}` : `${m}:${sec}`
+}
+
+/** Los relacionados tal como los guardó la página del video (no depende de qué tarjetas se dibujaron). */
+function collectFromData() {
+  const list = Array.isArray(window.yutuTvRelatedVideos) ? window.yutuTvRelatedVideos : []
+  const items = []
+
+  for (const video of list) {
+    const id = video?.videoId
+    if (!id || (video.type && video.type !== 'video' && video.type !== 'shortVideo')) continue
+    const thumbs = Array.isArray(video.videoThumbnails) ? video.videoThumbnails : []
+    const thumb = thumbs.find((t) => t.quality === 'medium') ?? thumbs.find((t) => t.quality === 'high') ?? thumbs[0]
+
+    items.push({
+      href: `#/watch/${id}`,
+      image: thumb?.url ?? `https://i.ytimg.com/vi/${id}/mqdefault.jpg`,
+      duration: video.liveNow ? 'EN VIVO' : formatDuration(video.lengthSeconds),
+      title: video.title ?? '',
+      channel: video.author ?? ''
+    })
+    if (items.length >= MAX_ITEMS) break
+  }
+
+  return items
+}
+
+/** Respaldo: las tarjetas que la página ya dibujó. */
+function collectFromCards() {
   const cards = Array.from(document.querySelectorAll('.sidebarArea .ft-list-video.recommendation'))
   const items = []
 
@@ -50,11 +86,19 @@ function collectRelated() {
   return items
 }
 
+function collectRelated() {
+  const fromData = collectFromData()
+  return fromData.length > 0 ? fromData : collectFromCards()
+}
+
 /** @returns {boolean} true si se abrió el panel */
 export function openRelated() {
   if (panel) return true
   const items = collectRelated()
-  if (items.length === 0) return false
+  if (items.length === 0) {
+    showToast('No hay videos relacionados para este video')
+    return false
+  }
 
   previousFocus = document.activeElement
   panel = el('div', 'tvRelated')

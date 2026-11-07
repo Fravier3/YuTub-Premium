@@ -349,6 +349,10 @@ export default defineComponent({
     }
   },
   watch: {
+    recommendedVideos(list) {
+      // La pantalla completa de la variante TV (tvRelated.js) lee la lista de aquí
+      if (process.env.YUTU_TV) window.yutuTvRelatedVideos = list
+    },
     async 'playbackRoute.fullPath'() {
       await this.reloadView()
     },
@@ -370,6 +374,7 @@ export default defineComponent({
     this.onMountedDependOnLocalStateLoading()
   },
   beforeUnmount() {
+    if (process.env.YUTU_TV) window.yutuTvRelatedVideos = []
     window.removeEventListener('beforeunload', this.handleWatchProgressAutoSave)
     document.removeEventListener('keydown', this.resetAutoplayInterruptionTimeout)
     document.removeEventListener('click', this.resetAutoplayInterruptionTimeout)
