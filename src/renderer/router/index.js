@@ -167,4 +167,24 @@ const router = createRouter({
   }
 })
 
+if (process.env.YUTU_TV) {
+  /*
+   * Android TV: pasar de un video a otro (relacionados, siguiente video, listas) reemplaza la entrada del
+   * historial en vez de añadir otra. Así Atrás desde un video vuelve a la búsqueda o lista de donde se
+   * abrió, y no a los videos que se fueron viendo por el camino.
+   */
+  const isWatchPath = (location) => {
+    const path = typeof location === 'string' ? location : location?.path
+    return typeof path === 'string' && path.startsWith('/watch/')
+  }
+
+  const originalPush = router.push.bind(router)
+  router.push = (location) => {
+    if (isWatchPath(location) && router.currentRoute.value.path.startsWith('/watch/')) {
+      return router.replace(location)
+    }
+    return originalPush(location)
+  }
+}
+
 export default router
