@@ -33,7 +33,13 @@ function isVisible(el) {
 function getScope() {
   const prompts = document.querySelectorAll('.prompt')
   const open = Array.from(prompts).filter((p) => !p.hasAttribute('inert')).pop()
-  return open ?? document
+  if (open) return open
+  return getFullWindowPlayer() ?? document
+}
+
+/** El reproductor, solo mientras ocupa toda la pantalla (el resto de la página queda detrás). */
+function getFullWindowPlayer() {
+  return document.body.classList.contains('playerFullWindow') ? document.querySelector('.ftVideoPlayer') : null
 }
 
 /** @returns {HTMLElement[]} */
@@ -116,7 +122,9 @@ function pickNext(from, candidates, dir, current) {
 /** @param {HTMLElement} el */
 function focusElement(el) {
   el.focus({ preventScroll: true })
-  el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' })
+  if (!getFullWindowPlayer()) {
+    el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' })
+  }
 }
 
 function getVideo() {
@@ -133,9 +141,27 @@ function isPlayerMode() {
   return !active.matches('a, button, input, select, textarea, summary, [tabindex], [role="button"]')
 }
 
+/**
+ * El reproductor ignora los clics en controles que considera ocultos, y se esconden solos a los pocos segundos.
+ * Un movimiento de "ratón" simulado los muestra y reinicia ese temporizador.
+ */
+function wakePlayerControls() {
+  const player = getFullWindowPlayer()
+  if (!player) return
+  const rect = player.getBoundingClientRect()
+  player.dispatchEvent(new MouseEvent('mousemove', {
+    bubbles: true,
+    clientX: rect.left + rect.width / 2,
+    clientY: rect.top + rect.height - 20
+  }))
+}
+
 /** @param {KeyboardEvent} event */
 function handleKeyDown(event) {
   if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return
+
+  const isNavKey = event.key.startsWith('Arrow') || event.key === 'Enter'
+  if (isNavKey && document.activeElement && document.activeElement !== document.body) wakePlayerControls()
 
   const dirs = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down' }
   const dir = dirs[event.key]
@@ -176,7 +202,12 @@ function handleKeyDown(event) {
 
   // Sin nada enfocado: empezar por el contenido principal
   if (!active || active === document.body) {
-    focusElement(candidates.find((el) => el.closest('.routerView')) ?? candidates[0])
+    const inPlayer = getFullWindowPlayer() !== null
+    const first = inPlayer
+      ? (candidates.find((el) => el.matches('.shaka-play-button')) ?? candidates[0])
+      : (candidates.find((el) => el.closest('.routerView')) ?? candidates[0])
+    wakePlayerControls()
+    focusElement(first)
     return
   }
 
@@ -186,6 +217,9 @@ function handleKeyDown(event) {
 
   if (next) {
     focusElement(next)
+  } else if (getFullWindowPlayer()) {
+    // Arriba desde los controles: volver al modo video (←/→ saltan, OK pausa)
+    if (dir === 'up') active.blur()
   } else if (dir === 'down' || dir === 'up') {
     // No hay nada más en esa dirección: bajar/subir la página por si carga más contenido
     window.scrollBy({ top: dir === 'down' ? 300 : -300, behavior: 'smooth' })
@@ -215,10 +249,61 @@ function setEnterKeyHints() {
   })
 }
 
+const isShown = (el) => el instanceof HTMLElement && el.getClientRects().length > 0 && getComputedStyle(el).display !== 'none'
+
+/**
+ * Lo llama el APK al pulsar Atrás: cierra primero lo que esté abierto en el reproductor.
+ * @returns {boolean} true si se encargó (el APK entonces no sale de la página)
+ */
+function handleBack() {
+  const player = document.querySelector('.ftVideoPlayer')
+  if (!player) return false
+
+  const subMenu = Array.from(player.querySelectorAll('.shaka-settings-menu')).find(isShown)
+  if (subMenu) {
+    subMenu.querySelector('.shaka-back-to-overflow-button')?.click()
+    return true
+  }
+
+  const overflow = Array.from(player.querySelectorAll('.shaka-overflow-menu')).find(isShown)
+  if (overflow) {
+    player.querySelector('.shaka-overflow-menu-button')?.click()
+    focusElement(player.querySelector('.shaka-overflow-menu-button') ?? player)
+    return true
+  }
+
+  const active = document.activeElement
+  if (active && active !== document.body && player.contains(active)) {
+    active.blur() // salir de los controles, volver al modo video
+    return true
+  }
+
+  return false
+}
+
+/** Lo llama el APK con la tecla MENÚ del control: abre los ajustes del reproductor (calidad, velocidad, subtítulos). */
+function openPlayerSettings() {
+  const player = document.querySelector('.ftVideoPlayer')
+  const button = player?.querySelector('.shaka-overflow-menu-button')
+  if (!button) return false
+
+  wakePlayerControls()
+  const alreadyOpen = Array.from(player.querySelectorAll('.shaka-overflow-menu')).some(isShown)
+  if (!alreadyOpen) setTimeout(() => button.click(), 50)
+
+  setTimeout(() => {
+    const first = Array.from(player.querySelectorAll('.shaka-overflow-menu button, .shaka-settings-menu button')).find(isShown)
+    if (first) first.focus({ preventScroll: true })
+  }, 250)
+  return true
+}
+
 export function initSpatialNavigation() {
   document.addEventListener('keydown', handleKeyDown, true)
   document.addEventListener('focusin', setEnterKeyHints, true)
   window.addEventListener('hashchange', () => setTimeout(setEnterKeyHints, 300))
   setTimeout(setEnterKeyHints, 500)
   window.yutuTvSubmitInput = submitFocusedInput
+  window.yutuTvBack = handleBack
+  window.yutuTvOpenSettings = openPlayerSettings
 }

@@ -196,3 +196,12 @@ a {
   flex-shrink: 0;
   backface-visibility: hidden;
 }
+
+/* Mientras el foco esté en el reproductor, los controles no se esconden */
+.yutu-tv .ftVideoPlayer:focus-within .shaka-controls-button-panel,
+.yutu-tv .ftVideoPlayer:focus-within .shaka-controls-top-button-panel,
+.yutu-tv .ftVideoPlayer:focus-within .shaka-seek-bar-container,
+.yutu-tv .ftVideoPlayer:focus-within .shaka-scrim-container,
+.yutu-tv .ftVideoPlayer:focus-within .shaka-overflow-menu-button {
+  opacity: 1 !important;
+}
