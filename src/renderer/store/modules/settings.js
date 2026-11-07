@@ -232,7 +232,7 @@ const state = {
   hideLabelsSideBar: false,
   hideChapters: false,
   showDistractionFreeTitles: false,
-  landingPage: 'latin',
+  landingPage: process.env.YUTU_TV ? 'latin' : (process.env.SUPPORTS_LOCAL_API ? 'subscriptions' : 'popular'),
   listType: 'grid',
   maxVideoPlaybackRate: 3,
   onlyShowLatestFromChannel: false,

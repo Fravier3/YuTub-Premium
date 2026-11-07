@@ -1453,7 +1453,7 @@ export default defineComponent({
     },
 
     handleVideoLoaded: function () {
-      if (!process.env.IS_ELECTRON && this.backgroundAudioUrl && !this.isLive && !this.isPostLiveDvr) {
+      if (!process.env.IS_ELECTRON && !process.env.YUTU_TV && this.backgroundAudioUrl && !this.isLive && !this.isPostLiveDvr) {
         this.$nextTick(() => {
           const video = this.$el.querySelector('video')
           if (!video) return

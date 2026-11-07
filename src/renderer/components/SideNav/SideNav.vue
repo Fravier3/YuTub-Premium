@@ -9,6 +9,7 @@
       :class="applyHiddenLabels"
     >
       <router-link
+        v-if="IS_YUTU_TV"
         class="navOption topNavOption mobileShow"
         role="button"
         to="/latin"
@@ -31,7 +32,8 @@
       </router-link>
       <router-link
         v-if="!hidePopularVideos && (backendFallback || backendPreference === 'invidious')"
-        class="navOption mobileHidden"
+        class="navOption"
+        :class="IS_YUTU_TV ? 'mobileHidden' : 'topNavOption mobileShow'"
         role="button"
         to="/popular"
         :title="$t('Most Popular')"
@@ -265,6 +267,7 @@ import { KeyboardShortcuts } from '../../../constants'
 const { locale, t } = useI18n()
 
 const SUPPORTS_LOCAL_API = process.env.SUPPORTS_LOCAL_API
+const IS_YUTU_TV = process.env.YUTU_TV
 
 /** @type {import('vue').ComputedRef<boolean>} */
 const isOpen = computed(() => {

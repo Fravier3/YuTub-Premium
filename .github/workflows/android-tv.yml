@@ -5,6 +5,8 @@ on:
     paths:
       - 'android/**'
       - '.github/workflows/android-tv.yml'
+      # El APK lleva su propia copia de la app; cambiar la web NO regenera el APK.
+      # Para incluir cambios de la app en el APK: Actions > "APK Android TV" > Run workflow.
   workflow_dispatch:
   schedule:
     # Una vez por semana: mantiene viva la clave de firma guardada en la caché (GitHub borra cachés sin uso a los 7 días)
@@ -27,7 +29,26 @@ jobs:
     if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      # La app de TV va DENTRO del APK (variante propia, portada latina), así que no depende de la web publicada
+      - name: Compilar la app de TV e incluirla en el APK
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm run pack:tv
+          mkdir -p android/app/src/main/assets
+          rm -rf android/app/src/main/assets/www
+          cp -r dist/tv android/app/src/main/assets/www
+          test -f android/app/src/main/assets/www/index.html
 
       - uses: actions/setup-java@v4
         with:
