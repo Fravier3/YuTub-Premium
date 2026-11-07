@@ -119,6 +119,9 @@ public class MainActivity extends Activity {
 
     private static final int REQUEST_VOICE = 4711;
 
+    /** La app web avisa cuando el foco está en la barra de búsqueda (caja o lupa). */
+    private volatile boolean searchFocused = false;
+
     private Intent voiceIntent() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -129,6 +132,11 @@ public class MainActivity extends Activity {
 
     /** Puente para que la app web use la búsqueda por voz del sistema. */
     private class Bridge {
+        @JavascriptInterface
+        public void setSearchFocused(boolean focused) {
+            searchFocused = focused;
+        }
+
         @JavascriptInterface
         public boolean hasVoiceSearch() {
             return voiceIntent().resolveActivity(getPackageManager()) != null;
@@ -252,6 +260,14 @@ public class MainActivity extends Activity {
     /** Teclas multimedia del control remoto: reproducir/pausar y saltar ±10 s. */
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        // OK sobre la barra de búsqueda: abrir el teclado propio. Se hace aquí porque, en un campo de texto,
+        // Android no siempre entrega el OK a la página.
+        if (searchFocused && customView == null && isSelectKey(event.getKeyCode())) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getRepeatCount() == 0) {
+                web.evaluateJavascript("window.yutuTvOpenSearch && window.yutuTvOpenSearch()", null);
+            }
+            return true;
+        }
         // Video a pantalla completa: la página no recibe las teclas, así que OK pausa y ←/→ saltan
         if (customView != null && event.getAction() == KeyEvent.ACTION_DOWN) {
             switch (event.getKeyCode()) {
@@ -299,6 +315,12 @@ public class MainActivity extends Activity {
         return super.dispatchKeyEvent(event);
     }
 
+    private static boolean isSelectKey(int code) {
+        return code == KeyEvent.KEYCODE_DPAD_CENTER
+                || code == KeyEvent.KEYCODE_ENTER
+                || code == KeyEvent.KEYCODE_NUMPAD_ENTER;
+    }
+
     private void runVideo(String action) {
         web.evaluateJavascript("(function(){var v=document.querySelector('video');if(v){" + action + ";}})();", null);
     }
@@ -334,6 +356,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onPause() {
+        searchFocused = false;
         // Al salir de la app (botón Inicio) el video se pausa
         runVideo("v.pause()");
         web.onPause();
