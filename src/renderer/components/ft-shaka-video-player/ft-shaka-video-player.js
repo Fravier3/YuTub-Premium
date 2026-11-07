@@ -3,6 +3,7 @@ import shaka from 'shaka-player'
 import { useI18n } from 'vue-i18n'
 
 import store from '../../store/index'
+import { setVideoMediaSessionPlaybackState } from '../../helpers/backgroundAudio'
 import { KeyboardShortcuts } from '../../../constants'
 import { AudioTrackSelection } from './player-components/AudioTrackSelection'
 import { FullWindowButton } from './player-components/FullWindowButton'
@@ -1214,7 +1215,7 @@ export default defineComponent({
       startPowerSaveBlocker()
 
       if ('mediaSession' in navigator) {
-        navigator.mediaSession.playbackState = 'playing'
+        setVideoMediaSessionPlaybackState('playing')
       }
     }
 
@@ -1222,7 +1223,7 @@ export default defineComponent({
       stopPowerSaveBlocker()
 
       if ('mediaSession' in navigator) {
-        navigator.mediaSession.playbackState = 'paused'
+        setVideoMediaSessionPlaybackState('paused')
       }
     }
 
@@ -1230,7 +1231,7 @@ export default defineComponent({
       stopPowerSaveBlocker()
 
       if ('mediaSession' in navigator) {
-        navigator.mediaSession.playbackState = 'none'
+        setVideoMediaSessionPlaybackState('none')
       }
 
       emit('ended')
@@ -2676,7 +2677,7 @@ export default defineComponent({
         stopPowerSaveBlocker()
 
         if ('mediaSession' in navigator) {
-          navigator.mediaSession.playbackState = 'none'
+          setVideoMediaSessionPlaybackState('none')
         }
       }
     }
@@ -3300,7 +3301,7 @@ export default defineComponent({
       window.removeEventListener('beforeunload', stopPowerSaveBlocker)
 
       if ('mediaSession' in navigator) {
-        navigator.mediaSession.playbackState = 'none'
+        setVideoMediaSessionPlaybackState('none')
       }
 
       skippedSponsorBlockSegments.value.forEach(segment => clearTimeout(segment.timeoutId))

@@ -408,6 +408,11 @@ export default defineComponent({
       }
     },
 
+    activateContinuousAudio: async function () {
+      const started = await this.backgroundAudioController?.start()
+      if (!started) showToast(this.t('Video.Background Audio Not Available'))
+    },
+
     toggleBackgroundAudio: async function () {
       if (this.backgroundAudioController) {
         const next = !this.backgroundAudioOn
