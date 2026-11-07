@@ -8,6 +8,7 @@ import { library } from './fontawesome-minimal'
 import './yutu.css'
 import { initSpatialNavigation } from './helpers/spatialNavigation'
 import { initTvSearch } from './helpers/tvSearch'
+import { initTvRelated } from './helpers/tvRelated'
 // import the styles
 import '@fortawesome/fontawesome-svg-core/styles.css'
 
@@ -292,6 +293,7 @@ router.isReady().then(() => {
 
   if (process.env.YUTU_TV) {
     initTvSearch()
+    initTvRelated()
     initSpatialNavigation()
   }
 })

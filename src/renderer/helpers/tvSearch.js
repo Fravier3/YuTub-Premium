@@ -21,6 +21,15 @@ let text = ''
 let timer = 0
 let requestId = 0
 
+/** El APK ofrece búsqueda por voz si la TV tiene reconocimiento de voz. */
+function hasVoiceSearch() {
+  try {
+    return Boolean(window.YutuTV?.hasVoiceSearch?.())
+  } catch {
+    return false
+  }
+}
+
 /** @returns {HTMLInputElement | null} */
 export function getTvSearchInput() {
   return document.querySelector('.searchContainer input.ft-input')
@@ -82,6 +91,7 @@ function build() {
   last.appendChild(clear)
   last.appendChild(key('BUSCAR', 'search', 'tvKeyMid tvKeyPrimary'))
   last.appendChild(key('CERRAR', 'close', 'tvKeyMid'))
+  if (hasVoiceSearch()) last.insertBefore(key('🎤 VOZ', 'voice', 'tvKeyMid'), last.lastChild)
   keys.appendChild(last)
   left.appendChild(keys)
 
@@ -173,6 +183,9 @@ function handleClick(event) {
   } else if (action === 'close') {
     closeTvSearch(true)
     return
+  } else if (action === 'voice') {
+    window.YutuTV?.startVoiceSearch?.()
+    return
   } else if (action === 'suggestion') {
     submit(target.dataset.value ?? '')
     return
@@ -216,7 +229,27 @@ function handleKeyDown(event) {
   openTvSearch()
 }
 
+/** El APK devuelve aquí lo que se dijo por voz. */
+function handleVoiceResult(spoken) {
+  const query = String(spoken ?? '').trim()
+  if (query === '') return
+  if (!overlay) openTvSearch()
+  submit(query)
+}
+
 export function initTvSearch() {
+  window.yutuTvVoiceResult = handleVoiceResult
+  // Marcar la caja de búsqueda en cuanto aparezca (antes de que nadie la enfoque)
+  let scheduled = false
+  new MutationObserver(() => {
+    if (scheduled) return
+    scheduled = true
+    requestAnimationFrame(() => {
+      scheduled = false
+      prepareSearchInput()
+    })
+  }).observe(document.body, { childList: true, subtree: true })
+
   document.addEventListener('keydown', handleKeyDown, true)
   document.addEventListener('click', (event) => {
     if (!overlay && event.target === getTvSearchInput()) openTvSearch()

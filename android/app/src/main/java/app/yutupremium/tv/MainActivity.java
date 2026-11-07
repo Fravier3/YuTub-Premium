@@ -2,7 +2,9 @@ package app.yutupremium.tv;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,8 +15,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
-import android.view.inputmethod.InputConnectionWrapper;
-import android.view.inputmethod.InputMethodManager;
+import android.speech.RecognizerIntent;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -22,10 +24,14 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
+import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -46,7 +52,7 @@ public class MainActivity extends Activity {
     private View customView;
     private WebChromeClient.CustomViewCallback customViewCallback;
 
-    @SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +83,7 @@ public class MainActivity extends Activity {
         // La app web usa este sufijo para activar el modo TV (anillo de foco grande, etc.)
         s.setUserAgentString(s.getUserAgentString() + " YutuTV/1.0");
 
+        web.addJavascriptInterface(new Bridge(), "YutuTV");
         web.setWebViewClient(new TvWebViewClient());
         web.setWebChromeClient(new TvChromeClient());
 
@@ -89,46 +96,63 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * WebView que atrapa el Enter / "Buscar" del teclado de pantalla. Sin esto, el teclado de Android TV
-     * manda la tecla como acción del sistema y la página no hace la búsqueda ni oculta el teclado.
+     * WebView sin teclado de Android: la búsqueda usa el teclado propio de la app (con sugerencias),
+     * así el teclado del sistema no se abre ni tapa nada. Un teclado físico sigue funcionando.
      */
-    private class TvWebView extends WebView {
+    private static class TvWebView extends WebView {
         TvWebView(Context context) {
             super(context);
         }
 
         @Override
         public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-            InputConnection base = super.onCreateInputConnection(outAttrs);
-            if (base == null) return null;
-            return new InputConnectionWrapper(base, true) {
-                @Override
-                public boolean performEditorAction(int actionCode) {
-                    submitTextField();
-                    return true;
-                }
+            return null;
+        }
 
-                @Override
-                public boolean sendKeyEvent(KeyEvent event) {
-                    int code = event.getKeyCode();
-                    if (code == KeyEvent.KEYCODE_ENTER || code == KeyEvent.KEYCODE_NUMPAD_ENTER) {
-                        if (event.getAction() == KeyEvent.ACTION_UP) submitTextField();
-                        return true;
-                    }
-                    return super.sendKeyEvent(event);
-                }
-            };
+        @Override
+        public boolean onCheckIsTextEditor() {
+            return false;
         }
     }
 
-    /** Envía el campo enfocado (busca) y oculta el teclado de pantalla. */
-    private void submitTextField() {
-        web.post(() -> {
-            web.evaluateJavascript("(function(){return !!(window.yutuTvSubmitInput && window.yutuTvSubmitInput());})()", null);
-            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            if (imm != null) imm.hideSoftInputFromWindow(web.getWindowToken(), 0);
-            web.requestFocus();
-        });
+    // ---- Búsqueda por voz ----
+
+    private static final int REQUEST_VOICE = 4711;
+
+    private Intent voiceIntent() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Di lo que quieres buscar");
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+        return intent;
+    }
+
+    /** Puente para que la app web use la búsqueda por voz del sistema. */
+    private class Bridge {
+        @JavascriptInterface
+        public boolean hasVoiceSearch() {
+            return voiceIntent().resolveActivity(getPackageManager()) != null;
+        }
+
+        @JavascriptInterface
+        public void startVoiceSearch() {
+            runOnUiThread(() -> {
+                try {
+                    startActivityForResult(voiceIntent(), REQUEST_VOICE);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(MainActivity.this, "La búsqueda por voz no está disponible en esta TV", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != REQUEST_VOICE || resultCode != RESULT_OK || data == null) return;
+        ArrayList<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+        if (results == null || results.isEmpty()) return;
+        web.evaluateJavascript("window.yutuTvVoiceResult && window.yutuTvVoiceResult(" + JSONObject.quote(results.get(0)) + ")", null);
     }
 
     private class TvWebViewClient extends WebViewClient {
