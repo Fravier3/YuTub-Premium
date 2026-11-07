@@ -16,7 +16,7 @@ import FtAgeRestricted from '../../components/FtAgeRestricted/FtAgeRestricted.vu
 import { calculateColorLuminance } from '../../helpers/colors'
 import {
   isBackgroundAudioActive,
-  pickAudioUrl,
+  pickAudioSources,
   startBackgroundAudio,
   stopBackgroundAudio,
   connectContinuousAudio
@@ -128,6 +128,7 @@ export default defineComponent({
       backgroundAudioController: null,
       continuousAudioReady: false,
       backgroundAudioUrl: null,
+      backgroundAudioSources: [],
       backgroundAudioOn: false,
       /** true si se activó solo al minimizar (al volver se regresa al video) */
       backgroundAudioAuto: false,
@@ -544,6 +545,7 @@ export default defineComponent({
       this.sabrData = null
       this.legacyFormats = []
       this.backgroundAudioUrl = null
+      this.backgroundAudioSources = []
       if (this.backgroundAudioOn) {
         stopBackgroundAudio()
         this.backgroundAudioOn = false
@@ -1244,8 +1246,9 @@ export default defineComponent({
               })
             }
 
-            const audioUrl = pickAudioUrl(result.adaptiveFormats)
-            this.backgroundAudioUrl = audioUrl && (!process.env.SUPPORTS_LOCAL_API || this.proxyVideos) ? getProxyUrl(audioUrl) : audioUrl
+            this.backgroundAudioSources = pickAudioSources(result.adaptiveFormats, result.formatStreams)
+              .map(url => (!process.env.SUPPORTS_LOCAL_API || this.proxyVideos) ? getProxyUrl(url) : url)
+            this.backgroundAudioUrl = this.backgroundAudioSources[0] ?? null
 
             this.vrProjection = result.adaptiveFormats
               .find(stream => {
@@ -1465,12 +1468,16 @@ export default defineComponent({
           this.disposeContinuousAudio()
           this.backgroundAudioController = markRaw(connectContinuousAudio(video, {
             url: this.backgroundAudioUrl,
+            urls: this.backgroundAudioSources,
             host: this.$refs.backgroundAudioHost,
             title: this.videoTitle,
             artist: this.channelName,
             artwork: this.thumbnail,
             isAudioOnly: () => this.backgroundAudioOn,
-            onReady: ready => { this.continuousAudioReady = ready },
+            onReady: ready => {
+              this.continuousAudioReady = ready
+              if (!ready) this.backgroundAudioOn = false
+            },
             onEnded: () => this.handleVideoEnded(),
             onError: () => showToast(this.t('Video.Background Audio Not Available'))
           }))
