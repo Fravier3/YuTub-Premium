@@ -23,7 +23,7 @@ const config = {
     web: path.join(__dirname, '../src/renderer/main.js'),
   },
   output: {
-    path: path.join(__dirname, '../dist/web'),
+    path: path.join(__dirname, process.env.YUTU_TV ? '../dist/tv' : '../dist/web'),
     filename: '[name].js',
     copy: [
       {
@@ -179,6 +179,7 @@ const config = {
     new webpack.DefinePlugin({
       'process.platform': 'undefined',
       'process.env.IS_ELECTRON': false,
+      'process.env.YUTU_TV': !!process.env.YUTU_TV,
       'process.env.IS_ELECTRON_MAIN': false,
       'process.env.SUPPORTS_LOCAL_API': false,
       __VUE_OPTIONS_API__: 'true',
