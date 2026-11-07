@@ -3,22 +3,27 @@ package app.yutupremium.tv;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Yutu Premium para Android TV: una WebView a pantalla completa que carga la app web.
@@ -26,18 +31,17 @@ import android.widget.FrameLayout;
  */
 public class MainActivity extends Activity {
 
-    private static final String HOME_URL = "https://fravier3.github.io/YuTub-Premium/";
-    private static final String HOST = "fravier3.github.io";
-    private static final String OFFLINE_URL = "file:///android_asset/offline.html";
+    /** La app va dentro del APK (assets/www) y se sirve bajo este origen https local: no depende de ninguna web. */
+    private static final String HOST = "appassets.androidplatform.net";
+    private static final String HOME_URL = "https://" + HOST + "/index.html";
     private static final int SEEK_SECONDS = 10;
 
     private FrameLayout root;
     private WebView web;
     private View customView;
     private WebChromeClient.CustomViewCallback customViewCallback;
-    private boolean showingOffline = false;
 
-    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,58 +72,70 @@ public class MainActivity extends Activity {
         // La app web usa este sufijo para activar el modo TV (anillo de foco grande, etc.)
         s.setUserAgentString(s.getUserAgentString() + " YutuTV/1.0");
 
-        web.addJavascriptInterface(new Bridge(), "YutuTV");
         web.setWebViewClient(new TvWebViewClient());
         web.setWebChromeClient(new TvChromeClient());
 
         if (savedInstanceState != null) {
             web.restoreState(savedInstanceState);
         } else {
-            load();
+            web.loadUrl(HOME_URL);
         }
         web.requestFocus();
-    }
-
-    private void load() {
-        showingOffline = false;
-        if (isOnline()) {
-            web.loadUrl(HOME_URL);
-        } else {
-            showingOffline = true;
-            web.loadUrl(OFFLINE_URL);
-        }
-    }
-
-    private boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        if (cm == null) return true; // si no se puede saber, intentar igual
-        NetworkInfo info = cm.getActiveNetworkInfo();
-        return info != null && info.isConnected();
-    }
-
-    /** Puente que usa la página sin conexión. */
-    private class Bridge {
-        @JavascriptInterface
-        public void retry() {
-            runOnUiThread(MainActivity.this::load);
-        }
     }
 
     private class TvWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             String host = request.getUrl().getHost();
-            // Dentro de la app solo se navega por el propio sitio; no hay navegador externo en la TV
+            // Dentro de la app solo se navega por los archivos propios; no hay navegador externo en la TV
             return host == null || !host.equals(HOST);
         }
 
+        /** Sirve los archivos de la app desde los assets del APK. */
         @Override
-        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-            if (request.isForMainFrame() && !showingOffline) {
-                showingOffline = true;
-                view.loadUrl(OFFLINE_URL);
+        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+            Uri uri = request.getUrl();
+            if (!HOST.equals(uri.getHost())) return null; // API de videos, miniaturas, etc.: red normal
+
+            String path = uri.getPath();
+            if (path == null || path.equals("/") || path.isEmpty()) path = "/index.html";
+            try {
+                InputStream in = getAssets().open("www" + path);
+                WebResourceResponse response = new WebResourceResponse(mimeFor(path), "UTF-8", in);
+                response.setResponseHeaders(new HashMap<String, String>());
+                return response;
+            } catch (IOException e) {
+                return new WebResourceResponse("text/plain", "UTF-8", 404, "Not Found",
+                        new HashMap<String, String>(), new ByteArrayInputStream(new byte[0]));
             }
         }
+    }
+
+    private static final Map<String, String> MIME = new HashMap<>();
+
+    static {
+        MIME.put("html", "text/html");
+        MIME.put("js", "text/javascript");
+        MIME.put("css", "text/css");
+        MIME.put("json", "application/json");
+        MIME.put("svg", "image/svg+xml");
+        MIME.put("png", "image/png");
+        MIME.put("jpg", "image/jpeg");
+        MIME.put("jpeg", "image/jpeg");
+        MIME.put("webp", "image/webp");
+        MIME.put("gif", "image/gif");
+        MIME.put("ico", "image/x-icon");
+        MIME.put("woff", "font/woff");
+        MIME.put("woff2", "font/woff2");
+        MIME.put("ttf", "font/ttf");
+        MIME.put("txt", "text/plain");
+    }
+
+    private static String mimeFor(String path) {
+        int dot = path.lastIndexOf('.');
+        String ext = dot >= 0 ? path.substring(dot + 1).toLowerCase(Locale.ROOT) : "";
+        String mime = MIME.get(ext);
+        return mime != null ? mime : "application/octet-stream";
     }
 
     private class TvChromeClient extends WebChromeClient {
@@ -164,7 +180,7 @@ public class MainActivity extends Activity {
     /** Teclas multimedia del control remoto: reproducir/pausar y saltar ±10 s. */
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN && !showingOffline) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
             switch (event.getKeyCode()) {
                 case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
                     runVideo("v.paused ? v.play() : v.pause()");
@@ -196,7 +212,7 @@ public class MainActivity extends Activity {
     public void onBackPressed() {
         if (customView != null) {
             web.getWebChromeClient().onHideCustomView();
-        } else if (!showingOffline && web.canGoBack()) {
+        } else if (web.canGoBack()) {
             web.goBack();
         } else {
             super.onBackPressed();
@@ -218,7 +234,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         // Al salir de la app (botón Inicio) el video se pausa
-        if (!showingOffline) runVideo("v.pause()");
+        runVideo("v.pause()");
         web.onPause();
         super.onPause();
     }

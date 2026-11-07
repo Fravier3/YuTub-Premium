@@ -53,14 +53,16 @@ const router = createRouter({
           component: Trending
         }]
       : []),
-    {
-      path: '/latin',
-      name: 'latin',
-      meta: {
-        title: 'Latin Home'
-      },
-      component: LatinHome
-    },
+    ...(process.env.YUTU_TV
+      ? [{
+          path: '/latin',
+          name: 'latin',
+          meta: {
+            title: 'Latin Home'
+          },
+          component: LatinHome
+        }]
+      : []),
     {
       path: '/popular',
       name: 'popular',

@@ -58,6 +58,7 @@
       tabindex="-1"
     ></iframe>
     <% } else { %>
+    <% if (!process.env.YUTU_TV) { %>
     <script>
     // Service worker con auto-actualización: se revisa al abrir, al volver a la app y cada 45 min
     if ("serviceWorker" in navigator) {
@@ -75,6 +76,7 @@
       }).catch(function () {});
     }
     </script>
+    <% } %>
     <% } %>
     <!-- webpack builds are automatically injected -->
   </body>

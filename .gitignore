@@ -30,3 +30,9 @@ debug/
 lefthook-local.yml
 
 locale-errors.json
+
+# APK de Android TV
+android/keystore/
+android/app/src/main/assets/www/
+android/**/build/
+android/.gradle/
