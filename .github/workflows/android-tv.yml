@@ -120,6 +120,7 @@ jobs:
       # Vive en una rama aparte con un solo commit, para no engordar el historial de main.
       - name: Publicar copia directa (raw) en la rama apk
         if: github.ref == 'refs/heads/main'
+        continue-on-error: true # si falla, el release de arriba igual se publica
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
