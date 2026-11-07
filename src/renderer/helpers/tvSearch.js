@@ -219,11 +219,14 @@ export function closeTvSearch(restoreFocus) {
   if (restoreFocus) getTvSearchInput()?.focus({ preventScroll: true })
 }
 
-/** ¿Es parte de la barra de búsqueda (caja, lupa, etc.) y no el botón de filtros ni la lista de la app? */
+/**
+ * ¿Es parte de la barra de búsqueda donde OK debe abrir el teclado (caja de texto, lupa)?
+ * No lo es la X que borra el texto, ni el botón de filtros, ni la lista de la app.
+ */
 function isSearchTrigger(target) {
   if (!(target instanceof Element)) return false
   if (target.closest('.navSearchButton')) return true
-  return Boolean(target.closest('.searchContainer')) && !target.closest('.navFilterButton, ul, li')
+  return Boolean(target.closest('.searchContainer')) && !target.closest('.clearInputTextButton, .navFilterButton, ul, li')
 }
 
 /** OK en cualquier parte de la barra de búsqueda abre el teclado propio. */
