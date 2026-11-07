@@ -24,7 +24,8 @@ const config = {
   },
   output: {
     path: path.join(__dirname, process.env.YUTU_TV ? '../dist/tv' : '../dist/web'),
-    filename: '[name].js',
+    filename: isDevMode ? '[name].js' : '[name].[contenthash].js',
+    chunkFilename: isDevMode ? '[id].js' : '[id].[contenthash].js',
     copy: [
       {
         from: 'static/pwabuilder-sw.js',
