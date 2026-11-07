@@ -1,11 +1,11 @@
 .sideNav {
   display: block;
-  block-size: calc(100vh - 60px);
+  block-size: calc(100vh - calc(var(--yt-top) + var(--yt-safe-top)));
   inline-size: 80px;
   overflow-x: hidden;
   position: sticky;
   inset-inline-start: 0;
-  inset-block-start: 60px;
+  inset-block-start: calc(var(--yt-top) + var(--yt-safe-top));
   z-index: 3;
   box-shadow: 1px -1px 1px -1px var(--primary-shadow-color);
   background-color: var(--side-nav-color);
@@ -239,7 +239,9 @@
     position: fixed;
     display: flex;
     margin-block-start: 0;
-    block-size: 60px;
+    box-sizing: border-box;
+    block-size: calc(var(--yt-nav-bottom) + var(--yt-safe-bottom));
+    padding-block-end: var(--yt-safe-bottom);
     inline-size: 100%;
     inset-block: auto 0;
     overflow-y: hidden;

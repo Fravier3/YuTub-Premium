@@ -1,6 +1,7 @@
 /* Yutu Premium: capa visual estilo YouTube sobre FreeTube (iPhone + PC) */
 :root {
   --yt-top: 56px;
+  --yt-nav-bottom: 56px;
   --yt-safe-top: env(safe-area-inset-top, 0);
   --yt-safe-bottom: env(safe-area-inset-bottom, 0);
 }
@@ -21,15 +22,7 @@ select {
   font-size: max(16px, 1em); /* evita el zoom automático de iOS */
 }
 
-/* ---------- Barra superior ---------- */
-.topNav {
-  block-size: calc(var(--yt-top) + var(--yt-safe-top));
-  padding-block-start: var(--yt-safe-top);
-  line-height: normal;
-  box-shadow: none;
-  background-color: var(--bg-color);
-}
-
+/* ---------- Barra superior (alturas y zonas seguras en TopNav.scss) ---------- */
 @media only screen and (width >= 961px) {
   .topNav {
     grid-template-columns: 1fr minmax(320px, 640px) 1fr;
@@ -44,16 +37,10 @@ select {
   .topNav .navIconButton {
     display: none; /* atrás/adelante no hacen falta en el teléfono */
   }
-
-  .topNav .searchContainer {
-    inset-block-start: calc(var(--yt-top) + var(--yt-safe-top));
-  }
 }
 
-/* ---------- Barra lateral / navegación inferior ---------- */
+/* ---------- Barra lateral / navegación inferior (alturas en SideNav.css) ---------- */
 .sideNav {
-  inset-block-start: calc(var(--yt-top) + var(--yt-safe-top));
-  block-size: calc(100vh - var(--yt-top) - var(--yt-safe-top));
   box-shadow: none;
   background-color: var(--bg-color);
 }
@@ -69,8 +56,6 @@ select {
 
 @media only screen and (width <= 680px) {
   .sideNav {
-    block-size: calc(56px + var(--yt-safe-bottom));
-    padding-block-end: var(--yt-safe-bottom);
     box-shadow: 0 -1px 0 var(--secondary-card-bg-color);
     justify-content: space-around;
   }
@@ -83,15 +68,15 @@ select {
     padding-block: 8px 0;
   }
 
-  .routerView {
-    margin-block: calc(var(--yt-top) + var(--yt-safe-top) + 12px) calc(70px + var(--yt-safe-bottom)) !important;
-    margin-inline: 0 !important;
-  }
-
   .routerView .routerView,
   .routerView .card {
     margin-inline: 0 !important;
     inline-size: 100% !important;
+  }
+
+  .flexBox.routerView {
+    margin-block: calc(var(--yt-top) + var(--yt-safe-top) + 12px) calc(var(--yt-nav-bottom) + var(--yt-safe-bottom) + 16px) !important;
+    margin-inline: 0 !important;
   }
 
   .routerView .grid {
