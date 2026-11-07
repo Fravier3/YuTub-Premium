@@ -221,6 +221,13 @@ function handleKeyDown(event) {
   }
 
   const current = active
+
+  // ↓ sobre la fila de botones del reproductor (Play, volumen, ajustes…): no hay nada debajo, se abren los relacionados
+  if (dir === 'down' && !isRelatedOpen() && getFullWindowPlayer() && current.closest('.shaka-controls-button-panel')) {
+    openRelated()
+    return
+  }
+
   const from = current.getBoundingClientRect()
   const next = pickNext(from, candidates, dir, current)
 

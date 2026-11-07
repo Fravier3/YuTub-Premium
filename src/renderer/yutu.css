@@ -387,3 +387,20 @@ a {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+/* Pista en la pantalla completa: dónde están los videos relacionados */
+.yutu-tv .playerFullWindow .ftVideoPlayer:focus-within::after {
+  content: '▼  Videos relacionados';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 84px;
+  margin-inline: auto;
+  inline-size: max-content;
+  padding-block: 6px;
+  padding-inline: 18px;
+  border-radius: 20px;
+  background: rgb(0 0 0 / 65%);
+  color: #fff;
+  font-size: 18px;
+  pointer-events: none;
+}

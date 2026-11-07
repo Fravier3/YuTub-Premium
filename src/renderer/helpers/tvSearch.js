@@ -219,11 +219,26 @@ export function closeTvSearch(restoreFocus) {
   if (restoreFocus) getTvSearchInput()?.focus({ preventScroll: true })
 }
 
-/** OK sobre la caja de búsqueda abre el teclado propio. */
+/** ¿Es parte de la barra de búsqueda (caja, lupa, etc.) y no el botón de filtros ni la lista de la app? */
+function isSearchTrigger(target) {
+  if (!(target instanceof Element)) return false
+  if (target.closest('.navSearchButton')) return true
+  return Boolean(target.closest('.searchContainer')) && !target.closest('.navFilterButton, ul, li')
+}
+
+/** OK en cualquier parte de la barra de búsqueda abre el teclado propio. */
 function handleKeyDown(event) {
   // Solo teclas reales del usuario: el Enter que enviamos por código es para que la app haga la búsqueda
   if (!event.isTrusted || overlay || event.key !== 'Enter') return
-  if (event.target !== getTvSearchInput()) return
+  if (!isSearchTrigger(event.target)) return
+  event.preventDefault()
+  event.stopImmediatePropagation()
+  openTvSearch()
+}
+
+/** Un clic (control con puntero) en la barra de búsqueda también abre el teclado propio. */
+function handleSearchBarClick(event) {
+  if (!event.isTrusted || overlay || !isSearchTrigger(event.target)) return
   event.preventDefault()
   event.stopImmediatePropagation()
   openTvSearch()
@@ -251,9 +266,7 @@ export function initTvSearch() {
   }).observe(document.body, { childList: true, subtree: true })
 
   document.addEventListener('keydown', handleKeyDown, true)
-  document.addEventListener('click', (event) => {
-    if (!overlay && event.target === getTvSearchInput()) openTvSearch()
-  }, true)
+  document.addEventListener('click', handleSearchBarClick, true)
   document.addEventListener('focusin', () => setTimeout(prepareSearchInput, 0), true)
   window.addEventListener('hashchange', () => setTimeout(prepareSearchInput, 300))
   setTimeout(prepareSearchInput, 500)
