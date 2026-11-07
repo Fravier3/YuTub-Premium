@@ -246,6 +246,11 @@ public class MainActivity extends Activity {
                     break;
             }
         }
+        // Tecla MENÚ del control: ajustes del reproductor (calidad, velocidad, subtítulos)
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
+            web.evaluateJavascript("(function(){return !!(window.yutuTvOpenSettings && window.yutuTvOpenSettings());})()", null);
+            return true;
+        }
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             switch (event.getKeyCode()) {
                 case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
@@ -278,11 +283,17 @@ public class MainActivity extends Activity {
     public void onBackPressed() {
         if (customView != null) {
             web.getWebChromeClient().onHideCustomView();
-        } else if (web.canGoBack()) {
-            web.goBack();
-        } else {
-            super.onBackPressed();
+            return;
         }
+        // Primero que la página cierre lo que esté abierto (menú de calidad, controles); si no, retroceder
+        web.evaluateJavascript("(function(){return !!(window.yutuTvBack && window.yutuTvBack());})()", value -> {
+            if ("true".equals(value)) return;
+            if (web.canGoBack()) {
+                web.goBack();
+            } else {
+                finish();
+            }
+        });
     }
 
     @Override
