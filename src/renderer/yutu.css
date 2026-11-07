@@ -1,0 +1,168 @@
+/* Yutu Premium: capa visual estilo YouTube sobre FreeTube (iPhone + PC) */
+:root {
+  --yt-top: 56px;
+  --yt-safe-top: env(safe-area-inset-top, 0);
+  --yt-safe-bottom: env(safe-area-inset-bottom, 0);
+}
+
+html {
+  text-size-adjust: 100%;
+}
+
+body {
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+}
+
+input,
+textarea,
+select {
+  font-size: max(16px, 1em); /* evita el zoom automático de iOS */
+}
+
+/* ---------- Barra superior ---------- */
+.topNav {
+  block-size: calc(var(--yt-top) + var(--yt-safe-top));
+  padding-block-start: var(--yt-safe-top);
+  line-height: normal;
+  box-shadow: none;
+  background-color: var(--bg-color);
+}
+
+@media only screen and (width >= 961px) {
+  .topNav {
+    grid-template-columns: 1fr minmax(320px, 640px) 1fr;
+  }
+}
+
+.topNav .middle {
+  max-inline-size: 640px;
+}
+
+@media only screen and (width <= 680px) {
+  .topNav .navIconButton {
+    display: none; /* atrás/adelante no hacen falta en el teléfono */
+  }
+
+  .topNav .searchContainer {
+    inset-block-start: calc(var(--yt-top) + var(--yt-safe-top));
+  }
+}
+
+/* ---------- Barra lateral / navegación inferior ---------- */
+.sideNav {
+  inset-block-start: calc(var(--yt-top) + var(--yt-safe-top));
+  block-size: calc(100vh - var(--yt-top) - var(--yt-safe-top));
+  box-shadow: none;
+  background-color: var(--bg-color);
+}
+
+.sideNav .navOption {
+  border-radius: 10px;
+  margin-inline: 4px;
+}
+
+.sideNav .navOption.router-link-active {
+  background-color: var(--secondary-card-bg-color);
+}
+
+@media only screen and (width <= 680px) {
+  .sideNav {
+    block-size: calc(56px + var(--yt-safe-bottom));
+    padding-block-end: var(--yt-safe-bottom);
+    box-shadow: 0 -1px 0 var(--secondary-card-bg-color);
+    justify-content: space-around;
+  }
+
+  .sideNav .navOption {
+    flex: 1;
+    margin-inline: 0;
+    border-radius: 0;
+    block-size: 56px;
+    padding-block: 8px 0;
+  }
+
+  .routerView {
+    margin-block: calc(var(--yt-top) + var(--yt-safe-top) + 12px) calc(70px + var(--yt-safe-bottom)) !important;
+    margin-inline: 0 !important;
+  }
+
+  .routerView .routerView,
+  .routerView .card {
+    margin-inline: 0 !important;
+  }
+
+  .routerView .grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .routerView h2 {
+    padding-inline: 12px;
+  }
+
+  .routerView .ft-list-item {
+    padding-inline: 0;
+  }
+
+  .routerView .ft-list-video .videoInfo,
+  .routerView .ft-list-video .info {
+    padding-inline: 12px;
+  }
+}
+
+/* ---------- Tarjetas de video estilo YouTube ---------- */
+.ft-list-item {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.ft-list-video .videoThumbnail .thumbnailLink,
+.ft-list-video .videoThumbnail .thumbnailImage {
+  border-radius: 12px;
+}
+
+.ft-list-video .videoThumbnail .videoDuration {
+  background-color: rgb(0 0 0 / 80%);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 4px;
+  padding-block: 1px;
+  padding-inline: 4px;
+}
+
+.ft-list-video .thumbnailLink:hover {
+  outline: none;
+}
+
+.ft-list-video .title {
+  font-weight: 500;
+}
+
+/* En el teléfono las miniaturas ocupan todo el ancho, como en la app de YouTube */
+@media only screen and (width <= 680px) {
+  .routerView .grid .thumbnailLink,
+  .routerView .grid .thumbnailImage {
+    border-radius: 0;
+  }
+}
+
+/* ---------- Detalles ---------- */
+.card,
+.ft-card {
+  border-radius: 12px;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

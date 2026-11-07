@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <% if (!process.env.IS_ELECTRON) { %>
+    <meta name="description" content="Yutu Premium: videos sin anuncios ni rastreo, con interfaz estilo YouTube." />
+    <meta name="theme-color" content="#0f0f0f" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Yutu Premium" />
+    <link rel="manifest" href="static/manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="static/icons/logo.svg" />
+    <link rel="apple-touch-icon" href="static/icons/apple-touch-icon.png" />
+    <% } %>
+    <title>Yutu Premium</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <% if (process.env.IS_ELECTRON) { %>
+    <iframe
+      id="sigFrame"
+      src="<%= sigFrameSrc %>"
+      csp="default-src 'none'; script-src '<%= sigFrameCspHash %>' 'unsafe-eval'"
+      sandbox="allow-scripts"
+      height="1"
+      width="1"
+      style="display: none; pointer-events: none"
+      tabindex="-1"
+    ></iframe>
+    <% } else { %>
+    <script>
+    // Service worker con auto-actualización: se revisa al abrir, al volver a la app y cada 45 min
+    if ("serviceWorker" in navigator) {
+      var hadController = !!navigator.serviceWorker.controller;
+      var reloaded = false;
+      navigator.serviceWorker.addEventListener("controllerchange", function () {
+        if (!hadController || reloaded) { hadController = true; return; }
+        reloaded = true;
+        window.location.reload();
+      });
+      navigator.serviceWorker.register("pwabuilder-sw.js", { scope: "./", updateViaCache: "none" }).then(function (reg) {
+        var check = function () { reg.update().catch(function () {}); };
+        document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") check(); });
+        setInterval(check, 45 * 60 * 1000);
+      }).catch(function () {});
+    }
+    </script>
+    <% } %>
+    <!-- webpack builds are automatically injected -->
+  </body>
+
+</html>

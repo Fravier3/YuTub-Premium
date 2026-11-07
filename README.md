@@ -1,11 +1,36 @@
 # Yutu Premium
 
-PWA con interfaz estilo YouTube para iPhone y PC. Datos desde instancias públicas de Invidious (como FreeTube, sin cuenta ni rastreo) y reproductor `youtube-nocookie`.
+App de video sin anuncios ni rastreo, con interfaz estilo YouTube, para **iPhone y PC**.
 
-- Inicio, Explorar/Tendencias, búsqueda con sugerencias, canales, video con comentarios y relacionados
-- Suscripciones, historial, "Ver más tarde" y "Me gusta" guardados en el dispositivo
-- Tema claro/oscuro, instancia configurable, modo demostración si no hay conexión
-- Instalable y con auto-actualización (sube la versión en `version.json`, `APP_VERSION` en `index.html` y `CACHE` en `sw.js`)
+Está construida sobre el código de [FreeTube](https://github.com/FreeTubeApp/FreeTube) (build web), con:
 
-Publicar: Settings → Pages → Deploy from a branch → `main` / root.
-Instalar: iPhone → Safari → Compartir → Añadir a pantalla de inicio. PC → icono de instalar en Chrome/Edge.
+- Marca nueva (logo Y + P en el triángulo de play) y nombre *Yutu Premium*
+- Tema claro/oscuro con los colores de YouTube, buscador en píldora, tarjetas de video con esquinas redondeadas
+- Móvil: miniaturas a todo el ancho, barra inferior de navegación, zonas seguras del iPhone (notch y barra inferior)
+- PWA instalable con auto-actualización (revisa al abrir, al volver a la app y cada 45 min)
+- Página inicial: *Más populares*; idioma automático según el dispositivo (incluye español)
+
+## Desarrollo
+
+```
+pnpm install --frozen-lockfile
+pnpm run dev:web      # servidor local
+pnpm run pack:web     # build de producción en dist/web
+```
+
+## Publicar (GitHub Pages)
+
+1. Fusiona esta rama a `main`.
+2. Settings → Pages → Source: **GitHub Actions**.
+3. El workflow `.github/workflows/deploy-pages.yml` compila y publica en `https://fravier3.github.io/YuTub-Premium/`.
+
+Para que la actualización llegue sola a los teléfonos, sube `VERSION` en `static/pwabuilder-sw.js` en cada publicación.
+
+## Instalar
+
+- iPhone: Safari → Compartir → Añadir a pantalla de inicio.
+- PC/Android: icono de instalar en Chrome/Edge.
+
+## Licencia
+
+AGPL-3.0-or-later, igual que FreeTube. Ver `LICENSE`.

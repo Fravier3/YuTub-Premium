@@ -1,0 +1,12 @@
+.ft-card {
+  background-color: transparent;
+  margin: 0;
+  padding-block: 3px 16px;
+  padding-inline: 0;
+}
+
+@media only screen and (width <= 680px) {
+  .ft-card {
+    padding-block: 3px 8px;
+  }
+}
