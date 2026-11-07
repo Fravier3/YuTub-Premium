@@ -302,6 +302,7 @@ const hidePopularVideos = computed(() => store.getters.getHidePopularVideos)
 const hideTrendingVideos = computed(() => store.getters.getHideTrendingVideos)
 
 const INCLUDED_DEFAULT_PAGE_NAMES = [
+  'latin',
   'subscriptions',
   'subscribedChannels',
   'popular',

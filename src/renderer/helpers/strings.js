@@ -37,6 +37,8 @@ export function translateWindowTitle(title) {
       return i18n.global.t('Channels.Title')
     case 'Trending':
       return i18n.global.t('Trending.Trending')
+    case 'Latin Home':
+      return i18n.global.t('Latin Home')
     case 'Most Popular':
       return i18n.global.t('Most Popular')
     case 'Your Playlists':

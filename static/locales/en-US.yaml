@@ -861,6 +861,11 @@ Channel:
     Reveal Answers: Reveal Answers
     Hide Answers: Hide Answers
     Video hidden by FreeTube: Video hidden by Yutu Premium
+Latin Home: 'Home'
+Latin Feed:
+  Latin Music: 'Latin music'
+  Popular in Latin America: 'Popular in Latin America'
+  Nothing to show: 'Could not load videos. Check your connection or change the instance in Settings.'
 Video:
   Background Audio: 'Background audio'
   Background Audio On: 'Background audio on: it keeps playing when you minimize the app'

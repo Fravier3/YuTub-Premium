@@ -4,6 +4,7 @@ import SubscribedChannels from '../views/SubscribedChannels/SubscribedChannels.v
 import ProfileSettings from '../views/ProfileSettings/ProfileSettings.vue'
 import Trending from '../views/Trending/Trending.vue'
 import Popular from '../views/Popular/Popular.vue'
+import LatinHome from '../views/LatinHome/LatinHome.vue'
 import UserPlaylists from '../views/UserPlaylists/UserPlaylists.vue'
 import History from '../views/History/History.vue'
 import Settings from '../views/Settings/Settings.vue'
@@ -52,6 +53,14 @@ const router = createRouter({
           component: Trending
         }]
       : []),
+    {
+      path: '/latin',
+      name: 'latin',
+      meta: {
+        title: 'Latin Home'
+      },
+      component: LatinHome
+    },
     {
       path: '/popular',
       name: 'popular',
