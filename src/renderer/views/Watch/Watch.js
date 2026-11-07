@@ -15,6 +15,13 @@ import WatchVideoRecommendations from '../../components/WatchVideoRecommendation
 import FtAgeRestricted from '../../components/FtAgeRestricted/FtAgeRestricted.vue'
 import { calculateColorLuminance } from '../../helpers/colors'
 import {
+  isBackgroundAudioActive,
+  pickAudioUrl,
+  startBackgroundAudio,
+  stopBackgroundAudio,
+  unlockBackgroundAudio
+} from '../../helpers/backgroundAudio'
+import {
   buildChaptersVttFile,
   buildVTTFileLocally,
   copyToClipboard,
@@ -118,8 +125,10 @@ export default defineComponent({
       upcomingTimeLeft: null,
       /** @type {'dash' | 'audio' | 'legacy'} */
       activeFormat: 'legacy',
-      /** @type {'dash' | 'legacy' | null} */
-      formatBeforeBackground: null,
+      backgroundAudioUrl: null,
+      backgroundAudioOn: false,
+      /** true si se activó solo al minimizar (al volver se regresa al video) */
+      backgroundAudioAuto: false,
       thumbnail: '',
       videoId: '',
       videoTitle: '',
@@ -363,46 +372,100 @@ export default defineComponent({
   mounted: function () {
     this.onMountedDependOnLocalStateLoading()
 
-    // Segundo plano en el teléfono: al minimizar la app, el audio sigue sonando
+    // Audio en segundo plano (web): desbloquear el <audio> con el primer toque y reaccionar al minimizar
     if (!process.env.IS_ELECTRON) {
       document.addEventListener('visibilitychange', this.handleVisibilityChange)
-      window.addEventListener('pagehide', this.handlePageHide)
+      document.addEventListener('touchend', this.unlockAudioOnGesture, { capture: true, passive: true })
+      document.addEventListener('click', this.unlockAudioOnGesture, { capture: true, passive: true })
     }
   },
   beforeUnmount: function () {
     document.removeEventListener('visibilitychange', this.handleVisibilityChange)
-    window.removeEventListener('pagehide', this.handlePageHide)
+    document.removeEventListener('touchend', this.unlockAudioOnGesture, { capture: true })
+    document.removeEventListener('click', this.unlockAudioOnGesture, { capture: true })
+    if (this.backgroundAudioOn) {
+      stopBackgroundAudio()
+      this.backgroundAudioOn = false
+    }
   },
   methods: {
+    unlockAudioOnGesture: function () {
+      unlockBackgroundAudio()
+      document.removeEventListener('touchend', this.unlockAudioOnGesture, { capture: true })
+      document.removeEventListener('click', this.unlockAudioOnGesture, { capture: true })
+    },
+
     /**
-     * iOS pausa el video cuando la app pasa a segundo plano, pero deja seguir el audio.
-     * Si el video se está reproduciendo en un dispositivo táctil y la app se oculta,
-     * cambiamos al formato de solo audio (en la misma posición) y al volver restauramos el anterior.
+     * iOS pausa el <video> al minimizar pero deja sonar un <audio> nativo.
+     * Al minimizar con un video sonando, pasamos el sonido al <audio> en la misma posición;
+     * al volver (si fue automático) regresamos al video.
      */
     handleVisibilityChange: function () {
       const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
-      if (!isTouchDevice) return
 
       if (document.visibilityState === 'hidden') {
-        if (this.activeFormat === 'audio' || this.isLive || this.isPostLiveDvr || this.manifestSrc === null) return
-
-        const video = document.querySelector('.ft-shaka-video-player video, video')
+        if (!isTouchDevice || this.backgroundAudioOn) return
+        const video = document.querySelector('video')
         if (!video || video.paused || video.ended) return
-
-        this.formatBeforeBackground = this.activeFormat
-        this.enableAudioFormat()
-      } else if (this.formatBeforeBackground) {
-        const previous = this.formatBeforeBackground
-        this.formatBeforeBackground = null
-        if (this.activeFormat === 'audio') {
-          this.handleFormatChange(previous)
-        }
+        this.startBackgroundAudioPlayback(true)
+      } else if (this.backgroundAudioOn && this.backgroundAudioAuto) {
+        this.stopBackgroundAudioPlayback(true)
       }
     },
 
-    handlePageHide: function () {
-      // La app se está cerrando de verdad: no restaurar nada al volver
-      this.formatBeforeBackground = null
+    toggleBackgroundAudio: function () {
+      if (this.backgroundAudioOn) {
+        this.stopBackgroundAudioPlayback(true)
+      } else {
+        this.startBackgroundAudioPlayback(false)
+      }
+    },
+
+    startBackgroundAudioPlayback: async function (auto) {
+      if (!this.backgroundAudioUrl || this.isLive || this.isPostLiveDvr) {
+        if (!auto) showToast(this.t('Video.Background Audio Not Available'))
+        return
+      }
+
+      const video = document.querySelector('video')
+      const started = await startBackgroundAudio({
+        url: this.backgroundAudioUrl,
+        time: video?.currentTime ?? 0,
+        title: this.videoTitle,
+        artist: this.channelName,
+        artwork: this.thumbnail,
+        onEnded: () => {
+          this.backgroundAudioOn = false
+          this.handleVideoEnded()
+        },
+        onError: () => {
+          this.backgroundAudioOn = false
+          if (video) video.play().catch(() => {})
+        }
+      })
+
+      if (!started) {
+        if (!auto) showToast(this.t('Video.Background Audio Not Available'))
+        return
+      }
+
+      video?.pause()
+      this.backgroundAudioOn = true
+      this.backgroundAudioAuto = auto
+      if (!auto) showToast(this.t('Video.Background Audio On'))
+    },
+
+    stopBackgroundAudioPlayback: function (resumeVideo) {
+      if (!isBackgroundAudioActive() && !this.backgroundAudioOn) return
+      const time = stopBackgroundAudio()
+      this.backgroundAudioOn = false
+      this.backgroundAudioAuto = false
+
+      const video = document.querySelector('video')
+      if (video) {
+        try { video.currentTime = time } catch { /* se ignora si aún no hay metadatos */ }
+        if (resumeVideo) video.play().catch(() => {})
+      }
     },
 
     async reloadView() {
@@ -469,6 +532,11 @@ export default defineComponent({
       this.manifestMimeType = MANIFEST_TYPE_DASH
       this.sabrData = null
       this.legacyFormats = []
+      this.backgroundAudioUrl = null
+      if (this.backgroundAudioOn) {
+        stopBackgroundAudio()
+        this.backgroundAudioOn = false
+      }
       this.captions = []
       this.vrProjection = null
       this.recommendedVideos = []
@@ -1164,6 +1232,9 @@ export default defineComponent({
                 format.url = getProxyUrl(format.url)
               })
             }
+
+            const audioUrl = pickAudioUrl(result.adaptiveFormats)
+            this.backgroundAudioUrl = audioUrl && (!process.env.SUPPORTS_LOCAL_API || this.proxyVideos) ? getProxyUrl(audioUrl) : audioUrl
 
             this.vrProjection = result.adaptiveFormats
               .find(stream => {
