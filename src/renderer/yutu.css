@@ -152,3 +152,31 @@ a {
     transition: none !important;
   }
 }
+
+/* ---------- Modo Android TV (control remoto con flechas) ---------- */
+.yutu-tv a:focus-visible,
+.yutu-tv button:focus-visible,
+.yutu-tv input:focus-visible,
+.yutu-tv select:focus-visible,
+.yutu-tv [tabindex]:focus-visible {
+  outline: 4px solid #fff !important;
+  outline-offset: 3px !important;
+  border-radius: 12px;
+  box-shadow: 0 0 0 7px rgb(0 0 0 / 55%);
+}
+
+.yutu-tv,
+.yutu-tv body {
+  scroll-behavior: smooth;
+  cursor: none; /* sin puntero en la TV */
+}
+
+/* Texto un poco más grande para verlo desde el sofá */
+.yutu-tv body {
+  font-size: 18px;
+}
+
+.yutu-tv .ft-list-video .title,
+.yutu-tv .ft-list-item .title {
+  font-size: 1.15em;
+}
