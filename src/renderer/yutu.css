@@ -180,3 +180,19 @@ a {
 .yutu-tv .ft-list-item .title {
   font-size: 1.15em;
 }
+
+/* Render header glyphs directly, without translucent or filtered ancestors. */
+.topNav {
+  background-color: var(--card-bg-color);
+  backdrop-filter: none;
+  filter: none;
+  opacity: 1;
+}
+
+.topNav .navIcon,
+.topNav .logoIcon,
+.topNav .logoText,
+.topNav .colorOption {
+  flex-shrink: 0;
+  backface-visibility: hidden;
+}

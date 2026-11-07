@@ -3,6 +3,7 @@
     class="videoLayout"
     :class="{
       isLoading,
+      continuousAudioReady,
       useTheatreMode: useTheatreMode && !isLoading,
       noSidebar: !theatrePossible
     }"
@@ -50,7 +51,7 @@
           @error="handlePlayerError"
           @loaded="handleVideoLoaded"
           @timeupdate="updateCurrentChapter"
-          @ended="handleVideoEnded"
+          @ended="handlePlaybackEnded"
           @toggle-theatre-mode="useTheatreMode = !useTheatreMode"
           @toggle-autoplay="toggleAutoplay"
           @playback-rate-updated="updatePlaybackRate"
@@ -58,6 +59,13 @@
           @skip-to-prev="handleSkipToPrev"
           @player-reload-requested="onSabrReloadRequested"
         />
+        <div
+          v-show="continuousAudioReady"
+          class="backgroundAudioBar"
+        >
+          <span>{{ $t('Continuous Audio') }}</span>
+          <div ref="backgroundAudioHost" />
+        </div>
         <div
           v-if="!isLoading && (isUpcoming || errorMessage)"
           class="videoPlayer"

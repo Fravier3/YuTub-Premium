@@ -1,4 +1,5 @@
 import store from '../../store/index'
+import { loadLatinMusicFeed, rotateLatinResults } from '../latinMusicFeed'
 import { calculatePublishedDate, getRelativeTimeFromDate } from '../utils'
 import { isNullOrEmpty } from '../strings'
 import autolinker from 'autolinker'
@@ -37,24 +38,26 @@ export function getProxyUrl(uri) {
 /**
  * @param {string | URL} url
  */
-export function invidiousFetch(url) {
+export function invidiousFetch(url, { signal } = {}) {
   const authorization = store.getters.getCurrentInvidiousInstanceAuthorization
 
   if (authorization) {
     return fetch(url, {
+      signal,
       headers: {
         Authorization: authorization
       }
     })
   } else {
-    return fetch(url)
+    return fetch(url, { signal })
   }
 }
 
-function invidiousAPICall({ resource, id = '', params = {}, doLogError = true, subResource = '' }) {
+function invidiousAPICall({ resource, id = '', params = {}, doLogError = true, subResource = '', timeoutMs = 0 }) {
   return new Promise((resolve, reject) => {
     const requestUrl = getCurrentInstanceUrl() + '/api/v1/' + resource + '/' + id + (!isNullOrEmpty(subResource) ? `/${subResource}` : '') + '?' + new URLSearchParams(params).toString()
-    invidiousFetch(requestUrl)
+    const signal = timeoutMs ? AbortSignal.timeout(timeoutMs) : undefined
+    invidiousFetch(requestUrl, { signal })
       .then((response) => response.json())
       .then((json) => {
         if (json.error !== undefined) {
@@ -603,24 +606,21 @@ export async function getInvidiousSearchSuggestions(query) {
  *  publishedText: string
  * }[]>}
  */
-export async function getInvidiousPopularFeed() {
-  const response = await invidiousAPICall({
-    resource: 'popular',
-    id: '',
-    params: {}
+export async function getInvidiousPopularFeed(previousIds = []) {
+  const items = await loadLatinMusicFeed({
+    previousIds,
+    trending: region => invidiousAPICall({ resource: 'trending', params: { type: 'music', region, hl: 'es' }, doLogError: false, timeoutMs: 12_000 }),
+    search: (query, region) => invidiousAPICall({
+      resource: 'search',
+      params: { q: query, region, page: 1, sort_by: 'view_count', date: 'month', type: 'video', hl: 'es' },
+      doLogError: false,
+      timeoutMs: 12_000
+    })
   })
-
-  const items = response.filter((item) => {
-    return item.type === 'video' || item.type === 'shortVideo' || item.type === 'channel' || item.type === 'playlist'
+  items.forEach(item => {
+    normalizeOneInvidiousVideoAttributes(item)
+    setPublishedTimestamp(item)
   })
-
-  items.forEach((item) => {
-    if (item.type === 'video' || item.type === 'shortVideo') {
-      normalizeOneInvidiousVideoAttributes(item)
-      setPublishedTimestamp(item)
-    }
-  })
-
   return items
 }
 
@@ -629,14 +629,6 @@ export async function getInvidiousPopularFeed() {
  * ordenada por vistas del último mes. Se usa búsqueda y no "popular"/"trending" porque
  * esas listas ya no están disponibles de forma fiable en las instancias.
  */
-const LATIN_MUSIC_SOURCES = [
-  { q: 'música latina', region: 'MX' },
-  { q: 'reggaeton', region: 'PR' },
-  { q: 'música latina', region: 'CO' },
-  { q: 'bachata', region: 'DO' },
-  { q: 'cumbia', region: 'AR' },
-]
-
 const LATIN_POPULAR_SOURCES = [
   { q: 'lo más visto', region: 'MX' },
   { q: 'videos populares', region: 'CO' },
@@ -676,6 +668,7 @@ async function fetchLatinSource(source) {
     resource: 'search',
     id: '',
     doLogError: false,
+    timeoutMs: 12_000,
     params: {
       q: source.q,
       region: source.region,
@@ -717,7 +710,7 @@ export async function getInvidiousLatinFeed(forceRefresh = false) {
   }
 
   const [music, popular] = await Promise.allSettled([
-    fetchLatinSources(LATIN_MUSIC_SOURCES, 24),
+    getInvidiousPopularFeed(latinFeedCache?.music.slice(0, 12).map(item => item.videoId) ?? []),
     fetchLatinSources(LATIN_POPULAR_SOURCES, 24)
   ])
 
@@ -727,8 +720,8 @@ export async function getInvidiousLatinFeed(forceRefresh = false) {
 
   latinFeedCache = {
     time: Date.now(),
-    music: music.status === 'fulfilled' ? music.value : [],
-    popular: popular.status === 'fulfilled' ? popular.value : []
+    music: music.status === 'fulfilled' ? music.value : (latinFeedCache?.music ?? []),
+    popular: popular.status === 'fulfilled' ? rotateLatinResults(popular.value, Date.now(), latinFeedCache?.popular.slice(0, 12).map(item => item.videoId) ?? []) : (latinFeedCache?.popular ?? [])
   }
 
   return latinFeedCache

@@ -64,10 +64,22 @@
     if ("serviceWorker" in navigator) {
       var hadController = !!navigator.serviceWorker.controller;
       var reloaded = false;
-      navigator.serviceWorker.addEventListener("controllerchange", function () {
-        if (!hadController || reloaded) { hadController = true; return; }
+      var pendingReload = false;
+      function reloadWhenIdle() {
+        var playing = Array.prototype.some.call(document.querySelectorAll('audio, video'), function (media) {
+          return !media.paused && !media.ended;
+        });
+        if (playing || reloaded) return;
         reloaded = true;
         window.location.reload();
+      }
+      document.addEventListener('pause', function () {
+        if (pendingReload) window.setTimeout(reloadWhenIdle, 0);
+      }, true);
+      navigator.serviceWorker.addEventListener("controllerchange", function () {
+        if (!hadController || reloaded) { hadController = true; return; }
+        pendingReload = true;
+        reloadWhenIdle();
       });
       navigator.serviceWorker.register("pwabuilder-sw.js", { scope: "./", updateViaCache: "none" }).then(function (reg) {
         var check = function () { reg.update().catch(function () {}); };
