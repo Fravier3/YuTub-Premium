@@ -8,6 +8,8 @@
  *  - en la página de un video, sin nada enfocado: ←/→ saltan 10 s y OK pausa/reproduce.
  */
 
+import { closeTvSearch, isTvSearchOpen } from './tvSearch'
+
 const SEEK_SECONDS = 10
 const FOCUSABLE = 'a[href], button, input, select, textarea, summary, [tabindex], [role="button"], [role="menuitem"], [role="option"]'
 const CARD_SELECTOR = '.ft-list-item'
@@ -31,6 +33,8 @@ function isVisible(el) {
 
 /** Zona donde se puede mover el foco: el diálogo abierto, o toda la página. */
 function getScope() {
+  const tvSearch = document.querySelector('.tvSearch')
+  if (tvSearch) return tvSearch
   const prompts = document.querySelectorAll('.prompt')
   const open = Array.from(prompts).filter((p) => !p.hasAttribute('inert')).pop()
   if (open) return open
@@ -168,10 +172,10 @@ function handleKeyDown(event) {
   const active = document.activeElement
 
   // Escribiendo en un campo: izquierda/derecha mueven el cursor del texto
-  if (active && isTextInput(active) && (dir === 'left' || dir === 'right')) return
+  if (active && isTextInput(active) && !active.hasAttribute('data-tv-search') && (dir === 'left' || dir === 'right')) return
 
   // Página del video, foco en el video: saltar y pausar
-  if (isPlayerMode() && !getScope().classList?.contains('prompt')) {
+  if (isPlayerMode() && !isTvSearchOpen() && !getScope().classList?.contains('prompt')) {
     const video = getVideo()
     if (dir === 'left') {
       video.currentTime = Math.max(0, video.currentTime - SEEK_SECONDS)
@@ -256,6 +260,11 @@ const isShown = (el) => el instanceof HTMLElement && el.getClientRects().length 
  * @returns {boolean} true si se encargó (el APK entonces no sale de la página)
  */
 function handleBack() {
+  if (isTvSearchOpen()) {
+    closeTvSearch(true)
+    return true
+  }
+
   const player = document.querySelector('.ftVideoPlayer')
   if (!player) return false
 
