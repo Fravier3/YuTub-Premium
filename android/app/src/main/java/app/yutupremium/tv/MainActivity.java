@@ -180,6 +180,24 @@ public class MainActivity extends Activity {
     /** Teclas multimedia del control remoto: reproducir/pausar y saltar ±10 s. */
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        // Video a pantalla completa: la página no recibe las teclas, así que OK pausa y ←/→ saltan
+        if (customView != null && event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (event.getKeyCode()) {
+                case KeyEvent.KEYCODE_DPAD_CENTER:
+                case KeyEvent.KEYCODE_ENTER:
+                case KeyEvent.KEYCODE_NUMPAD_ENTER:
+                    runVideo("v.paused ? v.play() : v.pause()");
+                    return true;
+                case KeyEvent.KEYCODE_DPAD_RIGHT:
+                    runVideo("v.currentTime = Math.min(v.duration || Infinity, v.currentTime + " + SEEK_SECONDS + ")");
+                    return true;
+                case KeyEvent.KEYCODE_DPAD_LEFT:
+                    runVideo("v.currentTime = Math.max(0, v.currentTime - " + SEEK_SECONDS + ")");
+                    return true;
+                default:
+                    break;
+            }
+        }
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             switch (event.getKeyCode()) {
                 case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
