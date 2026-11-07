@@ -60,6 +60,17 @@
           @player-reload-requested="onSabrReloadRequested"
         />
         <div
+          v-if="backgroundAudioController && !continuousAudioReady"
+          class="backgroundAudioBar"
+        >
+          <button
+            type="button"
+            @click="activateContinuousAudio"
+          >
+            {{ $t('Activate Continuous Audio') }}
+          </button>
+        </div>
+        <div
           v-show="continuousAudioReady"
           class="backgroundAudioBar"
         >

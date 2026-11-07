@@ -36,7 +36,8 @@ async function setup() {
   document.body = { appendChild() {} }
   document.createElement = () => audio
   globalThis.document = document
-  globalThis.window = { HTMLAudioElement: Media }
+  globalThis.window = new EventTarget()
+  window.HTMLAudioElement = Media
   const mediaSession = { setActionHandler() {} }
   Object.defineProperty(globalThis, 'navigator', { value: { mediaSession }, configurable: true })
   globalThis.MediaMetadata = class { constructor(data) { Object.assign(this, data) } }
@@ -50,7 +51,7 @@ async function setup() {
     url: 'https://example.com/audio.mp4', host: { appendChild() {} }, title: 'Song',
     isAudioOnly: () => audioOnly, onReady: value => { ready = value }, onEnded: () => { ended++ }
   })
-  return { audio, video, document, controller, ready: () => ready, ended: () => ended, setAudioOnly: value => { audioOnly = value } }
+  return { audio, video, document, controller, setVideoState: mod.setVideoMediaSessionPlaybackState, ready: () => ready, ended: () => ended, setAudioOnly: value => { audioOnly = value } }
 }
 const tick = () => new Promise(resolve => setImmediate(resolve))
 test('same audible stream survives minimizing and resynchronizes on return', async () => {
@@ -71,6 +72,7 @@ test('same audible stream survives minimizing and resynchronizes on return', asy
   assert.equal(x.video.paused, false)
   assert.equal(x.video.currentTime, 65)
   x.video.pause()
+  await new Promise(resolve => setTimeout(resolve, 350))
   assert.equal(x.audio.paused, true)
   x.controller.dispose()
   assert.equal(x.video.muted, false)
@@ -102,5 +104,44 @@ test('autoplay rejection restores video audio and explicit activation can retry'
   x.audio.dispatchEvent(new Event('ended'))
   x.audio.dispatchEvent(new Event('ended'))
   assert.equal(x.ended(), 1)
+  x.controller.dispose()
+})
+
+test('iOS may pause video before visibilitychange without pausing the audio stream', async () => {
+  const x = await setup()
+  await x.video.play(); await tick()
+  // WebKit can emit this while hidden=false and hasFocus() still returns true.
+  x.video.pause()
+  assert.equal(x.audio.paused, false)
+  x.document.hidden = true
+  x.document.dispatchEvent(new Event('visibilitychange'))
+  await new Promise(resolve => setTimeout(resolve, 350))
+  assert.equal(x.audio.paused, false)
+  assert.equal(navigator.mediaSession.playbackState, 'playing')
+  x.controller.dispose()
+})
+
+test('visual pause/end cannot overwrite an audible Media Session', async () => {
+  const x = await setup()
+  await x.video.play(); await tick()
+  x.setVideoState('paused')
+  assert.equal(navigator.mediaSession.playbackState, 'playing')
+  x.setVideoState('none')
+  assert.equal(navigator.mediaSession.playbackState, 'playing')
+  x.audio.pause()
+  x.setVideoState('paused')
+  assert.equal(navigator.mediaSession.playbackState, 'paused')
+  x.controller.dispose()
+})
+
+test('Play gesture starts native audio before the visual player consumes the click', async () => {
+  const x = await setup()
+  const playButton = { getAttribute: () => 'Play' }
+  const event = new Event('click')
+  Object.defineProperty(event, 'target', { value: { closest: () => playButton } })
+  x.document.dispatchEvent(event)
+  assert.equal(x.audio.paused, false)
+  await tick()
+  assert.equal(x.ready(), true)
   x.controller.dispose()
 })

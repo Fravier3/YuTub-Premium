@@ -26,7 +26,14 @@ export function isBackgroundAudioSupported() {
   return typeof document !== 'undefined' && 'HTMLAudioElement' in window
 }
 
-export const isBackgroundAudioActive = () => active
+export const isBackgroundAudioActive = () => active && !!audio && !audio.paused && !audio.ended
+
+/** A suspended visual track cannot overwrite a still-playing native audio session. */
+export function setVideoMediaSessionPlaybackState(state) {
+  if (!('mediaSession' in navigator)) return
+  if (state !== 'playing' && isBackgroundAudioActive()) return
+  navigator.mediaSession.playbackState = state
+}
 
 /**
  * Elige el audio AAC (mp4) de mayor calidad: es lo único que iOS reproduce siempre.
@@ -125,10 +132,16 @@ export function connectContinuousAudio(video, { url, host, title, artist, artwor
   let syncing = false
   let ended = false
   let resumeVisual = false
+  let backgroundSuspended = document.hidden
+  let videoPauseTimer
   const removers = []
-  const listen = (target, event, handler) => {
-    target.addEventListener(event, handler)
-    removers.push(() => target.removeEventListener(event, handler))
+  const listen = (target, event, handler, options) => {
+    target.addEventListener(event, handler, options)
+    removers.push(() => target.removeEventListener(event, handler, options))
+  }
+  const cancelVideoPause = () => {
+    clearTimeout(videoPauseTimer)
+    videoPauseTimer = undefined
   }
   const seek = (target, time) => {
     if (!Number.isFinite(time)) return
@@ -177,6 +190,7 @@ export function connectContinuousAudio(video, { url, host, title, artist, artwor
       active = true
       setMediaSession(el, { title, artist, artwork })
       onReady(true)
+      if (video.paused && !isAudioOnly()) playVisual()
       return true
     } catch {
       if (!disposed) {
@@ -189,9 +203,16 @@ export function connectContinuousAudio(video, { url, host, title, artist, artwor
     }
   }
   listen(el, 'loadedmetadata', () => seek(el, video.currentTime))
-  listen(video, 'play', () => { if (!syncing) start() })
+  listen(video, 'play', () => { cancelVideoPause(); if (!syncing) start() })
   listen(video, 'pause', () => {
-    if (!video.ended && !document.hidden && document.hasFocus() && !isAudioOnly() && !starting) el.pause()
+    cancelVideoPause()
+    if (!ownsAudio || starting || video.ended || isAudioOnly()) return
+    // WebKit may pause the visual track BEFORE updating document.hidden/focus.
+    // Allow the lifecycle event to cancel this; an explicit foreground pause
+    // still pauses the audio if the page stays visible and focused.
+    videoPauseTimer = setTimeout(() => {
+      if (!disposed && !document.hidden && !backgroundSuspended && document.hasFocus() && video.paused && !video.ended && !isAudioOnly()) el.pause()
+    }, 300)
   })
   listen(video, 'seeking', () => {
     if (!ownsAudio || syncing || document.hidden) return
@@ -234,12 +255,21 @@ export function connectContinuousAudio(video, { url, host, title, artist, artwor
     onEnded()
   })
   listen(el, 'error', fail)
+  listen(window, 'blur', () => {
+    backgroundSuspended = true
+    cancelVideoPause()
+  })
+  listen(window, 'focus', () => { backgroundSuspended = false })
   listen(document, 'visibilitychange', () => {
+    backgroundSuspended = document.hidden
+    cancelVideoPause()
     if (!ownsAudio) return
     if (document.hidden) {
       resumeVisual = !el.paused && !el.ended
       // Pause only the visual track, leaving the same native audio running.
       video.pause()
+      // Keep the lock-screen session attached to the audio, not the paused video.
+      if (!el.paused) setMediaSession(el, { title, artist, artwork })
     } else if (resumeVisual && !el.paused && !el.ended) {
       playVisual()
     }
@@ -252,7 +282,8 @@ export function connectContinuousAudio(video, { url, host, title, artist, artwor
     const label = control?.getAttribute('aria-label') ?? ''
     if (video.contains(target) || /^(play|reproducir)(\b|$)/i.test(label)) start()
   }
-  listen(document, 'click', gesture)
+  // Capture the Play label before Shaka changes it to Pause during the click.
+  listen(document, 'click', gesture, { capture: true })
   if (!video.paused && !video.ended) start()
 
   return {
@@ -266,6 +297,7 @@ export function connectContinuousAudio(video, { url, host, title, artist, artwor
     },
     dispose: () => {
       disposed = true
+      cancelVideoPause()
       removers.forEach(remove => remove())
       stopBackgroundAudio()
       video.muted = originalMuted
