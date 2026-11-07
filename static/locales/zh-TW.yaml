@@ -368,7 +368,7 @@ Settings:
     Expand Side Bar by Default: 預設展開側邊欄
     Disable Smooth Scrolling: 停用平滑捲動
     Hide Side Bar Labels: 隱藏側邊欄標籤
-    Hide Yutu Premium Header Logo: 隱藏 Yutu Premium 標題圖示
+    Hide FreeTube Header Logo: 隱藏 Yutu Premium 標題圖示
   Player Settings:
     Player Settings: '播放器'
     Play Next Video: '自動播放建議影片'
@@ -483,7 +483,7 @@ Settings:
     Import History: 匯入觀看紀錄
     Export NewPipe: 匯出 NewPipe
     Export YouTube: 匯出 YouTube
-    Export Yutu Premium: 匯出 Yutu Premium
+    Export FreeTube: 匯出 Yutu Premium
     Export Subscriptions: 匯出訂閱
     Import Subscriptions: 匯入訂閱
     Select Export Type: 選取匯出類型
@@ -497,7 +497,7 @@ Settings:
     Subscription File: 訂閱檔案
     History File: 歷史紀錄檔案
     Playlist File: 播放清單檔案
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: 匯出較舊 Yutu Premium 版本的播放清單
       Tooltip: "此選項將所有播放清單中的影片匯出到名為「我的最愛」的播放清單中。\n如何匯出和匯入舊版 Yutu Premium 播放清單中的影片：\n1. 啟用此選項後匯出播放清單。\n2. 使用「隱私設定」下的「刪除所有播放清單」選項刪除所有現有播放清單。\n3. 啟動舊版的 Yutu Premium 並導入匯出的播放清單。”"
     Search history file: 搜尋歷史紀錄檔案
@@ -649,7 +649,7 @@ About:
   Donate: 捐款
   Help: 說明
   these people and projects: 這些人與專案
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium 誕生都要感謝{creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium 誕生都要感謝{creditsPageLink}
   Translate: 翻譯
   room rules: 聊天室規則
   Please read the {roomRulesLink}: 請閱讀{roomRulesLink}
@@ -658,7 +658,7 @@ About:
   Please check for duplicates before posting: 提交前請檢查有無重複的問題
   GitHub issues: GitHub 問題追蹤器
   Report a problem: 回報問題
-  Yutu Premium Wiki: Yutu Premium Wiki
+  FreeTube Wiki: Yutu Premium Wiki
   GitHub releases: GitHub 版本
   Downloads / Changelog: 下載 / 變更紀錄
   Source code: 原始碼
@@ -707,7 +707,7 @@ Channel:
     votes: '{votes} 票'
     Reveal Answers: 揭露答案
     Hide Answers: 隱藏答案
-    Video hidden by Yutu Premium: 由 Yutu Premium 隱藏的影片
+    Video hidden by FreeTube: 由 Yutu Premium 隱藏的影片
     Viewing Posts Only Supported By Invidious: 僅 Invidious 支援檢視貼文。前往頻道的社群分頁即可檢視其中的內容而不需使用 Invidious。
     View Full Post: 檢視完整貼文
   Live:

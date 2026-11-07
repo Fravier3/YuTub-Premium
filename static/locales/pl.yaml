@@ -368,7 +368,7 @@ Settings:
     Expand Side Bar by Default: Domyślnie rozwiń pasek boczny
     Disable Smooth Scrolling: Wyłącz płynne przewijanie
     Hide Side Bar Labels: Schowaj etykiety paska bocznego
-    Hide Yutu Premium Header Logo: Schowaj logo Yutu Premium z paska górnego
+    Hide FreeTube Header Logo: Schowaj logo Yutu Premium z paska górnego
   Player Settings:
     Player Settings: 'Odtwarzacz'
     Play Next Video: 'Automatycznie otwórz polecane wideo'
@@ -481,7 +481,7 @@ Settings:
     Profile object has insufficient data, skipping item: Obiekt profilu ma niewystarczającą ilość danych. Pomijam element
     Export History: Wyeksportuj historię
     Import History: Zaimportuj historię
-    Export Yutu Premium: Eksport do Yutu Premium
+    Export FreeTube: Eksport do Yutu Premium
     Export YouTube: Eksport do YouTube
     Export NewPipe: Eksport do NewPipe
     Export Subscriptions: Wyeksportuj subskrypcje
@@ -497,7 +497,7 @@ Settings:
     History File: Plik historii
     Playlist File: Plik playlist
     Subscription File: Plik subskrypcji
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Tooltip: "Opcja ta wyeksportuje filmy ze wszystkich playlist, jako jedną playlistę o nazwie „Ulubione”.\nOto jak wyeksportować i zaimportować filmy z playlist do starszych wersji Yutu Premium:\n1. Wyeksportuj swoje playlisty z tą opcją włączoną.\n 2. Usuń wszystkie swoje istniejące playlisty przy użyciu opcji „Usuń wszystkie playlisty” z ustawień prywatności.\n3. Uruchom starszą wersję Yutu Premium, następnie zaimportuj wyeksportowane playlisty."
       Label: Wyeksportuj playlisty dla starszych wersji Yutu Premium
     Search history file: Plik historii wyszukiwania
@@ -657,7 +657,7 @@ About:
   Please check for duplicates before posting: Proszę poszukać duplikatów przed wysłaniem
   GitHub issues: problemy na GitHub
   Report a problem: Zgłoś problem
-  Yutu Premium Wiki: Wiki Yutu Premium
+  FreeTube Wiki: Wiki Yutu Premium
   GitHub releases: Wydania na GitHub
   Downloads / Changelog: Wydania / Lista zmian
   Source code: Kod źródłowy
@@ -665,7 +665,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: Licencjonowany na {licenseLink}
   Please read the {roomRulesLink}: Proszę przeczytać {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium powstał dzięki {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium powstał dzięki {creditsPageLink}
 Channel:
   Subscribe: 'Zasubskrybuj'
   Unsubscribe: 'Odsubskrybuj'
@@ -708,7 +708,7 @@ Channel:
     votes: '{votes} głosów'
     Reveal Answers: Pokaż odpowiedzi
     Hide Answers: Schowaj odpowiedzi
-    Video hidden by Yutu Premium: Film schowany przez Yutu Premium
+    Video hidden by FreeTube: Film schowany przez Yutu Premium
     View Full Post: Zobacz całe wpisy
     Viewing Posts Only Supported By Invidious: Wyświetlanie postów jest wspierane tylko przez Invidious. Możesz zobaczyć zawartość nie korzystając z Invidious, przechodząc do karty „Społeczność” danego kanału.
   Live:

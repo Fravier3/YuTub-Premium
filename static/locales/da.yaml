@@ -363,7 +363,7 @@ Settings:
     Disable Smooth Scrolling: Deaktivér jævn rulning
     Expand Side Bar by Default: Udvid sidebjælken som standard
     Hide Side Bar Labels: Skjul sidebjælkens etiketter
-    Hide Yutu Premium Header Logo: Skjul Yutu Premium's header-logo
+    Hide FreeTube Header Logo: Skjul Yutu Premium's header-logo
   Player Settings:
     Player Settings: 'Afspiller'
     Play Next Video: 'Auto-afspil anbefalede videoer'
@@ -456,7 +456,7 @@ Settings:
     Select Export Type: 'Vælg eksporttype'
     Import Subscriptions: 'Importér abonnementer'
     Export Subscriptions: 'Eksportér abonnementer'
-    Export Yutu Premium: 'Eksportér Yutu Premium'
+    Export FreeTube: 'Eksportér Yutu Premium'
     Export YouTube: 'Eksportér YouTube'
     Export NewPipe: 'Eksportér NewPipe'
     Import History: 'Importér historik'
@@ -484,7 +484,7 @@ Settings:
     Playlist File: Playlistefil
 
     Subscription File: Abonnementsfil
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Eksportér playlister til ældre FreeTube-versioner
       Tooltip: "Denne indstilling eksporterer videoer fra alle playlister til én playliste kaldet \"Favoritter\".\nSådan eksporterer og importerer du playlister til en ældre version af Yutu Premium:\n1. Eksportér dine playlister med denne indstilling aktiveret.\n2. Slet alle eksisterende playlister via \"Fjern alle playlister\" under Privatlivsindstillinger.\n3. Start den ældre version af Yutu Premium og importér de eksporterede playlister."
   Proxy Settings:
@@ -611,7 +611,7 @@ About:
   GitHub issues: GitHub-problemer
   Report a problem: Rapportér et problem
   FAQ: OSS
-  Yutu Premium Wiki: Yutu Premium Wiki
+  FreeTube Wiki: Yutu Premium Wiki
   Help: Hjælp
   GitHub releases: GitHub-udgivelser
   Downloads / Changelog: Downloads / Ændringslog
@@ -695,7 +695,7 @@ Channel:
   Posts:
     Hide Answers: Skjul svar
     This channel currently does not have any posts: Denne kanal har i øjeblikket ingen opslag
-    Video hidden by Yutu Premium: Video skjult af Yutu Premium
+    Video hidden by FreeTube: Video skjult af Yutu Premium
     votes: '{votes} stemmer'
     Reveal Answers: Vis svar
     View Full Post: Se hele opslaget

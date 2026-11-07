@@ -294,7 +294,7 @@ Settings:
     Secondary Color Theme: 'Sekundærfargetema'
         #* Main Color Theme
     Hide Side Bar Labels: Skjul sidefeltetikettar
-    Hide Yutu Premium Header Logo: Skjul FreeTube-tittellogo
+    Hide FreeTube Header Logo: Skjul FreeTube-tittellogo
   Player Settings:
     Player Settings: 'Videoavspelingsinnstillingar'
     Play Next Video: 'Spel av neste video'
@@ -386,7 +386,7 @@ Settings:
     Select Export Type: 'Vel eksporttype'
     Import Subscriptions: 'Importer abonnement'
     Export Subscriptions: 'Eksporter abonnement'
-    Export Yutu Premium: 'Eksporter Yutu Premium'
+    Export FreeTube: 'Eksporter Yutu Premium'
     Export YouTube: 'Eksporter YouTube'
     Export NewPipe: 'Eksporter NewPipe'
     Import History: 'Importer historikk'
@@ -473,7 +473,7 @@ About:
   Downloads / Changelog: 'Nedlastingar / Endringslogg'
   GitHub releases: 'GitHub-utgjevingar'
   Help: 'Hjelp'
-  Yutu Premium Wiki: 'FreeTube-wiki'
+  FreeTube Wiki: 'FreeTube-wiki'
   FAQ: 'Ofte stilte spørsmål'
   Report a problem: 'Rapporter eit problem'
   GitHub issues: 'GitHub-problemsporar'

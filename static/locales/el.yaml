@@ -370,7 +370,7 @@ Settings:
     Expand Side Bar by Default: Ανάπτυξη της πλευρικής μπάρας από προεπιλογή
     Disable Smooth Scrolling: Απενεργοποίηση ομαλής κύλισης
     Hide Side Bar Labels: Απόκρυψη ετικετών πλευρικής μπάρας
-    Hide Yutu Premium Header Logo: Απόκρυψη Λογότυπου Κεφαλίδας Yutu Premium
+    Hide FreeTube Header Logo: Απόκρυψη Λογότυπου Κεφαλίδας Yutu Premium
   Player Settings:
     Player Settings: 'Πρόγραμμα αναπαραγωγής'
     Play Next Video: 'Αναπαραγωγή Προτεινόμενου Βίντεο'
@@ -469,7 +469,7 @@ Settings:
     Select Export Type: 'Επιλογή Τρόπου Εξαγωγής'
     Import Subscriptions: 'Εισαγωγή Συνδρομών'
     Export Subscriptions: 'Εξαγωγή Συνδρομών'
-    Export Yutu Premium: 'Εξαγωγή για Yutu Premium'
+    Export FreeTube: 'Εξαγωγή για Yutu Premium'
     Export YouTube: 'Εξαγωγή για Youtube'
     Export NewPipe: 'Εξαγωγή για NewPipe'
     Import History: 'Εισαγωγή Ιστορικού'
@@ -497,7 +497,7 @@ Settings:
     History File: Αρχείο Ιστορικού
     Playlist File: Αρχείο Λίστας Αναπαραγωγής
 
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Εξαγωγή λιστών αναπαραγωγής για παλαιότερες εκδόσεις Yutu Premium
       Tooltip: "Αυτή η επιλογή εξάγει βίντεο από όλες τις λίστες αναπαραγωγής σε μία λίστα αναπαραγωγής με το όνομα “Αγαπημένα”.\nΠώς να εξάγετε & να εισάγετε βίντεο σε λίστες αναπαραγωγής για μια παλαιότερη έκδοση του Yutu Premium:\n1. Εξάγετε τις λίστες αναπαραγωγής σας με ενεργοποιημένη αυτή την επιλογή.\n 2. Διαγράψτε όλες τις υπάρχουσες λίστες αναπαραγωγής σας χρησιμοποιώντας την επιλογή Κατάργηση όλων των λιστών αναπαραγωγής στις Ρυθμίσεις απορρήτου.\n 3. Εκκινήστε την παλαιότερη έκδοση του Yutu Premium και εισαγάγετε τις εξαχθείσες λίστες αναπαραγωγής.\""
     Search history file: Αρχείο ιστορικού αναζήτησης
@@ -644,7 +644,7 @@ About:
   GitHub issues: Προβλήματα GitHub
   Report a problem: Αναφορά προβλήματος
   FAQ: Συχνές ερωτήσεις
-  Yutu Premium Wiki: Yutu Premium βίκι
+  FreeTube Wiki: Yutu Premium βίκι
   Help: Βοήθεια
   GitHub releases: Κυκλοφορίες GitHub
   Downloads / Changelog: Λήψεις / Αρχείο καταγραφής αλλαγών
@@ -654,7 +654,7 @@ About:
   AGPLv3: 'AGPLv3'
   Licensed under the {licenseLink}: Διατίθεται υπό την άδεια {licenseLink}
   Please read the {roomRulesLink}: Παρακαλώ διαβάστε τους {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Το Yutu Premium υποστηρίζεται από τους {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Το Yutu Premium υποστηρίζεται από τους {creditsPageLink}
 Profile:
   Profile Select: 'Επιλογή Προφίλ'
   All Channels: 'Όλα τα κανάλια'
@@ -738,7 +738,7 @@ Channel:
     Hide Answers: Απόκρυψη Απαντήσεων
     votes: '{votes} ψήφοι'
     View Full Post: Προβολή πλήρους δημοσίευσης
-    Video hidden by Yutu Premium: Βίντεο κρυμμένο από Yutu Premium
+    Video hidden by FreeTube: Βίντεο κρυμμένο από Yutu Premium
     Viewing Posts Only Supported By Invidious: Η προβολή αναρτήσεων υποστηρίζεται μόνο από το Invidious. Μεταβείτε στην καρτέλα της κοινότητας ενός καναλιού για να δείτε το περιεχόμενο εκεί χωρίς το Invidious.
   Live:
     Live: Ζωντανά

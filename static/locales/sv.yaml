@@ -374,7 +374,7 @@ Settings:
     Expand Side Bar by Default: Visa sidpanelen utfälld som standard
     Disable Smooth Scrolling: Inaktivera mjuk rullning
     Hide Side Bar Labels: Dölj etiketter i sidpanelen
-    Hide Yutu Premium Header Logo: Dölj FreeTube-logotypen i sidhuvudet
+    Hide FreeTube Header Logo: Dölj FreeTube-logotypen i sidhuvudet
   Player Settings:
     Player Settings: 'Spelare'
     Play Next Video: 'Spela upp rekommenderade videor automatiskt'
@@ -475,7 +475,7 @@ Settings:
     Select Export Type: 'Välj exporttyp'
     Import Subscriptions: 'Importera prenumerationer'
     Export Subscriptions: 'Exportera prenumerationer'
-    Export Yutu Premium: 'Exportera i FreeTube-format'
+    Export FreeTube: 'Exportera i FreeTube-format'
     Export YouTube: 'Exportera i YouTube-format'
     Export NewPipe: 'Exportera i NewPipe-format'
     Import History: 'Importera historik'
@@ -503,7 +503,7 @@ Settings:
     Import Playlists: Importera spellistor
     Playlist insufficient data: Spellistan ”{playlist}” saknar nödvändiga uppgifter och hoppas över
 
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Exportera spellistor för äldre versioner av Yutu Premium
       Tooltip: "Det här alternativet exporterar videor från alla spellistor till en spellista med namnet \"Favoriter\".\nSå här exporterar och importerar du videor i spellistor för en äldre version av Yutu Premium:\n1. Exportera dina spellistor med det här alternativet aktiverat.\n2. Ta bort alla dina befintliga spellistor med alternativet Ta bort alla spellistor under Sekretessinställningar.\n3. Starta den äldre versionen av Yutu Premium och importera de exporterade spellistorna.\""
     Search history file: Sökhistorikfil
@@ -657,7 +657,7 @@ About:
   GitHub issues: GitHub-ärenden
   Report a problem: Rapportera ett problem
   FAQ: Frågor och svar
-  Yutu Premium Wiki: FreeTubes wiki
+  FreeTube Wiki: FreeTubes wiki
   Help: Hjälp
   GitHub releases: GitHub-utgåvor
   Downloads / Changelog: Nedladdningar / ändringslogg
@@ -667,7 +667,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: Licensierat enligt {licenseLink}
   Please read the {roomRulesLink}: Läs {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium möjliggörs av {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium möjliggörs av {creditsPageLink}
 Profile:
   Profile Select: 'Välj profil'
   All Channels: 'Alla kanaler'
@@ -754,7 +754,7 @@ Channel:
     Reveal Answers: Visa svar
     Hide Answers: Dölj svar
     View Full Post: Visa hela inlägget
-    Video hidden by Yutu Premium: Videon har dolts av Yutu Premium
+    Video hidden by FreeTube: Videon har dolts av Yutu Premium
     Viewing Posts Only Supported By Invidious: Visa Inlägg stöds endast av Invidious. Gå till en kanals community-flik för att se innehåll där utan Invidious.
   Shorts:
     This channel does not currently have any shorts: Den här kanalen har för närvarande inga Shorts-videor

@@ -366,7 +366,7 @@ Settings:
     Expand Side Bar by Default: Zijbalk standaard uitklappen
     Disable Smooth Scrolling: Vloeiend scrollen uitschakelen
     Hide Side Bar Labels: Labels in zĳbalk verbergen
-    Hide Yutu Premium Header Logo: Yutu Premium headerlogo verbergen
+    Hide FreeTube Header Logo: Yutu Premium headerlogo verbergen
   Player Settings:
     Player Settings: 'Speler'
     Play Next Video: 'Aanbevolen video''s automatisch afspelen'
@@ -468,7 +468,7 @@ Settings:
     Import History: Geschiedenis importeren
     Export NewPipe: NewPipe exporteren
     Export YouTube: YouTube exporteren
-    Export Yutu Premium: Yutu Premium exporteren
+    Export FreeTube: Yutu Premium exporteren
     Export Subscriptions: Abonnementen exporteren
     Import Subscriptions: Abonnementen importeren
     Select Export Type: Exporteertype selecteren
@@ -488,7 +488,7 @@ Settings:
     Subscription File: Abonnementen­bestand
     History File: Geschiedenis­bestand
     Playlist File: Afspeellĳst­bestand
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Afspeel­lijsten exporteren voor oudere FreeTube-versies
       Tooltip: "Deze optie exporteert video's van alle afspeel­lijsten naar één afspeel­lijst met de naam ‘Favorieten’.\nVideo's exporteren en importeren in afspeel­lijsten voor een oudere versie van Yutu Premium:\n1. Exporteer uw afspeel­lijsten met deze optie ingeschakeld.\n2. Verwijder al uw bestaande afspeel­lijsten met de optie ‘Alle afspeel­lijsten verwijderen’ onder ‘Privacy­instellingen’.\n 3. Start de oudere versie van Yutu Premium en importeer de geëxporteerde afspeel­lijsten."
     Search history file: Zoekgeschiedenisbestand
@@ -625,7 +625,7 @@ About:
   GitHub issues: GitHub-issues
   Report a problem: Probleem melden
   FAQ: Veelgestelde vragen
-  Yutu Premium Wiki: FreeTube-wiki
+  FreeTube Wiki: FreeTube-wiki
   Help: Hulp
   GitHub releases: GitHub-uitgaven
   Downloads / Changelog: Downloads en wijzigings­logboek
@@ -677,7 +677,7 @@ Channel:
     Hide Answers: Antwoorden verbergen
     votes: '{votes} stemmen'
     This channel currently does not have any posts: Dit kanaal heeft momenteel geen posts
-    Video hidden by Yutu Premium: Video verborgen door Yutu Premium
+    Video hidden by FreeTube: Video verborgen door Yutu Premium
     Viewing Posts Only Supported By Invidious: Posts bekijken wordt alleen ondersteund door Invidious. Ga naar het community-tabblad van een kanaal om content te bekijken zonder Invidious.
     View Full Post: Volledige Post Weergeven
   Releases:

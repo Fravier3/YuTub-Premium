@@ -371,7 +371,7 @@ Settings:
     Disable Smooth Scrolling: Slå av jevn skrolling
     Expand Side Bar by Default: Utvidet sidefelt som standard
     Hide Side Bar Labels: Skjul etiketter i sidefeiltet
-    Hide Yutu Premium Header Logo: Skjul FreeTubes tittel og logo
+    Hide FreeTube Header Logo: Skjul FreeTubes tittel og logo
   Player Settings:
     Player Settings: 'Videoavspiller'
     Play Next Video: 'Spill av neste anbefalte video automatisk'
@@ -487,7 +487,7 @@ Settings:
     Import History: Importer historikk
     Export NewPipe: Eksporter NewPipe
     Export YouTube: Eksporter YouTube
-    Export Yutu Premium: Eksporter Yutu Premium
+    Export FreeTube: Eksporter Yutu Premium
     Export Subscriptions: Eksporter abonnementer
     Import Subscriptions: Importer abonnementer
     Select Export Type: Velg eksporttype
@@ -500,7 +500,7 @@ Settings:
     Import Playlists: Importer spillelister
     All playlists has been successfully exported: Alle spillelister har blitt eksportert
     Playlist insufficient data: Utilstrekkelig data i «{playlist}»-spillelisten. Hopper over elementet
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Eksporter spillelister for eldre FreeTube-versjoner
       Tooltip: "Denne funksjonen eksporterer videoer fra alle spillelister inn i en spilleliste med navnet «Favoritter».\nFor å eksportere og importere videoer i spillelister i eldre versjoner av Yutu Premium:\n1.) Eksporter spillelistene dine med denne funksjonen skrudd på.\n2.) Slett alle spillelistene dine med «Fjern alle spillelister» under «Personvern».\n3.) Start opp den eldre versjonen av Yutu Premium og importer de eksporterte spillelistene dine."
     Search history file: Søkshistorikkfil
@@ -657,7 +657,7 @@ About:
   Credits: Bidragsytere
   room rules: rommreglene
   GitHub issues: GitHub-problemsporer
-  Yutu Premium Wiki: FreeTube-wiki
+  FreeTube Wiki: FreeTube-wiki
   GitHub releases: GitHub-utgivelser
   Beta: Beta
   Chat on Matrix: Snakk med oss på Matrix
@@ -665,7 +665,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: Lisensiert under {licenseLink}
   Please read the {roomRulesLink}: Les {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium blir til takket være {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium blir til takket være {creditsPageLink}
 Channel:
   Subscribe: 'Abonner'
   Unsubscribe: 'Opphev abonnement'
@@ -708,7 +708,7 @@ Channel:
     Hide Answers: Skjul svar
     votes: '{votes} stemmer'
     View Full Post: Se hele innlegget
-    Video hidden by Yutu Premium: Video skjult av Yutu Premium
+    Video hidden by FreeTube: Video skjult av Yutu Premium
     Viewing Posts Only Supported By Invidious: Innlegg kan bare vises gjennom Invidious. Gå til kanalens fellesskapside for å se innholdet der uten Invidious.
     Reveal Answers: Vis svar
   Shorts:

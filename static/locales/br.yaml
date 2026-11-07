@@ -324,7 +324,7 @@ Settings:
     Disable Smooth Scrolling: 'Diweredekaat an dibunañ flour'
     UI Scale: 'Skeul an UI'
     Hide Side Bar Labels: 'Kuzhat tikedennoù ar varrenn gostez'
-    Hide Yutu Premium Header Logo: 'Kuzhat logo Yutu Premium an talbenn'
+    Hide FreeTube Header Logo: 'Kuzhat logo Yutu Premium an talbenn'
     Base Theme:
       Base Theme: 'Tem diazez'
       Black: 'Du'
@@ -604,19 +604,19 @@ Settings:
     Playlist File: 'Restr ar roll-videoioù'
     Check for Legacy Subscriptions: ''
     Export Subscriptions: 'Ezporzhiañ ar c''houmanantoù'
-    Export Yutu Premium: 'Ezporzhiañ Yutu Premium'
+    Export FreeTube: 'Ezporzhiañ Yutu Premium'
     Export YouTube: 'Ezporzhiañ YouTube'
     Export NewPipe: 'Ezporzhiañ NewPipe'
     Import History: 'Enporzhiañ ar roll istor'
     Export History: 'Ezporzhiañ ar roll istor'
     Import Playlists: 'Enporzhiañ rolloù-videoioù'
     Export Playlists: 'Ezporzhiañ rolloù-videoioù'
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: 'Ezporzhiañ rolloù-videoioù evit stummoù kozh Yutu Premium'
       # |- = Keep newlines, No newline at end
       Tooltip: |-
         An dibarzh-mañ a ezporzh videoioù an holl rolloù-videoioù e-barzh ur roll-videoioù anvet « Favorites ».
-        Penaos ezporzhiañ & enporzhiañ videoioù e-barzh rolloù-videoioù gant stummoù kozh Yutu Premium :
+        Penaos ezporzhiañ & enporzhiañ videoioù e-barzh rolloù-videoioù gant stummoù kozh FreeTube :
         1. Ezporzhiañ ho rolloù-videoioù gant an dibarzh-mañ gweredekaet.
         2. Dilemel an holl rolloù-videoioù en ur implijout an dibarzh Dilemel an holl rolloù-videoioù dindan Prevezded.
         3. Loc'hañ stumm kozh Yutu Premium hag enporzhiañ ar rolloù-videoioù ezporzhiet."
@@ -717,7 +717,7 @@ About:
   Downloads / Changelog: 'Pellgargañ / Deizlevr ar cheñchamantoù'
   GitHub releases: 'Ermaeziadennoù GitHub'
   Help: 'Skoazell'
-  Yutu Premium Wiki: 'Wiki Yutu Premium'
+  FreeTube Wiki: 'Wiki Yutu Premium'
   FAQ: 'FAG'
   Discussions: 'Kaozeadennoù'
   Report a problem: 'Menegiñ ur gudenn'
@@ -734,7 +734,7 @@ About:
 
   Licensed under the {licenseLink}: Dindan an aotre-implijout {licenseLink}
   Please read the {roomRulesLink}: Mar-plij, lennit {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Bez ez eus deus Yutu Premium a-drugarez da {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Bez ez eus deus Yutu Premium a-drugarez da {creditsPageLink}
 Profile:
   Profile Settings: 'Profil'
   Toggle Profile List: 'Diskouez roll ar profiloù'
@@ -832,7 +832,7 @@ Channel:
     View Full Post: 'Gwelet ar pennad a-bezh'
     Reveal Answers: 'Diskouez ar respontoù'
     Hide Answers: 'Kuzhat ar respontoù'
-    Video hidden by Yutu Premium: 'Video kuzhet gant Yutu Premium'
+    Video hidden by FreeTube: 'Video kuzhet gant Yutu Premium'
     Viewing Posts Only Supported By Invidious: 'Posupl eo gwelet ar pennadoù gant Invidious hepken. Kit war ivinell kumuniezh ur chadenn evit gwelet he fennadoù hep Invidious.'
   Home:
     Home: Degemer

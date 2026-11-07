@@ -368,7 +368,7 @@ Settings:
     Expand Side Bar by Default: Étendre la barre latérale par défaut
     Disable Smooth Scrolling: Désactiver le défilement fluide
     Hide Side Bar Labels: Masquer les étiquettes dans la barre latérale
-    Hide Yutu Premium Header Logo: Masquer le logo Yutu Premium dans l’en-tête
+    Hide FreeTube Header Logo: Masquer le logo Yutu Premium dans l’en-tête
   Player Settings:
     Player Settings: 'Lecteur'
     Play Next Video: 'Lecture automatique des vidéos recommandées'
@@ -474,7 +474,7 @@ Settings:
     Import History: Importer l’historique
     Export NewPipe: Export NewPipe
     Export YouTube: Export YouTube
-    Export Yutu Premium: Export Yutu Premium
+    Export FreeTube: Export Yutu Premium
     Export Subscriptions: Exporter les abonnements
     Import Subscriptions: Importer les abonnements
     Select Export Type: Sélectionner le type d'exportation
@@ -497,7 +497,7 @@ Settings:
     History File: Fichier d'historique
     Subscription File: Fichier d'abonnements
     Playlist File: Fichier de playlists
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Tooltip: "Cette option permet d'exporter les vidéos de toutes les listes de lecture vers une seule liste de lecture nommée « Favorites ».\nComment exporter et importer des vidéos dans des sélections pour une ancienne version de Yutu Premium :\n 1. Exportez vos sélections avec cette option activée.\n2. Supprimez toutes vos sélections existantes à l'aide de l'option Supprimer toutes les sélections sous Paramètres de confidentialité.\n3. Lancez l'ancienne version de Yutu Premium et importez les listes de lecture exportées. »"
       Label: Exportation des listes de lecture pour les anciennes versions de Yutu Premium
     Search history file: Fichier d'historique des recherches
@@ -658,14 +658,14 @@ About:
   room rules: règles du salon
   Please check for duplicates before posting: Veuillez vérifier s'il y a des doublons avant de publier
   GitHub issues: Les problèmes identifiés par la communauté sur GitHub
-  Yutu Premium Wiki: Wiki de Yutu Premium
+  FreeTube Wiki: Wiki de Yutu Premium
   GitHub releases: Versions GitHub
   Downloads / Changelog: Téléchargements / Journal des modifications
   Discussions: Discussions
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: Sous licence {licenseLink}
   Please read the {roomRulesLink}: Veuillez lire les {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium est rendu possible grâce à {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium est rendu possible grâce à {creditsPageLink}
 Channel:
   Subscribe: 'S’abonner'
   Unsubscribe: 'Se désabonner'
@@ -708,7 +708,7 @@ Channel:
     votes: '{votes} votes'
     Reveal Answers: Afficher les réponses
     Hide Answers: Masquer les réponses
-    Video hidden by Yutu Premium: Vidéo cachée par Yutu Premium
+    Video hidden by FreeTube: Vidéo cachée par Yutu Premium
     View Full Post: Voir le message complet
     Viewing Posts Only Supported By Invidious: L'affichage des messages n'est possible qu'avec Indivious. Allez dans l'onglet communauté de la chaîne pour visualiser le contenu sans Indivious.
   Live:

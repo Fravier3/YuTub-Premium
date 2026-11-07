@@ -287,7 +287,7 @@ Settings:
     Disable Smooth Scrolling: Desactivar desplazamiento suave
     Expand Side Bar by Default: Expandir la barra lateral por defecto
     Hide Side Bar Labels: Esconder las etiquetas de la barra lateral
-    Hide Yutu Premium Header Logo: Ocultar el logo de Yutu Premium del encabezado
+    Hide FreeTube Header Logo: Ocultar el logo de Yutu Premium del encabezado
   Player Settings:
     Player Settings: 'Configuraciones del reproductor'
     Play Next Video: 'Reproducción automática de videos recomendados'
@@ -381,7 +381,7 @@ Settings:
     Select Export Type: 'Seleccionar tipo para exportar'
     Import Subscriptions: 'Importar suscripciones'
     Export Subscriptions: 'Exportar suscripciones'
-    Export Yutu Premium: 'Exportar Freetube'
+    Export FreeTube: 'Exportar Freetube'
     Export YouTube: 'Exportar Youtube'
     Export NewPipe: 'Exportar NewPipe'
     Import History: 'Importar historial'
@@ -408,7 +408,7 @@ Settings:
     Unable to write file: No se pudo escribir el archivo
     Unknown data key: Clave de datos desconocida
     Invalid history file: Archivo de historial no válido
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Tooltip: "\"Esta opción exporta los videos de todas las listas de reproducción en una sola lista llamada 'Favoritos'.\nCómo exportar e importar videos en listas de reproducción para una versión anterior de Yutu Premium:\n\nExportá tus listas de reproducción con esta opción activada.\n\nEliminá todas tus listas existentes usando la opción 'Eliminar todas las listas de reproducción' en la sección de Configuración de privacidad.\n\nIniciá la versión anterior de Yutu Premium e importá las listas de reproducción exportadas.\""
       Label: Exportar listas de reproducción para versiones anteriores de Yutu Premium
   Distraction Free Settings:

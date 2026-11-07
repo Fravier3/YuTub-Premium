@@ -373,7 +373,7 @@ Settings:
     UI Scale: Skala UI
     Disable Smooth Scrolling: Nonaktifkan Gulir Halus
     Hide Side Bar Labels: Sembunyikan Label Bilah Samping
-    Hide Yutu Premium Header Logo: Sembunyikan Logo Header Yutu Premium
+    Hide FreeTube Header Logo: Sembunyikan Logo Header Yutu Premium
   Player Settings:
     Player Settings: 'Pemutar'
     Play Next Video: 'Putar Otomatis Video Rekomendasi'
@@ -473,7 +473,7 @@ Settings:
     Select Export Type: 'Pilih Tipe Ekspor'
     Import Subscriptions: 'Impor Langganan'
     Export Subscriptions: 'Ekspor Langganan'
-    Export Yutu Premium: 'Ekspor Yutu Premium'
+    Export FreeTube: 'Ekspor Yutu Premium'
     Export YouTube: 'Ekspor YouTube'
     Export NewPipe: 'Ekspor NewPipe'
     Import History: 'Impor Riwayat'
@@ -500,7 +500,7 @@ Settings:
     Subscription File: Berkas Langganan
     History File: Berkas Riwayat
     Playlist File: Berkas Daftar Putar
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Ekspor Daftar Putar untuk Versi Yutu Premium yang Lebih Tua
 
       Tooltip: "Opsi ini mengekspor video dari semua daftar putar ke dalam satu daftar putar bernama 'Favorit'.\nCara mengekspor & mengimpor video dalam daftar putar untuk Yutu Premium versi lama:\n1. Ekspor daftar putar Anda dengan mengaktifkan opsi ini.\n2. Hapus semua daftar putar Anda yang ada menggunakan opsi Hapus Semua Daftar Putar di bawah Pengaturan Privasi.\n3. Luncurkan Yutu Premium versi lama dan impor daftar putar yang diekspor.\""
@@ -650,7 +650,7 @@ About:
   GitHub issues: Isu GitHub
   Report a problem: Laporkan masalah
   FAQ: PYSD
-  Yutu Premium Wiki: Wiki Yutu Premium
+  FreeTube Wiki: Wiki Yutu Premium
   Help: Bantuan
   GitHub releases: Rilis GitHub
   Downloads / Changelog: Unduhan / Catatan Perubahan
@@ -660,7 +660,7 @@ About:
   AGPLv3: Agplv3
   Licensed under the {licenseLink}: Dilisensikan di bawah {licenseLink}
   Please read the {roomRulesLink}: Silahkan baca {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium dapat dibuat atas dukungan dari {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium dapat dibuat atas dukungan dari {creditsPageLink}
 Profile:
   Profile Select: 'Pilih Profil'
   All Channels: 'Semua Kanal'
@@ -741,7 +741,7 @@ Channel:
   Posts:
     Hide Answers: Sembunyikan jawaban
     Reveal Answers: Tampilkan jawaban
-    Video hidden by Yutu Premium: Video disembunyikan oleh Yutu Premium
+    Video hidden by FreeTube: Video disembunyikan oleh Yutu Premium
     This channel currently does not have any posts: Kanal ini belum memiliki pos apa pun
     votes: '{votes} memilih'
     View Full Post: Lihat Postingan Lengkap

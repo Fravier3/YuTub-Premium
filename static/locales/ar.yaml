@@ -365,7 +365,7 @@ Settings:
     Disable Smooth Scrolling: عطّل التمرير المتجانس
     Expand Side Bar by Default: كبّر الشريط الجانبي بشكل افتراضي
     Hide Side Bar Labels: إخفاء تسميات الشريط الجانبي
-    Hide Yutu Premium Header Logo: إخفاء شعار رأس Yutu Premium
+    Hide FreeTube Header Logo: إخفاء شعار رأس Yutu Premium
   Player Settings:
     Player Settings: 'المشغل'
     Play Next Video: 'التشغيل التلقائي لمقاطع الفيديو الموصى بها'
@@ -476,7 +476,7 @@ Settings:
     Profile object has insufficient data, skipping item: لا يحتوي عنصر الملف الشخصي على بيانات كافية, تخطي العنصر
     Export NewPipe: تصدير NewPipe
     Export YouTube: تصدير Youtube
-    Export Yutu Premium: تصدير Yutu Premium
+    Export FreeTube: تصدير Yutu Premium
     Export Subscriptions: تصدير الاشتراكات
     Import Subscriptions: استيراد الاشتراكات
     Select Export Type: حدّد نوع التصدير
@@ -490,7 +490,7 @@ Settings:
     Subscription File: Subscription ملف
     History File: ملف التاريخ
     Playlist File: Playlist ملف
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: تصدير قوائم التشغيل لإصدارات Yutu Premium الأقدم
       Tooltip: "يقوم هذا الخيار بتصدير مقاطع الفيديو من جميع قوائم التشغيل إلى قائمة تشغيل واحدة تسمى \"المفضلة\".\nكيفية تصدير واستيراد مقاطع الفيديو في قوائم التشغيل لإصدار أقدم من Yutu Premium:\n1. قم بتصدير قوائم التشغيل الخاصة بك مع تمكين هذا الخيار.\n2. احذف جميع قوائم التشغيل الموجودة لديك باستخدام خيار إزالة جميع قوائم التشغيل ضمن إعدادات الخصوصية.\n3. قم بتشغيل الإصدار الأقدم من Yutu Premium واستورد قوائم التشغيل المصدرة.\""
     Search history file: ملف سجل البحث
@@ -629,14 +629,14 @@ About:
   room rules: قواعد الغرفة
   Please check for duplicates before posting: يرجى التحقق من التكرارات قبل النشر
   GitHub issues: مشاكل GitHub
-  Yutu Premium Wiki: ويكي Freetube
+  FreeTube Wiki: ويكي Freetube
   GitHub releases: إصدارات GitHub
   Downloads / Changelog: التحميلات\التغييرات
   Discussions: المناقشات
   AGPLv3: رخصة أفيرو العمومية الإصدار ٣
   Licensed under the {licenseLink}: مرخص بموجب {licenseLink}
   Please read the {roomRulesLink}: ­يرجى قراءة {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: أصبح موقع Yutu Premium ممكناً بفضل {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: أصبح موقع Yutu Premium ممكناً بفضل {creditsPageLink}
 Profile:
   All Channels: 'جميع القنوات'
   Profile Manager: 'مدير الملف الشخصي'
@@ -719,7 +719,7 @@ Channel:
     Hide Answers: إخفاء الأجوبة
     votes: '{votes} أصوات'
     Reveal Answers: كشف الإجابات
-    Video hidden by Yutu Premium: تم إخفاء الفيديو بواسطة Yutu Premium
+    Video hidden by FreeTube: تم إخفاء الفيديو بواسطة Yutu Premium
     Viewing Posts Only Supported By Invidious: عرض المنشورات مدعوم فقط من قبل Invidious. توجه إلى علامة التبويب مجتمع القناة لعرض المحتوى هناك دون Invidious.
     View Full Post: عرض المنشور كاملا
   Live:

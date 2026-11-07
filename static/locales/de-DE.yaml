@@ -369,7 +369,7 @@ Settings:
     Disable Smooth Scrolling: Gleichmäßiges Scrollen deaktivieren
     Expand Side Bar by Default: Seitenleiste standardmäßig erweitern
     Hide Side Bar Labels: Seitenleisten-Beschriftungen ausblenden
-    Hide Yutu Premium Header Logo: FreeTube-Titellogo ausblenden
+    Hide FreeTube Header Logo: FreeTube-Titellogo ausblenden
   Player Settings:
     Player Settings: Video-Player
     Play Next Video: Empfohlene Videos automatisch abspielen
@@ -484,7 +484,7 @@ Settings:
     Import History: Verlauf importieren
     Export NewPipe: NewPipe exportieren
     Export YouTube: YouTube exportieren
-    Export Yutu Premium: Yutu Premium exportieren
+    Export FreeTube: Yutu Premium exportieren
     Export Subscriptions: Abos exportieren
     Import Subscriptions: Abos importieren
     Select Export Type: Exporttyp auswählen
@@ -498,7 +498,7 @@ Settings:
     Playlist File: Playlist-Datei
     Subscription File: Abo-Datei
     History File: Verlaufsdatei
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Playlists für ältere FreeTube-Versionen exportieren
       Tooltip: "Diese Option exportiert Videos aus allen Playlists in eine Playlist namens „Favoriten“.\nSo kannst du Playlists für eine ältere Version von Yutu Premium exportieren und importieren:\n1. Exportiere deine Playlists, wenn diese Option aktiviert ist.\n2. Lösche alle deine bestehenden Playlists mit der Option „Alle Playlists entfernen“ unter den Datenschutzeinstellungen.\n3. Starte die ältere Version von Yutu Premium und importiere die exportierten Playlists.\""
     Search history file: Suchverlaufsdatei
@@ -655,7 +655,7 @@ About:
   Please check for duplicates before posting: Bitte überprüfe vor dem Erstellen, ob eine ähnliche Issue bereits existiert
   GitHub issues: GitHub Issue-Tracker
   Report a problem: Problem melden
-  Yutu Premium Wiki: FreeTube-Wiki
+  FreeTube Wiki: FreeTube-Wiki
   GitHub releases: GitHub-Veröffentlichungen
   Downloads / Changelog: Downloads / Änderungsprotokoll
   Source code: Quellcode
@@ -663,7 +663,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: Lizenziert unter der {licenseLink}
   Please read the {roomRulesLink}: Bitte lies die {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium wird ermöglicht durch {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium wird ermöglicht durch {creditsPageLink}
 Channel:
   Subscribe: Abonnieren
   Unsubscribe: Deabonnieren
@@ -706,7 +706,7 @@ Channel:
     votes: '{votes} Stimmen'
     Reveal Answers: Antworten anzeigen
     Hide Answers: Antworten verbergen
-    Video hidden by Yutu Premium: Video versteckt von Yutu Premium
+    Video hidden by FreeTube: Video versteckt von Yutu Premium
     View Full Post: Vollständigen Beitrag anzeigen
     Viewing Posts Only Supported By Invidious: Das Anzeigen von Beiträgen wird nur von Invidious unterstützt. Gehe zum Tab „Beiträge“ eines Kanals, um dort Inhalte ohne Invidious anzuzeigen.
   Live:

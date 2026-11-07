@@ -365,7 +365,7 @@ Settings:
       Everforest Light Purple: Everforest светлољубичаста
     Secondary Color Theme: 'Секундарна тема боје'
         #* Main Color Theme
-    Hide Yutu Premium Header Logo: Сакриј Yutu Premium логотип у заглављу
+    Hide FreeTube Header Logo: Сакриј Yutu Premium логотип у заглављу
     Hide Side Bar Labels: Сакриј ознаке бочне траке
   Player Settings:
     Player Settings: 'Плејер'
@@ -508,7 +508,7 @@ Settings:
     Select Export Type: 'Избор врсте извоза'
     Import Subscriptions: 'Увоз праћења'
     Export Subscriptions: 'Извоз праћења'
-    Export Yutu Premium: 'Извоз FreeTube-а'
+    Export FreeTube: 'Извоз FreeTube-а'
     Export YouTube: 'Извоз YouTube-а'
     Export NewPipe: 'Извоз NewPipe-а'
     Import History: 'Увоз историје'
@@ -535,7 +535,7 @@ Settings:
     Import Playlists: Увоз плејлиста
     All playlists has been successfully imported: Све плејлисте су успешно увезене
     Playlist insufficient data: Нема довољно података за плејлисту „{playlist}“, прескакање предмета
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Tooltip: "Ова опција извози видео снимке са свих плејлиста у једну плејлисту под називом „Омиљено“.\nКако да извезете и увезете видео снимке у плејлисте за старију верзију FreeTube-а:\n1. Извезите своје плејлисте са омогућеном овом опцијом.\n2. Избришите све своје постојеће плејлисте користећи опцију „Уклони све плејлисте“ у оквиру подешавања приватности.\n3. Покрените старију верзију FreeTube-а и увезите извезене плејлисте."
       Label: Извоз плејлиста за старије верзије FreeTube-а
   Proxy Settings:
@@ -606,7 +606,7 @@ About:
   Downloads / Changelog: 'Преузимања / Евиденција промена'
   GitHub releases: 'GitHub издања'
   Help: 'Помоћ'
-  Yutu Premium Wiki: 'Yutu Premium Wiki'
+  FreeTube Wiki: 'Yutu Premium Wiki'
   FAQ: 'ЧПП'
   Report a problem: 'Пријава проблема'
   GitHub issues: 'Пријава проблема на GitHub-у'
@@ -700,7 +700,7 @@ Channel:
     Reveal Answers: Откриј одговоре
     Hide Answers: Сакриј одговоре
     votes: 'Гласова: {votes}'
-    Video hidden by Yutu Premium: Видео снимак сакрио је Yutu Premium
+    Video hidden by FreeTube: Видео снимак сакрио је Yutu Premium
     View Full Post: Погледај целу објаву
     Viewing Posts Only Supported By Invidious: Гледање објава подржава само Invidious. Идите на картицу заједнице канала да видите садржај тамо без Invidious-a.
   Live:

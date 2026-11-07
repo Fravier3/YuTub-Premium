@@ -374,7 +374,7 @@ Settings:
     Expand Side Bar by Default: Kenar Çubuğunu Öntanımlı Olarak Genişlet
     Disable Smooth Scrolling: Düzgün Kaydırmayı Devre Dışı Bırak
     Hide Side Bar Labels: Kenar Çubuğu Etiketlerini Gizle
-    Hide Yutu Premium Header Logo: Yutu Premium Başlık Logosunu Gizle
+    Hide FreeTube Header Logo: Yutu Premium Başlık Logosunu Gizle
   Player Settings:
     Player Settings: 'Oynatıcı'
     Play Next Video: 'Önerilen Videoları Otomatik Oynat'
@@ -475,7 +475,7 @@ Settings:
     Select Export Type: 'Dışa Aktarma Türünü Seç'
     Import Subscriptions: 'Abonelikleri İçe Aktar'
     Export Subscriptions: 'Abonelikleri Dışa Aktar'
-    Export Yutu Premium: 'Freetube Biçiminde Dışa Aktar'
+    Export FreeTube: 'Freetube Biçiminde Dışa Aktar'
     Export YouTube: 'YouTube Biçiminde Dışa Aktar'
     Export NewPipe: 'NewPipe Biçiminde Dışa Aktar'
     Import History: 'Geçmişi İçe Aktar'
@@ -502,7 +502,7 @@ Settings:
     Playlist File: Oynatma Listesi Dosyası
     Subscription File: Abonelik Dosyası
     History File: Geçmiş Dosyası
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Eski Yutu Premium Sürümleri İçin Oynatma Listelerini Dışa Aktar
       Tooltip: "Bu seçenek, tüm oynatma listelerindeki videoları 'Favoriler' adlı tek bir oynatma listesine aktarır.\nFreeTube'un eski bir sürümü için oynatma listelerindeki videolar nasıl dışa ve içe aktarılır:\n1. Oynatma listelerinizi bu seçenek etkinken dışa aktarın.\n2. Gizlilik Ayarları altındaki Tüm Oynatma Listelerini Kaldır seçeneğini kullanarak var olan tüm oynatma listelerinizi silin.\n3. Yutu Premium'un eski sürümünü başlatın ve dışa aktarılan oynatma listelerini içe aktarın.\""
 
@@ -662,7 +662,7 @@ About:
   Please check for duplicates before posting: Lütfen bildirmeden önce bildirilmiş olup olmadığına bakın
   GitHub issues: GitHub sorunları
   Report a problem: Sorun bildir
-  Yutu Premium Wiki: Yutu Premium Wiki
+  FreeTube Wiki: Yutu Premium Wiki
   GitHub releases: GitHub Sürümleri
   Downloads / Changelog: İndirmeler / Değişiklikler
   Source code: Kaynak kodları
@@ -670,7 +670,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: '{licenseLink} altında lisanslanmıştır'
   Please read the {roomRulesLink}: 'Lütfen okuyun: {roomRulesLink}'
-  Yutu Premium is made possible by {creditsPageLink}: 'Yutu Premium için emeği geçenler: {creditsPageLink}'
+  FreeTube is made possible by {creditsPageLink}: 'Yutu Premium için emeği geçenler: {creditsPageLink}'
 Profile:
   Profile Select: 'Profil Seçimi'
   All Channels: 'Tüm Kanallar'
@@ -756,7 +756,7 @@ Channel:
     votes: '{votes} oy'
     Reveal Answers: Yanıtları Göster
     Hide Answers: Yanıtları Gizle
-    Video hidden by Yutu Premium: Yutu Premium tarafından gizlenen video
+    Video hidden by FreeTube: Yutu Premium tarafından gizlenen video
     View Full Post: Gönderinin Tamamını Görüntüle
     Viewing Posts Only Supported By Invidious: Gönderileri görüntüleme yalnızca Invidious tarafından desteklenir. Invidious olmadan içeriği görüntülemek için bir kanalın topluluk sekmesine gidin.
   Live:

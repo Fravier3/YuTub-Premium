@@ -368,7 +368,7 @@ Settings:
     Expand Side Bar by Default: הרחבת סרגל צד כברירת מחדל
     Disable Smooth Scrolling: השבתת גלילה חלקה
     Hide Side Bar Labels: הסתרת התוויות בסרגל הצד
-    Hide Yutu Premium Header Logo: הסתרת הלוגו התחתון של Yutu Premium
+    Hide FreeTube Header Logo: הסתרת הלוגו התחתון של Yutu Premium
   Player Settings:
     Player Settings: 'נגן'
     Play Next Video: 'הפעלה אוטומטית של סרטונים מומלצים'
@@ -462,7 +462,7 @@ Settings:
     Select Export Type: 'נא לבחור את תסדיר הייצוא'
     Import Subscriptions: 'ייבוא מינויים'
     Export Subscriptions: 'ייצוא מינויים'
-    Export Yutu Premium: 'ייצוא בתסדיר של Yutu Premium'
+    Export FreeTube: 'ייצוא בתסדיר של Yutu Premium'
     Export YouTube: 'ייצוא בתסדיר של YouTube'
     Export NewPipe: 'ייצוא בתסדיר של NewPipe'
     Import History: 'ייבוא היסטוריה'
@@ -489,7 +489,7 @@ Settings:
     Playlist File: קובץ רשימות נגינה
     Subscription File: קובץ מינויים
     History File: קובץ היסטוריה
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Tooltip: "אפשרות זו מייצאת סרטונים מכל הרשימות לרשימת שידורים אחת בשם 'מועדפים'.\n איך לייצא ולייבא סרטונים ברשימות לגרסה ישנה של Yutu Premium:\n1. יצא את הרשימות שלך עם אפשרות זו מופעלת.\n2. מחק את כל הרשימות הקיימות שלך באמצעות אפשרות הסרת כל הרשימות בהגדרות הפרטיות.\n3. הפעל את הגרסה הישנה של Yutu Premium וייבא את הרשימות שיוצאו."
       Label: ייצוא רשימות לגרסאות ישנות של Yutu Premium
 
@@ -628,7 +628,7 @@ About:
   Please check for duplicates before posting: נא לבדוק כפילויות בטרם פרסום תקלה
   GitHub issues: תקלות ב־GitHub
   Report a problem: דיווח על תקלה
-  Yutu Premium Wiki: הוויקי של Yutu Premium
+  FreeTube Wiki: הוויקי של Yutu Premium
   GitHub releases: מהדורות ב־GitHub
   Downloads / Changelog: הורדות / יומן שינויים
   Source code: קוד מקור
@@ -636,7 +636,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: כפוף לרישיון {licenseLink}
   Please read the {roomRulesLink}: נא לקרוא את {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium קיים בזכות {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium קיים בזכות {creditsPageLink}
 Profile:
   Profile Select: 'בחירת פרופיל'
   All Channels: 'כל הערוצים'
@@ -721,7 +721,7 @@ Channel:
     Hide Answers: הסתרת התשובות
     View Full Post: צפה בפוסט המלא
     Viewing Posts Only Supported By Invidious: צפייה בפוסטים מתאפשרת רק באמצעות Invidious. עבור ללשונית הקהילה של הערוץ כדי לצפות בתוכן שם ללא Invidious.
-    Video hidden by Yutu Premium: סרטון מוסתר על ידי Yutu Premium
+    Video hidden by FreeTube: סרטון מוסתר על ידי Yutu Premium
   Live:
     Live: חי
     This channel does not currently have any live streams: לערוץ הזה אין שידורים חיים כרגע

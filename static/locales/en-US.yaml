@@ -327,7 +327,7 @@ Settings:
     Disable Smooth Scrolling: Disable Smooth Scrolling
     UI Scale: UI Scale
     Hide Side Bar Labels: Hide Side Bar Labels
-    Hide Yutu Premium Header Logo: Hide Yutu Premium Header Logo
+    Hide FreeTube Header Logo: Hide Yutu Premium Header Logo
     Base Theme:
       Base Theme: Base Theme
       Black: Black
@@ -609,7 +609,7 @@ Settings:
     Search history file: Search history file
     Settings File: Settings File
     Export Subscriptions: Export Subscriptions
-    Export Yutu Premium: Export Yutu Premium
+    Export FreeTube: Export Yutu Premium
     Export YouTube: Export YouTube
     Export NewPipe: Export NewPipe
     Import History: Import History
@@ -726,7 +726,7 @@ About:
   Downloads / Changelog: Downloads / Changelog
   GitHub releases: GitHub Releases
   Help: Help
-  Yutu Premium Wiki: Yutu Premium Wiki
+  FreeTube Wiki: Yutu Premium Wiki
   FAQ: FAQ
   Discussions: Discussions
   Report a problem: Report a problem
@@ -739,7 +739,7 @@ About:
   room rules: room rules
   Translate: Translate
   Credits: Credits
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium is made possible by {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium is made possible by {creditsPageLink}
   these people and projects: these people and projects
   Donate: Donate
 
@@ -860,7 +860,7 @@ Channel:
     View Full Post: View Full Post
     Reveal Answers: Reveal Answers
     Hide Answers: Hide Answers
-    Video hidden by Yutu Premium: Video hidden by Yutu Premium
+    Video hidden by FreeTube: Video hidden by Yutu Premium
 Video:
   IP block: 'YouTube has blocked your IP address from watching videos, or this video may contain content featuring minors that YouTube restricts access to for signed-out users. If this is an IP block, try switching to a different VPN or proxy.'
   MembersOnly: Members-only videos cannot be watched with Yutu Premium as they require Google login and paid membership to the uploader's channel.

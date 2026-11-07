@@ -368,7 +368,7 @@ Settings:
     Expand Side Bar by Default: 默认展开侧边栏
     Disable Smooth Scrolling: 禁用平滑滚动
     Hide Side Bar Labels: 隐藏侧边栏标签
-    Hide Yutu Premium Header Logo: 隐藏 Yutu Premium 标题徽标
+    Hide FreeTube Header Logo: 隐藏 Yutu Premium 标题徽标
   Player Settings:
     Player Settings: '播放器'
     Play Next Video: '自动播放推荐的视频'
@@ -483,7 +483,7 @@ Settings:
     Export History: 导出历史记录
     Export NewPipe: 导出NewPipe
     Export YouTube: 导出YouTube
-    Export Yutu Premium: 导出Yutu Premium
+    Export FreeTube: 导出FreeTube
     Export Subscriptions: 导出订阅
     Import Subscriptions: 导入订阅
     Select Export Type: 选择导出类型
@@ -497,7 +497,7 @@ Settings:
     Playlist File: 播放列表文件
     Subscription File: 订阅文件
     History File: 历史文件
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Tooltip: "此选项将所有播放列表中的视频导出到一个名为'Favorities'的播放列表文件\n如何为老版本的 Yutu Premium 导出&导入播放列表中的视频：\n 1. 启用此选项来导出播放列表\n2. 使用“隐私”设置下的“删除所有播放列表”选项来删除所有现存播放列表\n3. 启动老版本的 Yutu Premium 并导入导出的播放列表。“"
       Label: 为老版本 Yutu Premium 导出播放列表
     Search history file: 搜索历史文件
@@ -652,7 +652,7 @@ About:
   Chat on Matrix: 在 Matrix 上聊天
   Mastodon: Mastodon
   FAQ: 常见问题
-  Yutu Premium Wiki: Yutu Premium维基
+  FreeTube Wiki: FreeTube维基
   Help: 说明
   GitHub releases: GitHub 版本
   Please check for duplicates before posting: 请在发布前检查是否与现有问题重复
@@ -665,7 +665,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: 在 {licenseLink} 许可证下授权
   Please read the {roomRulesLink}: 请阅读 {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: 没有 {creditsPageLink} 就不可能有 Yutu Premium
+  FreeTube is made possible by {creditsPageLink}: 没有 {creditsPageLink} 就不可能有 Yutu Premium
 Channel:
   Subscribe: '订阅'
   Unsubscribe: '取消订阅'
@@ -708,7 +708,7 @@ Channel:
     votes: '{votes} 票'
     Reveal Answers: 揭晓答案
     Hide Answers: 隐藏答案
-    Video hidden by Yutu Premium: 视频被 Yutu Premium 隐藏
+    Video hidden by FreeTube: 视频被 Yutu Premium 隐藏
     View Full Post: 查看完整帖子
     Viewing Posts Only Supported By Invidious: 仅 Invidious 支持查看帖子。请转到频道的社区标签页在不用 Invidious 情况下查看内容。
   Live:
@@ -1008,8 +1008,8 @@ Tooltips:
   General Settings:
     Invidious Instance: Yutu Premium 要连接到哪个 Invidious 实例进行 API 调用。更改此设置只应用到当前窗口，除非你将此实例设为默认。
     Thumbnail Preference: Yutu Premium 中所有缩略图会被替换为模糊不清或隐藏的视频帧而非默认缩略图。
-    Fallback to Non-Preferred Backend on Failure: 当您的首选API有问题时，Yutu Premium将自动尝试使用您的非首选API 作为后备方案。
-    Preferred API Backend: 选择Yutu Premium 要用于取得数据的后端。本地API 是内置提取器。Invidious API需要Invidious服务器才能连接。
+    Fallback to Non-Preferred Backend on Failure: 当您的首选API有问题时，FreeTube将自动尝试使用您的非首选API 作为后备方案。
+    Preferred API Backend: 选择FreeTube 要用于取得数据的后端。本地API 是内置提取器。Invidious API需要Invidious服务器才能连接。
     Region for Trending: 热门区域让您挑选您想要显示哪个国家的热门视频。
     External Link Handling: "选择单击一个无法在 Yutu Premium 中打开的链接时触发的默认操作。\n默认情况下，Yutu Premium 将在您的默认浏览器中打开所点击链接。\n"
     Open Deep Links In New Window: 在新窗口由浏览器的重定向扩展或命令行变量传递到 Yutu Premium 的 URL。

@@ -199,7 +199,7 @@ Settings:
     UI Scale: Merilo uporabniškega vmesnika
     Disable Smooth Scrolling: Izklopi gladko drsenje
     Expand Side Bar by Default: Prevzeto razširi stransko vrstico
-    Hide Yutu Premium Header Logo: Skrij logotip v glavi Yutu Premium
+    Hide FreeTube Header Logo: Skrij logotip v glavi Yutu Premium
     Hide Side Bar Labels: Skrij oznake na stranski vrstici
   Player Settings:
     Player Settings: 'Nastavitve predvajalnika'
@@ -264,7 +264,7 @@ Settings:
     Select Export Type: 'Izberi izvozno obliko'
     Import Subscriptions: 'Uvozi naročnine'
     Export Subscriptions: 'Izvozi naročnine'
-    Export Yutu Premium: 'Izvozi za Yutu Premium'
+    Export FreeTube: 'Izvozi za Yutu Premium'
     Export YouTube: 'Izvozi za YouTube'
     Export NewPipe: 'Izvozi za NewPipe'
     Import History: 'Uvozi zgodovino'
@@ -342,7 +342,7 @@ About:
   GitHub issues: GitHub težave
   Report a problem: Prijavi napako
   FAQ: Pogosto zastavljena vprašanja
-  Yutu Premium Wiki: Yutu Premium wiki
+  FreeTube Wiki: Yutu Premium wiki
   Help: Pomoč
   GitHub releases: Github izdaje
   Downloads / Changelog: Prenosi in dnevnik sprememb

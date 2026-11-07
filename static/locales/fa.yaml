@@ -343,7 +343,7 @@ Settings:
     Secondary Color Theme: 'رنگ دوم تم'
         #* Main Color Theme
     Hide Side Bar Labels: مخفی کردن عنوان های ستون فرعی
-    Hide Yutu Premium Header Logo: لوگوی سربرگ Yutu Premium را مخفی کنید
+    Hide FreeTube Header Logo: لوگوی سربرگ Yutu Premium را مخفی کنید
   Player Settings:
     Player Settings: 'پخش کننده'
     Play Next Video: 'پخش اتوماتیک ویدیو پیشنهادی'
@@ -495,7 +495,7 @@ Settings:
     Select Export Type: 'انتخاب روش پشتیبان گیری'
     Import Subscriptions: 'وارد کردن بک آپ دنبال شوندگان'
     Export Subscriptions: 'ذخیره (پشتیبان گیری)دنبال شوندگان'
-    Export Yutu Premium: 'استخراج Yutu Premium'
+    Export FreeTube: 'استخراج Yutu Premium'
     Export YouTube: 'استخراج YouTube'
     Export NewPipe: 'استخراج NewPipe'
     Import History: 'وارد کردن تاریخچه'
@@ -522,7 +522,7 @@ Settings:
     History File: فایل تاریخچه
     Subscription File: فایل اشتراک
     Playlist insufficient data: داده ناکافی برای لیست پخش «{playlist}»، در حال رد شدن از مورد
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Tooltip: "این گزینه ویدئوها را از همه لیست های پخش به یک لیست پخش به نام \" مورد علاقه\" صادر می کند.\nنحوه صادر کردن و وارد کردن ویدیوها در لیست پخش برای نسخه قدیمی Yutu Premium:\n1. لیست های پخش خود را با فعال بودن این گزینه صادر کنید.\n2. با استفاده از گزینه حذف تمام لیست‌های پخش در قسمت تنظیمات حریم خصوصی، تمام لیست های پخش موجود خود را حذف کنید.\n3. نسخه قدیمی Yutu Premium را راه اندازی کنید و لیست های پخش صادر شده را وارد کنید.\""
       Label: صادر‌کردن لیست‌های پخش برای نسخه های قدیمی Yutu Premium
   Proxy Settings:
@@ -606,7 +606,7 @@ Channel:
     This channel currently does not have any posts: این کانال در حال حاضر هیچ پستی ندارد
     Hide Answers: پنهان کردن پاسخ ها
     View Full Post: مشاهده کامل پست
-    Video hidden by Yutu Premium: ویدیو توسط Yutu Premium مخفی شده
+    Video hidden by FreeTube: ویدیو توسط Yutu Premium مخفی شده
     Viewing Posts Only Supported By Invidious: مشاهده پست ها فقط توسط Invidious پشتیبانی می شود. برای مشاهده محتوا بدون Invidious، به برگه انجمن کانال بروید.
   Removed subscription from {count} other channel(s): اشتراک از {count} کانال(های) دیگر حذف شد
   About:
@@ -794,7 +794,7 @@ About:
   Credits: اعتبارات
   Beta: بتا
   About: درباره
-  Yutu Premium Wiki: ویکی فریتیوب
+  FreeTube Wiki: ویکی فریتیوب
   GitHub releases: نسخه های گیت هاب
   FAQ: پرسش و پاسخ
   room rules: قوانین اتاق

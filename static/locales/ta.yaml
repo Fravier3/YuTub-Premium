@@ -312,7 +312,7 @@ Settings:
     Disable Smooth Scrolling: 'மென்மையான ச்க்ரோலிங் முடக்கு'
     UI Scale: 'இடைமுகம் அளவுகோல்'
     Hide Side Bar Labels: 'பக்க பார் லேபிள்களை மறைக்கவும்'
-    Hide Yutu Premium Header Logo: 'ஃப்ரீட்யூப் தலைப்பு லோகோவை மறைக்கவும்'
+    Hide FreeTube Header Logo: 'ஃப்ரீட்யூப் தலைப்பு லோகோவை மறைக்கவும்'
     Base Theme:
       Base Theme: 'அடிப்படை கருப்பொருள்'
       Black: 'கருப்பு'
@@ -582,14 +582,14 @@ Settings:
     History File: 'வரலாற்று கோப்பு'
     Playlist File: 'பிளேலிச்ட் கோப்பு'
     Export Subscriptions: 'ஏற்றுமதி சந்தாக்கள்'
-    Export Yutu Premium: 'ஃப்ரீட்யூப் ஏற்றுமதி'
+    Export FreeTube: 'ஃப்ரீட்யூப் ஏற்றுமதி'
     Export YouTube: 'YouTube ஐ ஏற்றுமதி செய்யுங்கள்'
     Export NewPipe: 'புதிய பக்கத்தை ஏற்றுமதி செய்யுங்கள்'
     Import History: 'இறக்குமதி வரலாறு'
     Export History: 'ஏற்றுமதி வரலாறு'
     Import Playlists: 'பிளேலிச்ட்களை இறக்குமதி செய்யுங்கள்'
     Export Playlists: 'பிளேலிச்ட்கள் ஏற்றுமதி'
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: 'பழைய ஃப்ரீட்யூப் பதிப்புகளுக்கான பிளேலிச்ட்களை ஏற்றுமதி செய்யுங்கள்'
       # |- = Keep newlines, No newline at end
       Tooltip: |-
@@ -680,7 +680,7 @@ About:
   Downloads / Changelog: 'பதிவிறக்கங்கள் / சேஞ்ச்லாக்'
   GitHub releases: 'அறிவிலிமைய வெளியீடுகள்'
   Help: 'உதவி'
-  Yutu Premium Wiki: 'ஒரு வாரம் freetube'
+  FreeTube Wiki: 'ஒரு வாரம் freetube'
   FAQ: 'கேள்விகள்'
   Discussions: 'விவாதங்கள்'
   Report a problem: 'ஒரு சிக்கலைப் புகாரளிக்கவும்'
@@ -697,7 +697,7 @@ About:
 
   Licensed under the {licenseLink}: '{licenseLink} இன் கீழ் உரிமம் பெற்றது'
   Please read the {roomRulesLink}: '{roomRulesLink} ஐப் படிக்கவும்'
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium ஆனது {creditsPageLink} மூலம் சாத்தியமானது
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium ஆனது {creditsPageLink} மூலம் சாத்தியமானது
 Profile:
   Profile Settings: 'சுயவிவரம்'
   Toggle Profile List: 'சுயவிவர பட்டியலை மாற்றவும்'
@@ -792,7 +792,7 @@ Channel:
     View Full Post: 'முழு இடுகையைக் காண்க'
     Reveal Answers: 'பதில்களை வெளிப்படுத்துங்கள்'
     Hide Answers: 'பதில்களை மறைக்கவும்'
-    Video hidden by Yutu Premium: 'ஃப்ரீட்யூப் மறைத்த வீடியோ'
+    Video hidden by FreeTube: 'ஃப்ரீட்யூப் மறைத்த வீடியோ'
     Viewing Posts Only Supported By Invidious: 'இடுகைகளைப் பார்ப்பது வெறுப்புடன் மட்டுமே ஆதரிக்கப்படுகிறது. வன்கவர்வு இல்லாமல் உள்ளடக்கத்தைக் காண சேனலின் சமூக தாவலுக்குச் செல்லுங்கள்.'
   Home:
     Home: வீடு

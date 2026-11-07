@@ -368,7 +368,7 @@ Settings:
     Disable Smooth Scrolling: Vypnúť plynulé posúvanie
     Expand Side Bar by Default: Predvolene rozbaliť bočnú lištu
     Hide Side Bar Labels: Skryť označenia bočnej lišty
-    Hide Yutu Premium Header Logo: Skryť logo hlavičky Yutu Premium
+    Hide FreeTube Header Logo: Skryť logo hlavičky Yutu Premium
   Player Settings:
     Player Settings: 'Prehrávač'
     Play Next Video: 'Automaticky prehrávať odporúčané videá'
@@ -457,7 +457,7 @@ Settings:
     Import History: Importovať históriu
     Export NewPipe: Exportovať dáta vo formáte NewPipe
     Export YouTube: Exportovať dáta vo formáte Youtube
-    Export Yutu Premium: Exportovať dáta vo formáte Yutu Premium
+    Export FreeTube: Exportovať dáta vo formáte Yutu Premium
     Export Subscriptions: Exportovať odbery
     Import Subscriptions: Importovať odbery
     Select Export Type: Vybrať typ exportu
@@ -637,7 +637,7 @@ About:
   About: 'O Yutu Premium'
   #& About
 #On Channel Page
-  Yutu Premium Wiki: Wiki Yutu Premium
+  FreeTube Wiki: Wiki Yutu Premium
   Help: Pomoc
   GitHub releases: Vydania na GitHube
   Downloads / Changelog: Súbory na stiahnutie / Zoznam zmien
@@ -659,7 +659,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: Licencované pod {licenseLink}
   Please read the {roomRulesLink}: Prečítajte si prosím {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium existuje vďaka {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium existuje vďaka {creditsPageLink}
 Channel:
   Subscribe: 'Odoberať'
   Unsubscribe: 'Odhlásiť odber'
@@ -694,7 +694,7 @@ Channel:
   Removed subscription from {count} other channel(s): Odstránený odber z {count} iných kanálov
   This channel does not allow searching: Tento kanál neumožňuje vyhľadávanie
   Posts:
-    Video hidden by Yutu Premium: Video skryté Yutu Premium
+    Video hidden by FreeTube: Video skryté Yutu Premium
     Hide Answers: Skryť odpovede
     Reveal Answers: Ukázať odpovede
     View Full Post: Zobraziť celý príspevok

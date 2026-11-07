@@ -238,7 +238,7 @@ Settings:
     Disable Smooth Scrolling: اسموتھ اسکرولنگ غیر فعال کریں
     UI Scale: انٹرفیس (UI) کا اسکیل
     Hide Side Bar Labels: سائیڈ بار کے لیبلز چھپائیں
-    Hide Yutu Premium Header Logo: فری ٹیوب ہیڈر لوگو چھپائیں
+    Hide FreeTube Header Logo: فری ٹیوب ہیڈر لوگو چھپائیں
     Base Theme:
       Base Theme: بنیادی تھیم
       Black: کالا
@@ -433,7 +433,7 @@ Settings:
     Playlist File: پلے لسٹ فائل
     Search history file: سرچ ہسٹری فائل
     Export Subscriptions: سبسکرپشنز ایکسپورٹ کریں
-    Export Yutu Premium: فری ٹیوب ایکسپورٹ کریں
+    Export FreeTube: فری ٹیوب ایکسپورٹ کریں
     Export YouTube: یوٹیوب ایکسپورٹ کریں
     Export NewPipe: نیو پائپ ایکسپورٹ کریں
     Import History: ہسٹری امپورٹ کریں
@@ -594,7 +594,7 @@ About:
   Downloads / Changelog: ڈاؤن لوڈز / تبدیلیوں کا ریکارڈ
   GitHub releases: گِٹ ہب ریلیز
   Help: مدد
-  Yutu Premium Wiki: فری ٹیوب وکی
+  FreeTube Wiki: فری ٹیوب وکی
   FAQ: اکثر پوچھے گئے سوالات
   Discussions: بات چیت
   Report a problem: مسئلہ رپورٹ کریں
@@ -606,7 +606,7 @@ About:
   room rules: کمرے کے اصول
   Translate: ترجمہ کریں
   Credits: کریڈٹس
-  Yutu Premium is made possible by: 'فری ٹیوب ان لوگوں کی بدولت ممکن ہوا ہے'
+  FreeTube is made possible by: 'فری ٹیوب ان لوگوں کی بدولت ممکن ہوا ہے'
   these people and projects: یہ لوگ اور پروجیکٹس
   Donate: عطیہ دیں
 Profile:
@@ -709,7 +709,7 @@ Channel:
     View Full Post: مکمل پوسٹ دیکھیں
     Reveal Answers: جوابات ظاہر کریں
     Hide Answers: جوابات چھپائیں
-    Video hidden by Yutu Premium: ویڈیو کو Yutu Premium نے چھپا دیا ہے
+    Video hidden by FreeTube: ویڈیو کو Yutu Premium نے چھپا دیا ہے
 Video:
   IP block: یو ٹیوب نے آپ کے آئی پی ایڈریس کو ویڈیوز دیکھنے سے بلاک کر دیا ہے۔ براہ کرم کوئی دوسرا VPN یا پراکسی استعمال کریں۔
   MembersOnly: صرف ممبرز کے لیے مخصوص ویڈیوز Yutu Premium پر نہیں دیکھی جا سکتیں کیونکہ ان کے لیے گوگل لاگ ان اور اپ لوڈر کے چینل کی پیڈ ممبرشپ درکار ہے۔

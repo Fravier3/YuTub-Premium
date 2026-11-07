@@ -368,7 +368,7 @@ Settings:
     Expand Side Bar by Default: Расширить боковую панель
     Disable Smooth Scrolling: Отключить плавную прокрутку
     Hide Side Bar Labels: Скрыть надписи боковой панели
-    Hide Yutu Premium Header Logo: Скрыть значок Yutu Premium
+    Hide FreeTube Header Logo: Скрыть значок Yutu Premium
   Player Settings:
     Player Settings: 'Проигрыватель'
     Play Next Video: 'Автоматическое воспроизведение рекомендуемых видеороликов'
@@ -483,7 +483,7 @@ Settings:
     Import History: Импортировать историю
     Export NewPipe: Экспортировать NewPipe
     Export YouTube: Экспортировать YouTube
-    Export Yutu Premium: Экспортировать Yutu Premium
+    Export FreeTube: Экспортировать Yutu Premium
     Export Subscriptions: Экспортировать подписки
     Import Subscriptions: Импортировать подписки
     Select Export Type: Выбрать тип экспорта
@@ -497,7 +497,7 @@ Settings:
     Playlist File: Файл плейлистов
     Subscription File: Файл подписок
     History File: Файл истории
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Экспортировать подборки для старых выпусков Yutu Premium
       Tooltip: "Эта настройка экспортирует видео из всех плейлистов в один с названием «Избранное».\nКак экспортировать и импортировать видео в плейлистах для старых версий Yutu Premium:\n1. Экспортируй свои плейлисты с этой включённой настройкой.\n 2. Удали все свои существующие плейлисты, используя настройку удаления всех плейлистов под разделом Настройки Конфиденциальности.\n3. Запусти старую версию Freetube и импортируй экспортированные ранее плейлисты."
     Search history file: Файл истории поиска
@@ -652,7 +652,7 @@ About:
   Website: Сайт
   Report a problem: Сообщить о проблеме
   FAQ: ЧАВО
-  Yutu Premium Wiki: Вики Yutu Premium
+  FreeTube Wiki: Вики Yutu Premium
   Help: Помощь
   GitHub releases: Релизы на GitHub
   Downloads / Changelog: Скачать / Список изменений
@@ -664,7 +664,7 @@ About:
   AGPLv3: Лицензия AGPLv3
   Licensed under the {licenseLink}: Лицензируется на условиях {licenseLink}
   Please read the {roomRulesLink}: Пожалуйста, прочтите {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium стал возможен благодаря {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium стал возможен благодаря {creditsPageLink}
 Channel:
   Subscribe: 'Подписаться'
   Unsubscribe: 'Отписаться'
@@ -706,7 +706,7 @@ Channel:
     votes: 'Голосов: {votes}'
     Hide Answers: Скрыть ответы
     Reveal Answers: Раскрыть ответы
-    Video hidden by Yutu Premium: Видео скрыто Yutu Premium'ом
+    Video hidden by FreeTube: Видео скрыто Yutu Premium'ом
     Viewing Posts Only Supported By Invidious: Просмотр постов поддерживается только в Invidious. Перейдите на вкладку "Сообщество" канала, чтобы просматривать контент там без Invidious.
     View Full Post: Просмотреть полный пост
   Live:

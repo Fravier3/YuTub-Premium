@@ -299,7 +299,7 @@ Settings:
     Disable Smooth Scrolling: 'Deaktiveer vloeiende rol'
     UI Scale: 'Koppelvlakskaal'
     Hide Side Bar Labels: 'Versteek systaafetikette'
-    Hide Yutu Premium Header Logo: 'Versteek FreeTube-koplogo'
+    Hide FreeTube Header Logo: 'Versteek FreeTube-koplogo'
     Base Theme:
       Base Theme: 'Basistema'
       Black: 'Swart'
@@ -554,19 +554,19 @@ Settings:
     History File: 'Geskiedenislêer'
     Playlist File: 'Afspeellyslêer'
     Export Subscriptions: 'Stuur intekenings uit'
-    Export Yutu Premium: 'Stuur Yutu Premium uit'
+    Export FreeTube: 'Stuur Yutu Premium uit'
     Export YouTube: 'Stuur YouTube uit'
     Export NewPipe: 'Stuur NewPipe uit'
     Import History: 'Voer geskiedenis in'
     Export History: 'Stuur geskiedenis uit'
     Import Playlists: 'Voer afspeellyste in'
     Export Playlists: 'Stuur afspeellyste uit'
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: 'Stuur afspeellyste uit vir ouer FreeTube-weergawes'
       # |- = Keep newlines, No newline at end
       Tooltip: |-
         Hierdie opsie stuur video’s van alle afspeel­lyste uit na een afspeel­lys genaamd ‘Gunstelinge’.
-        Uitstuur en invoer van video’s in afspeel­lyste vir ’n ouer weergawe van Yutu Premium:
+        Uitstuur en invoer van video’s in afspeel­lyste vir ’n ouer weergawe van FreeTube:
         1. Stuur u afspeel­lyste uit met hierdie opsie geaktiveer.
         2. Verwyder al u bestaande afspeel­lyste met die opsie ‘Verwyder alle afspeel­lyste’ onder ‘Privaatheids­instellings’.
          3. Begin die ouer weergawe van Yutu Premium en ivoer die uitgestuurde afspeel­lyste in.
@@ -643,7 +643,7 @@ About:
   Downloads / Changelog: 'Aflaaie / Veranderingslogboek'
   GitHub releases: 'GitHub-vrystellings'
   Help: 'Hulp'
-  Yutu Premium Wiki: 'Yutu Premium Wiki'
+  FreeTube Wiki: 'Yutu Premium Wiki'
   FAQ: 'Gereelde vrae'
   Discussions: 'Besprekings'
   Report a problem: 'Rapporteer ’n probleem'
@@ -751,7 +751,7 @@ Channel:
     votes: '{votes} stemme'
     Reveal Answers: 'Onthul antwoorde'
     Hide Answers: 'Versteek antwoorde'
-    Video hidden by Yutu Premium: 'Video is deur Yutu Premium versteek'
+    Video hidden by FreeTube: 'Video is deur Yutu Premium versteek'
     View Full Post: Bekyk volle plasing
     Viewing Posts Only Supported By Invidious: Bekyk van plasings word slegs vir Invidious ondersteun. Gaan na ’n kanaal se gemeenskapsblad om inhoud te sien sonder Invidious.
   Home:

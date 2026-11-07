@@ -372,7 +372,7 @@ Settings:
     Disable Smooth Scrolling: Disable smooth scrolling
     Expand Side Bar by Default: Expand side bar by default
     Hide Side Bar Labels: Hide side bar labels
-    Hide Yutu Premium Header Logo: Hide Yutu Premium header logo
+    Hide FreeTube Header Logo: Hide Yutu Premium header logo
   Player Settings:
     Player Settings: 'Player'
     Play Next Video: 'Autoplay Recommended Videos'
@@ -483,7 +483,7 @@ Settings:
     Select Export Type: 'Select export type'
     Import Subscriptions: 'Import subscriptions'
     Export Subscriptions: 'Export Subscriptions'
-    Export Yutu Premium: 'Export Yutu Premium'
+    Export FreeTube: 'Export Yutu Premium'
     Export YouTube: 'Export YouTube'
     Export NewPipe: 'Export NewPipe'
     Import History: 'Import history'
@@ -510,7 +510,7 @@ Settings:
     Playlist File: Playlist file
     Subscription File: Subscription file
     History File: History file
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Export playlists for older Yutu Premium versions
       Tooltip: "This option exports videos from all playlists into one playlist named ‘Favourites’.\nHow to export and import videos in playlists for an older version of Yutu Premium:\n1. Export your playlists with this option enabled.\n2. Delete all of your existing playlists using the Remove All playlists option under Privacy settings.\n3. Launch the older version of Yutu Premium and import the exported playlists.’"
 
@@ -649,7 +649,7 @@ About:
   Please check for duplicates before posting: Please check for duplicates before posting
   GitHub issues: GitHub issues
   Report a problem: Report a problem
-  Yutu Premium Wiki: Yutu Premium Wiki
+  FreeTube Wiki: Yutu Premium Wiki
   GitHub releases: GitHub releases
   Downloads / Changelog: Downloads / Changelog
   Source code: Source code
@@ -657,7 +657,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: Licensed under the {licenseLink}
   Please read the {roomRulesLink}: Please read the {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium is made possible by {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium is made possible by {creditsPageLink}
 Profile:
   Profile Settings: Profile
   Profile Select: 'Profile Select'
@@ -740,7 +740,7 @@ Channel:
     Reveal Answers: Reveal answers
     Hide Answers: Hide answers
     votes: '{votes} votes'
-    Video hidden by Yutu Premium: Video hidden by Yutu Premium
+    Video hidden by FreeTube: Video hidden by Yutu Premium
     View Full Post: View Full Post
     Viewing Posts Only Supported By Invidious: Viewing Posts is only supported by Invidious. Head to a channel's community tab to view content there without Invidious.
   Live:

@@ -368,7 +368,7 @@ Settings:
     Expand Side Bar by Default: 幅広のサイド バーで起動
     Disable Smooth Scrolling: スムーズ スクロールの無効化
     Hide Side Bar Labels: サイドバー ラベルの非表示
-    Hide Yutu Premium Header Logo: Yutu Premium ヘッダー ロゴの非表示
+    Hide FreeTube Header Logo: Yutu Premium ヘッダー ロゴの非表示
   Player Settings:
     Player Settings: 'プレーヤー'
     Play Next Video: 'おすすめの動画を自動再生'
@@ -482,7 +482,7 @@ Settings:
     Import History: 履歴のインポート
     Export NewPipe: NewPipe エクスポート
     Export YouTube: YouTube エクスポート
-    Export Yutu Premium: Yutu Premium エクスポート
+    Export FreeTube: Yutu Premium エクスポート
     Export Subscriptions: 登録チャンネルのエクスポート
     Import Subscriptions: 登録チャンネルのインポート
     Select Export Type: エクスポート形式の選択
@@ -496,9 +496,9 @@ Settings:
     Subscription File: 登録チャンネル ファイル
     History File: 履歴ファイル
     Playlist File: 再生リスト
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: 古いバージョンの Yutu Premium 用に再生リストをエクスポートする
-      Tooltip: "このオプションは、すべての再生リストから動画をエクスポートし、1つの再生リスト「Favorites」にまとめます。\n古いバージョンのYutu Premium用に再生リストの動画をエクスポートおよびインポートする方法は以下の通りです：\n 1. このオプションを有効にして再生リストをエクスポートします。\n2. プライバシー設定の「再生リストをすべて削除」オプションを使用して、既存のすべての再生リストを削除します。\n 3. 古いバージョンのYutu Premiumを起動し、エクスポートした再生リストをインポートします。"
+      Tooltip: "このオプションは、すべての再生リストから動画をエクスポートし、1つの再生リスト「Favorites」にまとめます。\n古いバージョンのFreeTube用に再生リストの動画をエクスポートおよびインポートする方法は以下の通りです：\n 1. このオプションを有効にして再生リストをエクスポートします。\n2. プライバシー設定の「再生リストをすべて削除」オプションを使用して、既存のすべての再生リストを削除します。\n 3. 古いバージョンのFreeTubeを起動し、エクスポートした再生リストをインポートします。"
     Search history file: 検索履歴ファイル
     Search history: 検索履歴
     Import search history: 検索履歴のインポート
@@ -651,7 +651,7 @@ About:
   GitHub issues: GitHub の課題
   Report a problem: 問題の報告
   FAQ: よくある質問
-  Yutu Premium Wiki: Yutu Premium の Wiki
+  FreeTube Wiki: Yutu Premium の Wiki
   Help: ヘルプ
   GitHub releases: GitHub リリース
   Downloads / Changelog: ダウンロード / 変更ログ
@@ -661,7 +661,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: '{licenseLink} に基づいてライセンス供与されています'
   Please read the {roomRulesLink}: '{roomRulesLink} をお読みください'
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium は {creditsPageLink} によって支えられています
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium は {creditsPageLink} によって支えられています
 Channel:
   Subscribe: 'チャンネル登録'
   Unsubscribe: '登録解除'
@@ -700,7 +700,7 @@ Channel:
     votes: '{votes} 投票'
     Reveal Answers: 回答を表示
     Hide Answers: 回答を非表示
-    Video hidden by Yutu Premium: Yutu Premium によって非表示にされた動画
+    Video hidden by FreeTube: Yutu Premium によって非表示にされた動画
     View Full Post: 全文表示
     Viewing Posts Only Supported By Invidious: 投稿の閲覧は Invidious でのみサポートされています。Invidious がなくても、チャンネルのコミュニティタブでコンテンツを見ることができます。
   This channel does not exist: このチャンネルは存在しません
@@ -836,7 +836,7 @@ Video:
   DeArrow:
     Show Original Details: 元の情報を表示
     Show Modified Details: 変更された詳細を表示
-  DRMProtected: DRM保護された動画はYutu Premiumでは再生できません。これらの動画には、独自の非オープンソースのコンポーネントが必要です。この動画を視聴したい場合は、DRM対応のウェブブラウザで公式のYouTubeウェブサイトでご覧ください。
+  DRMProtected: DRM保護された動画はFreeTubeでは再生できません。これらの動画には、独自の非オープンソースのコンポーネントが必要です。この動画を視聴したい場合は、DRM対応のウェブブラウザで公式のYouTubeウェブサイトでご覧ください。
 #& Playlists
   Save Watched Progress: 視聴進捗を保存
   Watched Progress Saved: 視聴進捗を保存しました
@@ -844,7 +844,7 @@ Video:
   Watch:
     'Remaining preroll-ad time: {remindingTimeSeconds}s': '残りのプレロール広告時間: {remindingTimeSeconds}秒'
     'Remaining SABR backoff time: {remindingTimeSeconds}s': '残りのSABRバックオフ時間: {remindingTimeSeconds}秒'
-  Private: 非公開動画は、Googleアカウントでのログインと動画の所有権が必要なため、Yutu Premiumでは視聴できません。
+  Private: 非公開動画は、Googleアカウントでのログインと動画の所有権が必要なため、FreeTubeでは視聴できません。
   Collapse Playlist: プレイリストを折りたたむ
   Expand Playlist: プレイリストを展開する
   Station: 局

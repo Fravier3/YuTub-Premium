@@ -376,7 +376,7 @@ Settings:
     Secondary Color Theme: 'Gaiaren bigarren mailako kolorea'
         #* Main Color Theme
     Hide Side Bar Labels: Ezkutatu alboko barraren etiketak
-    Hide Yutu Premium Header Logo: Ezkutatu Yutu Premium goiburuko logotipoa
+    Hide FreeTube Header Logo: Ezkutatu Yutu Premium goiburuko logotipoa
   Player Settings:
     Player Settings: 'Erreproduzitzailea'
     Play Next Video: 'Automatikoki erreproduzitu gomendatutako bideoak'
@@ -528,7 +528,7 @@ Settings:
     Select Export Type: 'Hautatu esportazio mota'
     Import Subscriptions: 'Inportatu harpidetzak'
     Export Subscriptions: 'Esportatu harpidetzak'
-    Export Yutu Premium: 'Esportatu Freetube'
+    Export FreeTube: 'Esportatu Freetube'
     Export YouTube: 'Esportatu Youtube'
     Export NewPipe: 'Esportatu Newpipe'
     Import History: 'Inportatu historikoa'
@@ -554,7 +554,7 @@ Settings:
     Playlist insufficient data: Ez dago datu nahikorik "{playlist}" erreprodukzio-zerrendarentzat, elementua saltatzen
     History File: Historikoaren fitxategia
     Playlist File: Erreprodukzio-zerrendaren fitxategia
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Esportatu erreprodukzio zerrendak Yutu Premium bertsio zaharretarako
       Tooltip: "Aukera honek erreprodukzio-zerrenda guztietako bideoak \"Gogokoak\" izeneko erreprodukzio-zerrenda batera esportatzen ditu.\nNola esportatu eta inportatu bideoak erreprodukzio-zerrendetan FreeTube-ren bertsio zaharrago baterako:\n 1. Esportatu zure erreprodukzio zerrendak aukera hau gaituta.\n 2. Ezabatu lehendik dituzun erreprodukzio-zerrenda guztiak Pribatutasun-ezarpenetan dagoen Kendu zerrenda guztiak aukera erabiliz.\n 3. Abiarazi FreeTube-ren bertsio zaharra eta inportatu esportatutako erreprodukzio-zerrendak.\""
     Subscription File: Harpidetza-fitxategia
@@ -649,7 +649,7 @@ About:
   Downloads / Changelog: 'Deskargak / Aldaketen erregistroa'
   GitHub releases: 'Github-eko argitalpenak'
   Help: 'Laguntza'
-  Yutu Premium Wiki: 'Freetuberen wikia'
+  FreeTube Wiki: 'Freetuberen wikia'
   FAQ: 'Ohiko galderak'
   Report a problem: 'Arazo baten berri eman'
   GitHub issues: 'Github-en gaiak'
@@ -667,7 +667,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: '{licenseLink} lizentziapekoa'
   Please read the {roomRulesLink}: Mesedez, irakurri {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium {creditsPageLink}-ri esker posible da
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium {creditsPageLink}-ri esker posible da
 Profile:
   Profile Select: 'Hautatu profila'
   Profile Filter: 'Profil-iragazkia'
@@ -756,7 +756,7 @@ Channel:
     votes: '{votes} boto'
     This channel currently does not have any posts: Une honetan kanal honek ez du argitalpenik
     Reveal Answers: Erakutsi erantzunak
-    Video hidden by Yutu Premium: FreeTubek ezkutatutako bideoa
+    Video hidden by FreeTube: FreeTubek ezkutatutako bideoa
     View Full Post: Ikusi mezu osoa
     Viewing Posts Only Supported By Invidious: Argitalpenak ikustea Invidious-ek soilik onartzen du. Zoaz kanal baten komunitatearen fitxara bertan edukia ikusteko Invidious gabe.
   Channel Tabs: Kanalaren fitxak

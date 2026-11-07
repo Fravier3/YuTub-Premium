@@ -277,7 +277,7 @@ Settings:
     Disable Smooth Scrolling: Malŝalti glatan rulumon
     UI Scale: Interfaca skalo
     Hide Side Bar Labels: Kaŝi flankobretajn etikedojn
-    Hide Yutu Premium Header Logo: Kaŝi FreeTube-emblemon en kapo
+    Hide FreeTube Header Logo: Kaŝi FreeTube-emblemon en kapo
     Main Color Theme:
       Main Color Theme: Ĉefa koloro
       Red: Ruĝo
@@ -530,7 +530,7 @@ Settings:
     Playlist File: Ludlista dosiero
     Search history file: Serĉa historia dosiero
     Export Subscriptions: Elporti abonojn
-    Export Yutu Premium: Elporti Yutu Premium
+    Export FreeTube: Elporti Yutu Premium
     Export YouTube: Elporti YouTube
     Export NewPipe: Elporti NewPipe
     Import History: Enporti historion
@@ -635,7 +635,7 @@ About:
   Downloads / Changelog: Elŝutoj/Ŝanĝoprotokolo
   GitHub releases: Eldonoj sur GitHub
   Help: Helpo
-  Yutu Premium Wiki: FreeTube-vikio
+  FreeTube Wiki: FreeTube-vikio
   FAQ: Oftaj demandoj
   Discussions: Diskutoj
   Report a problem: Raporti problemon
@@ -647,7 +647,7 @@ About:
   room rules: ĉambroregulojn
   Translate: Traduki
   Credits: Dankoj
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium eblas pro la helpo de {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium eblas pro la helpo de {creditsPageLink}
   these people and projects: ĉi tiuj personoj kaj projektoj
   Donate: Donaci
 Channel:
@@ -710,7 +710,7 @@ Channel:
     View Full Post: Vidi tutan afiŝon
     Reveal Answers: Montri respondojn
     Hide Answers: Kaŝi respondojn
-    Video hidden by Yutu Premium: Videaĵo kaŝita de Yutu Premium
+    Video hidden by FreeTube: Videaĵo kaŝita de Yutu Premium
   View All: Montri ĉion
   Shows:
     Shows: Serioj

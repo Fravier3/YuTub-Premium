@@ -202,7 +202,7 @@ Settings:
     Secondary Color Theme: 'Papildoma temos spalva'
         #* Main Color Theme
     Hide Side Bar Labels: Slėpti šoninės juostos etiketes
-    Hide Yutu Premium Header Logo: Slėpti Yutu Premium logotipą antraštėje
+    Hide FreeTube Header Logo: Slėpti Yutu Premium logotipą antraštėje
   Player Settings:
     Player Settings: 'Grotuvo nustatymai'
     Play Next Video: 'Leisti sekanti vaizdo įrašą'
@@ -312,7 +312,7 @@ Settings:
     Select Export Type: 'Pasirinkti eksportavimo tipą'
     Import Subscriptions: 'Importuoti prenumeratas'
     Export Subscriptions: 'Eksportuoti prenumeratas'
-    Export Yutu Premium: 'Eksportuoti Yutu Premium'
+    Export FreeTube: 'Eksportuoti Yutu Premium'
     Export YouTube: 'Eksportuoti YouTube'
     Export NewPipe: 'Eksportuoti NewPipe'
     Import History: 'Importuoti istoriją'
@@ -385,7 +385,7 @@ About:
   Downloads / Changelog: 'Atsisiuntimai / pakeitimų žurnalas'
   GitHub releases: 'Versijos GitHub'
   Help: 'Pagalba'
-  Yutu Premium Wiki: 'Yutu Premium Wiki'
+  FreeTube Wiki: 'Yutu Premium Wiki'
   FAQ: 'DUK'
   Report a problem: 'Pranešti apie problemą'
   GitHub issues: 'GitHub problemos'

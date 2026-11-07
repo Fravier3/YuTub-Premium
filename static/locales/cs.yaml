@@ -375,7 +375,7 @@ Settings:
     Secondary Color Theme: 'Sekundární barva motivu'
         #* Main Color Theme
     Hide Side Bar Labels: Skrýt popisky na bočním panelu
-    Hide Yutu Premium Header Logo: Skrýt logo Yutu Premium v záhlaví
+    Hide FreeTube Header Logo: Skrýt logo Yutu Premium v záhlaví
   Player Settings:
     Player Settings: 'Přehrávač'
     Play Next Video: 'Automaticky přehrávat doporučená videa'
@@ -527,7 +527,7 @@ Settings:
     Select Export Type: 'Vybrat typ exportu'
     Import Subscriptions: 'Importovat odběry'
     Export Subscriptions: 'Exportovat odebírané kanály'
-    Export Yutu Premium: 'Exportovat Yutu Premium'
+    Export FreeTube: 'Exportovat Yutu Premium'
     Export YouTube: 'Exportovat YouTube'
     Export NewPipe: 'Exportovat NewPipe'
     Import History: 'Importovat historii'
@@ -554,7 +554,7 @@ Settings:
     History File: Soubor historie
     Subscription File: Soubor odběrů
     Playlist File: Soubor playlistů
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Tooltip: "Tato možnost exportuje videa ze všech playlistů do jednoho playlistu s názvem „Favorites“.\nJak exportovat a importovat videa z playlistů do starších verzí Yutu Premium:\n1. Povolte tuto možnost a exportujte své playlisty.\n2. Odstraňte všechny své stávající playlisty možností Odstranit všechny playlisty v nastavení soukromí.\n3. Spusťte starší verzi Yutu Premium a importujte exportované playlisty."
       Label: Exportovat playlisty pro starší verze Yutu Premium
 
@@ -657,7 +657,7 @@ About:
   Mastodon: Mastodon
   Website: Webové stránky
   FAQ: Často kladené dotazy
-  Yutu Premium Wiki: Wiki Yutu Premium
+  FreeTube Wiki: Wiki Yutu Premium
   Downloads / Changelog: Ke stažení / Seznam změn
   Translate: Překlady
   these people and projects: těmto lidem a projektům
@@ -670,7 +670,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: Licencováno pod {licenseLink}
   Please read the {roomRulesLink}: Přečtěte si prosím {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium existuje díky {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium existuje díky {creditsPageLink}
 Profile:
   Profile Select: 'Výběr profilu'
   All Channels: 'Všechny kanály'
@@ -756,7 +756,7 @@ Channel:
     Hide Answers: Skrýt odpovědi
     votes: '{votes} hlasů'
     Reveal Answers: Odhalit odpovědi
-    Video hidden by Yutu Premium: Video skryté programem Yutu Premium
+    Video hidden by FreeTube: Video skryté programem Yutu Premium
     View Full Post: Zobrazit celý příspěvek
     Viewing Posts Only Supported By Invidious: Zobrazení příspěvků je podporováno pouze službou Invidious. Přejděte do karty komunity kanálu pro zobrazení jejího obsahu bez Invidious.
   Live:

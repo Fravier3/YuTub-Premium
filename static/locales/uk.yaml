@@ -369,7 +369,7 @@ Settings:
     Secondary Color Theme: 'Другорядна кольорова тема'
         #* Main Color Theme
     Hide Side Bar Labels: Приховати мітки бічної панелі
-    Hide Yutu Premium Header Logo: Приховати логотип Yutu Premium із заголовка
+    Hide FreeTube Header Logo: Приховати логотип Yutu Premium із заголовка
   Player Settings:
     Player Settings: 'Програвач'
     Play Next Video: 'Автовідтворення рекомендованих відео'
@@ -514,7 +514,7 @@ Settings:
     Select Export Type: 'Оберіть тип експорту'
     Import Subscriptions: 'Імпортувати підписки'
     Export Subscriptions: 'Експортувати підписки'
-    Export Yutu Premium: 'Експортувати Yutu Premium'
+    Export FreeTube: 'Експортувати Yutu Premium'
     Export YouTube: 'Експортувати YouTube'
     Export NewPipe: 'Експортувати NewPipe'
     Import History: 'Імпортувати історію'
@@ -541,7 +541,7 @@ Settings:
     Playlist File: Файл списку відтворення
     Subscription File: Файл підписки
     History File: Файл історії
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Експортувати добірки для старих версій Yutu Premium
       Tooltip: "Ця опція експортує відео з усіх добірок в одну добірку під назвою \"Улюблені\".\nЯк експортувати та імпортувати відео з добірок для старої версії Yutu Premium:\n1. Експортуйте свої добірки увімкнувши цю опцію.\n2. Видаліть усі свої наявні добірки за допомогою опції \"Вилучити всі добірки\" в налаштуваннях приватності..\n3. Запустіть стару версію Yutu Premium та імпортуйте експортовані добірки."
     Search history file: Файл історії пошуку
@@ -628,7 +628,7 @@ About:
   GitHub issues: Проблеми на GitHub
   Report a problem: Повідомити про проблему
   FAQ: ЧаПи
-  Yutu Premium Wiki: Вікі Yutu Premium
+  FreeTube Wiki: Вікі Yutu Premium
   Help: Довідка
   GitHub releases: Релізи GitHub
   Downloads / Changelog: Завантаження / Журнал змін
@@ -638,7 +638,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: Ліцензовано за ліцензією {licenseLink}
   Please read the {roomRulesLink}: Будь ласка, прочитайте {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium став можливим завдяки {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium став можливим завдяки {creditsPageLink}
 Profile:
   Profile Select: 'Вибір профілю'
   All Channels: 'Усі канали'
@@ -721,7 +721,7 @@ Channel:
     votes: 'Голосів: {votes}'
     Reveal Answers: Розгорнути відповіді
     Hide Answers: Приховати відповіді
-    Video hidden by Yutu Premium: Відео приховане Yutu Premium
+    Video hidden by FreeTube: Відео приховане Yutu Premium
     View Full Post: Переглянути повний пост
     Viewing Posts Only Supported By Invidious: Перегляд постів підтримується лише через Invidious. Перейдіть до вкладки спільноти каналу, щоб переглядати контент без Invidious.
   Live:

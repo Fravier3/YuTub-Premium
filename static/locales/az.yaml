@@ -1,6 +1,6 @@
 # Put the name of your locale in the same language
 Locale Name: 'Azərbaycanca'
-Yutu Premium: 'Yutu Premium'
+FreeTube: 'Yutu Premium'
 
 # Webkit Menu Bar
 File: 'Fayl'
@@ -364,7 +364,7 @@ Settings:
     Hide Side Bar Labels: Kənar Cərgə Etiketlərini Gizlət
     Theme Settings: Kolorit
     Expand Side Bar by Default: Kənar Cərgəni İlkin Olaraq Genişləndir
-    Hide Yutu Premium Header Logo: Yutu Premium Başlıq Simvolunu Gizlət
+    Hide FreeTube Header Logo: Yutu Premium Başlıq Simvolunu Gizlət
     Secondary Color Theme: İkinci Dərəcəli Rəng Koloriti
   Player Settings:
     Screenshot:
@@ -549,7 +549,7 @@ Settings:
     Search history file: Axtarış tarixçəsi faylı
     Settings File: Tənzimləmələr Faylı
     Export Subscriptions: Abunəlikləri İxrac Et
-    Export Yutu Premium: FreeTube-u İxrac et
+    Export FreeTube: FreeTube-u İxrac et
     Export YouTube: YouTube-u İxrac et
     Export NewPipe: NewPipe-ı İxrac et
     Import History: Tarixçəni İdxal et
@@ -684,7 +684,7 @@ Channel:
     View Full Post: Tam Posta Bax
     Reveal Answers: Cavabları Göstərin
     Hide Answers: Cavabları Gizlət
-    Video hidden by Yutu Premium: Yutu Premium tərəfindən gizlədilən video
+    Video hidden by FreeTube: Yutu Premium tərəfindən gizlədilən video
   Shows:
     Shows: Verilişlər
     This channel does not currently have any shows: Bu kanalın hazırda heç bir verilişi yoxdur
@@ -1004,7 +1004,7 @@ About:
   Downloads / Changelog: Yükləmələr / Dəyişiklik Jurnalı
   GitHub releases: GitHub Buraxılışları
   Help: Kömək
-  Yutu Premium Wiki: Yutu Premium Wiki
+  FreeTube Wiki: Yutu Premium Wiki
   FAQ: FAQ
   Discussions: Müzakirələr
   Report a problem: Problemi bildir
@@ -1017,7 +1017,7 @@ About:
   room rules: otaq qaydaları
   Translate: Tərcümə et
   Credits: Müəlliflər
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium {creditsPageLink} dəstəyi ilə yaradılmışdır
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium {creditsPageLink} dəstəyi ilə yaradılmışdır
   these people and projects: bu şəxslər və layihələr
   Donate: İanə et
 Keys:

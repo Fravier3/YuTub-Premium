@@ -91,6 +91,7 @@ select {
   .routerView .routerView,
   .routerView .card {
     margin-inline: 0 !important;
+    inline-size: 100% !important;
   }
 
   .routerView .grid {

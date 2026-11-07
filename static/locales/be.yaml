@@ -268,7 +268,7 @@ Settings:
     Disable Smooth Scrolling: 'Адключыць плаўную прагортку'
     UI Scale: 'Маштаб інтэрфейсу'
     Hide Side Bar Labels: 'Схаваць надпісы на бакавой панэлі'
-    Hide Yutu Premium Header Logo: 'Схаваць лагатып загалоўка Yutu Premium'
+    Hide FreeTube Header Logo: 'Схаваць лагатып загалоўка Yutu Premium'
     Base Theme:
       Base Theme: 'Базавая тэма'
       Black: 'Чорная'
@@ -534,7 +534,7 @@ Settings:
     History File: 'Файл гісторыі'
     Playlist File: 'Файл плэй-ліста'
     Export Subscriptions: 'Экспарт падпісак'
-    Export Yutu Premium: 'Экспарт Yutu Premium'
+    Export FreeTube: 'Экспарт Yutu Premium'
     Export YouTube: 'Экспарт YouTube'
     Export NewPipe: 'Экспарт NewPipe'
     Import History: 'Імпарт гісторыі'
@@ -558,7 +558,7 @@ Settings:
     Unknown data key: 'Невядомы ключ даных'
     How do I import my subscriptions?: 'Як мне імпартаваць свае падпіскі?'
     Manage Subscriptions: 'Кіраванне падпіскамі'
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Экспарт плэй-лістоў для старых версій Yutu Premium
       Tooltip: "Гэты параметр экспартуе відэа з усіх плэй-лістоў у адзін плэй-ліст пад назвай «Выбранае».\nЯк экспартаваць і імпартаваць відэа ў плэй-лісты для старой версіі Yutu Premium:\n1. Экспартуйце свае плэй-лісты з уключанай опцыяй.\n 2. Выдаліце ўсе існуючыя плэй-лісты, выкарыстоўваючы опцыю «Выдаліць усе плэй-лісты» ў раздзеле «Налады прыватнасці».\n3. Запусціце старую версію Yutu Premium і імпартуйце экспартаваныя плэй-лісты.\""
   Proxy Settings:
@@ -618,7 +618,7 @@ About:
   Downloads / Changelog: 'Спампоўванне / Журнал змяненняў'
   GitHub releases: 'Выпускі на GitHub'
   Help: 'Даведка'
-  Yutu Premium Wiki: 'Yutu Premium Вікі'
+  FreeTube Wiki: 'Yutu Premium Вікі'
   FAQ: 'Частыя пытанні'
   Discussions: 'Абмеркаванні'
   Report a problem: 'Паведаміць пра праблему'
@@ -727,7 +727,7 @@ Channel:
     votes: '{votes} галасоў'
     Reveal Answers: 'Адкрыць адказы'
     Hide Answers: 'Схаваць адказы'
-    Video hidden by Yutu Premium: Відэа схавана Yutu Premium'ам
+    Video hidden by FreeTube: Відэа схавана Yutu Premium'ам
     View Full Post: Глядзець поўны пост
     Viewing Posts Only Supported By Invidious: Прагляд паведамленняў падтрымліваецца толькі ў Invidious. Перайдзіце на ўкладку супольнасці канала, каб праглядзець там змесціва без Invidious.
   Home:

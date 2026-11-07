@@ -370,7 +370,7 @@ Settings:
     Disable Smooth Scrolling: Tắt cuộn mượt
     Expand Side Bar by Default: Mở rộng thanh bên theo mặc định
     Hide Side Bar Labels: Ẩn nhãn thanh bên
-    Hide Yutu Premium Header Logo: Ẩn logo Yutu Premium trên thanh trên
+    Hide FreeTube Header Logo: Ẩn logo Yutu Premium trên thanh trên
   Player Settings:
     Player Settings: 'Trình phát'
     Play Next Video: 'Tự động phát video được đề xuất'
@@ -458,7 +458,7 @@ Settings:
     Import History: Nhập lịch sử
     Export NewPipe: Xuất NewPipe
     Export YouTube: Xuất YouTube
-    Export Yutu Premium: Xuất Yutu Premium
+    Export FreeTube: Xuất Yutu Premium
     Export Subscriptions: Xuất đăng ký
     Import Subscriptions: Nhập đăng ký
     Select Export Type: Chọn kiểu xuất ra
@@ -472,7 +472,7 @@ Settings:
     History File: Tệp lịch sử
     Playlist File: Tệp danh sách phát
     Subscription File: Tệp đăng ký
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Xuất danh sách phát cho các phiên bản Yutu Premium cũ hơn
       Tooltip: "Tùy chọn này sẽ gộp tất cả các danh sách phát vào một danh sách phát mang tên 'Ưa thích'.\nCách để nhập & xuất video trong danh sách phát cho một phiên bản cũ hơn của Yutu Premium:\n1. Xuất danh sách phát với tùy chọn này được bật.\n2. Xóa tất cả các danh sách phát qua tùy chọn Xóa tất cả danh sách phát trong mục Cài đặt quyền riêng tư.\n3. Mở phiên bản cũ hơn và nhập danh sách phát đã được xuất ra."
     Search history: Lịch sử tìm kiếm
@@ -646,7 +646,7 @@ About:
   Credits: Ghi công
   Donate: Quyên tặng
   GitHub issues: Sự cố GitHub
-  Yutu Premium Wiki: Yutu Premium Wiki
+  FreeTube Wiki: Yutu Premium Wiki
   Beta: Thử nghiệm
   Downloads / Changelog: Tải xuống / nhật ký thay đổi
   GitHub releases: Bản phát hành GitHub
@@ -658,7 +658,7 @@ About:
   AGPLv3: giấy phép AGPLv3
   Licensed under the {licenseLink}: Được cấp phép theo {licenseLink}
   Please read the {roomRulesLink}: Vui lòng đọc {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium được tạo ra bởi {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium được tạo ra bởi {creditsPageLink}
 Channel:
   Subscribe: 'Đăng ký'
   Unsubscribe: 'Hủy đăng ký'
@@ -703,7 +703,7 @@ Channel:
     votes: '{votes} bình chọn'
     Reveal Answers: Hiện Câu trả lời
     Hide Answers: Ẩn Câu trả lời
-    Video hidden by Yutu Premium: Yutu Premium đã ẩn video này
+    Video hidden by FreeTube: Yutu Premium đã ẩn video này
     View Full Post: Mở rộng bài đăng
     Viewing Posts Only Supported By Invidious: Việc xem các bài đăng chỉ được hỗ trợ qua Invidious. Hãy đi đến trang Cộng đồng của kênh để xem nội dung này mà không cần Invidious.
   Releases:

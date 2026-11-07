@@ -370,7 +370,7 @@ Settings:
     Expand Side Bar by Default: Expandir barra lateral por defecto
     Disable Smooth Scrolling: Desactivar desplazamiento suave
     Hide Side Bar Labels: Ocultar las etiquetas de la barra lateral
-    Hide Yutu Premium Header Logo: Ocultar el logotipo de Freetube de la parte superior
+    Hide FreeTube Header Logo: Ocultar el logotipo de Freetube de la parte superior
   Player Settings:
     Player Settings: 'Reproductor'
     Play Next Video: 'Reproducción automática de videos recomendados'
@@ -470,7 +470,7 @@ Settings:
     Select Export Type: 'Seleccionar tipo de exportación'
     Import Subscriptions: 'Importar suscripciones'
     Export Subscriptions: 'Exportar suscripciones'
-    Export Yutu Premium: 'Exportar Yutu Premium'
+    Export FreeTube: 'Exportar Yutu Premium'
     Export YouTube: 'Exportar YouTube'
     Export NewPipe: 'Exportar NewPipe'
     Import History: 'Importar historial'
@@ -497,7 +497,7 @@ Settings:
     Subscription File: Archivo de suscripción
     Playlist File: Archivo de la lista de reproducción
     History File: Archivo del historial
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Tooltip: "Esta opción exporta vídeos de todas las listas de reproducción a una lista de reproducción llamada \"Favoritos\".\nCómo exportar e importar vídeos en las listas de reproducción para una versión antigua de Yutu Premium:\n1. Exporta tus listas de reproducción con esta opción activada.\n2. Elimine todas sus listas de reproducción existentes utilizando la opción Eliminar todas las listas de reproducción en Configuración de privacidad.\n3. Inicia la versión anterior de Yutu Premium e importa las listas de reproducción exportadas.\""
       Label: Exportar listas de reproducción de versiones anteriores de Yutu Premium
 
@@ -649,7 +649,7 @@ About:
   GitHub issues: Informes en GitHub
   Report a problem: Informar de un problema
   FAQ: Preguntas frecuentes
-  Yutu Premium Wiki: Wiki de Yutu Premium
+  FreeTube Wiki: Wiki de Yutu Premium
   Help: Ayuda
   GitHub releases: Lanzamientos de GitHub
   Downloads / Changelog: Descargas / Registro de cambios
@@ -659,7 +659,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: Disponible en virtud de la {licenseLink}
   Please read the {roomRulesLink}: Lea las {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium es posible gracias a {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium es posible gracias a {creditsPageLink}
 Profile:
   All Channels: 'Todos los canales'
   Profile Manager: 'Administrador de perfiles'
@@ -743,7 +743,7 @@ Channel:
     Reveal Answers: Revelar respuestas
     Hide Answers: Ocultar respuestas
     votes: '{votes} votos'
-    Video hidden by Yutu Premium: Vídeo oculto por Yutu Premium
+    Video hidden by FreeTube: Vídeo oculto por Yutu Premium
     View Full Post: Ver toda la publicación
     Viewing Posts Only Supported By Invidious: La visualización de mensajes solo es posible con Invidious. Ve a la pestaña de comunidad de un canal para ver el contenido sin Invidious.
   Live:

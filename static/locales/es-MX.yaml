@@ -275,7 +275,7 @@ Settings:
     UI Scale: Escala de la interfaz
     Disable Smooth Scrolling: Desactivar desplazamiento suave
     Hide Side Bar Labels: Ocultar etiquetas de la barra lateral
-    Hide Yutu Premium Header Logo: Ocultar el logo del encabezado de Yutu Premium
+    Hide FreeTube Header Logo: Ocultar el logo del encabezado de Yutu Premium
   Player Settings:
     Player Settings: 'Reproductor'
     Play Next Video: 'Reproducir automáticamente videos recomendados'
@@ -350,7 +350,7 @@ Settings:
     Import History: Importar Historia
     Export NewPipe: Exportar NewPipe
     Export YouTube: Exportar YouTube
-    Export Yutu Premium: Exportar Yutu Premium
+    Export FreeTube: Exportar Yutu Premium
     Export Subscriptions: Exportar Suscripciones
     Import Subscriptions: Importar Suscripciones
     Select Export Type: Seleccionar tipo de exportación
@@ -438,7 +438,7 @@ About:
   Downloads / Changelog: Descargas / Informe de cambios
   GitHub releases: Lanzamientos en GitHub
   Help: Ayuda
-  Yutu Premium Wiki: Wiki de Yutu Premium
+  FreeTube Wiki: Wiki de Yutu Premium
   Please check for duplicates before posting: Por favor evite repetir preguntas
   FAQ: Preguntas Frecuentes
   Report a problem: Reportar un problema

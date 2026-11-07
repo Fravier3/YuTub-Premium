@@ -367,7 +367,7 @@ Settings:
     Disable Smooth Scrolling: Deaktiviraj neisprekidano pomicanje
     Expand Side Bar by Default: Standardno proširi bočnu traku
     Hide Side Bar Labels: Sakrij oznake bočnih traka
-    Hide Yutu Premium Header Logo: Sakrij Yutu Premium logotip u zaglavlju
+    Hide FreeTube Header Logo: Sakrij Yutu Premium logotip u zaglavlju
   Player Settings:
     Player Settings: 'Player'
     Play Next Video: 'Automatski reproduciraj preporučena videa'
@@ -480,7 +480,7 @@ Settings:
     Import History: Uvezi povijest
     Export NewPipe: Izvezi NewPipe
     Export YouTube: Izvezi YouTube
-    Export Yutu Premium: Izvezi Yutu Premium
+    Export FreeTube: Izvezi Yutu Premium
     Export Subscriptions: Izvezi pretplate
     Import Subscriptions: Uvezi pretplate
     Select Export Type: Odaberi vrstu izvoza
@@ -495,7 +495,7 @@ Settings:
     Subscription File: Datoteka pretplate
     History File: Datoteka povijesti
     Playlist File: Datoteka zbirke
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Tooltip: "Ova opcija izvozi videa iz svih zbirki u jednu zbirku pod nazivom „Favoriti”.\nKako izvesti i uvesti videa u zbirkama za stariju Yutu Premium verziju:\n 1. Izvezi svoje zbirke s ovom opcijom aktiviranom.\n2. Izbriši sve svoje postojeće zbirke pomoću opcije „Ukloni sve zbirke” u postavkama privatnosti.\n3. Pokreni stariju Yutu Premium verziju i uvezi izvezene zbirke.\""
       Label: Izvezi zbirke za starije Yutu Premium verzije
     Search history file: Datoteka povijesti pretraživanja
@@ -643,7 +643,7 @@ About:
   Mastodon: Mastodon
   GitHub issues: GitHub problemi
   Report a problem: Prijavi grešku
-  Yutu Premium Wiki: Yutu Premium Wiki
+  FreeTube Wiki: Yutu Premium Wiki
   GitHub releases: GitHub izdanja
   Downloads / Changelog: Preuzimanja/dnevnik promjena
   Source code: Izvorni kod
@@ -651,7 +651,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: 'Licenca: {licenseLink}'
   Please read the {roomRulesLink}: Pročitaj {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium omogućuju {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium omogućuju {creditsPageLink}
 Profile:
   All Channels: 'Svi kanali'
   Profile Manager: 'Upravljač profila'
@@ -737,7 +737,7 @@ Channel:
     Reveal Answers: Prikaži odgovore
     Hide Answers: Sakrij odgovore
     votes: '{votes} glasa'
-    Video hidden by Yutu Premium: Video skriven od FreeTubea
+    Video hidden by FreeTube: Video skriven od FreeTubea
     View Full Post: Pogledaj cijelu objavu
     Viewing Posts Only Supported By Invidious: Prikazivanje postova podržava samo Invidious. Idi na karticu zajednice kanala za prikaz sadržaja bez Invidiousa.
   Shorts:

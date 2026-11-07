@@ -369,7 +369,7 @@ Settings:
     Secondary Color Theme: Cor secundária
         #* Main Color Theme
     Hide Side Bar Labels: Ocultar texto na barra lateral
-    Hide Yutu Premium Header Logo: Ocultar logotipo Yutu Premium no topo
+    Hide FreeTube Header Logo: Ocultar logotipo Yutu Premium no topo
   Player Settings:
     Player Settings: Reprodutor
     Play Next Video: Reproduzir automaticamente os vídeos recomendados
@@ -514,7 +514,7 @@ Settings:
     Select Export Type: Selecione o tipo de exportação
     Import Subscriptions: Importar subscrições
     Export Subscriptions: Exportar subscrições
-    Export Yutu Premium: Exportar Yutu Premium
+    Export FreeTube: Exportar Yutu Premium
     Export YouTube: Exportar YouTube
     Export NewPipe: Exportar NewPipe
     Import History: Importar histórico
@@ -541,7 +541,7 @@ Settings:
     Subscription File: Ficheiro de subscrição
     History File: Ficheiro de histórico
     Playlist File: Ficheiro de lista de reprodução
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Exportar listas de reprodução para versões mais antigas do Yutu Premium
       Tooltip: "Esta opção exporta os vídeos de todas as listas de reprodução para uma lista de reprodução chamada \"Favoritos\".\nComo exportar e importar vídeos em listas de reprodução para uma versão mais antiga do Yutu Premium:\n1. Exporte as suas listas de reprodução com esta opção ativada.\n2. Elimine todas as listas de reprodução existentes usando a opção \"Remover todas as listas de reprodução\" em \"Definições de privacidade\".\n3. Abra a versão mais antiga do Yutu Premium e importe as listas de reprodução."
     Search history file: Procurar histórico de ficheiro
@@ -621,7 +621,7 @@ About:
   Downloads / Changelog: Descargas / alterações
   GitHub releases: Versões do GitHub
   Help: Ajuda
-  Yutu Premium Wiki: Wiki Yutu Premium
+  FreeTube Wiki: Wiki Yutu Premium
   FAQ: Perguntas frequentes
   Report a problem: Reportar um problema
   GitHub issues: Problemas no GitHub
@@ -638,7 +638,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: Licenciado ao abrigo de {licenseLink}
   Please read the {roomRulesLink}: Por favor leia o {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: O Yutu Premium é possível graças a {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: O Yutu Premium é possível graças a {creditsPageLink}
 Profile:
   All Channels: Todos os canais
   Profile Manager: Gestor de perfis
@@ -721,7 +721,7 @@ Channel:
     Reveal Answers: Mostrar respostas
     Hide Answers: Ocultar respostas
     votes: '{votes} votos'
-    Video hidden by Yutu Premium: Freetube ocultou este vídeo
+    Video hidden by FreeTube: Freetube ocultou este vídeo
     View Full Post: Ver publicação na íntegra
     Viewing Posts Only Supported By Invidious: A visualização de publicações só é suportada pelo Invidious. Aceda ao separador Comunidade de um canal para ver o conteúdo sem o Invidious.
   Live:

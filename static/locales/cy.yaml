@@ -282,7 +282,7 @@ Settings:
     Disable Smooth Scrolling: 'Analluogi Sgrolio Llyfn'
     UI Scale: 'Graddfa UI'
     Hide Side Bar Labels: 'Cuddio Labeli Bar Ochr'
-    Hide Yutu Premium Header Logo: 'Cuddio Logo Pennawd Yutu Premium'
+    Hide FreeTube Header Logo: 'Cuddio Logo Pennawd Yutu Premium'
     Base Theme:
       Base Theme: 'Thema Sylfaenol'
       Black: 'Du'
@@ -557,7 +557,7 @@ Settings:
     History File: 'Ffeil Hanes'
     Playlist File: 'Ffeil Rhestr Chwarae'
     Export Subscriptions: 'Allforio Tanysgrifiadau'
-    Export Yutu Premium: 'Allforio Yutu Premium'
+    Export FreeTube: 'Allforio Yutu Premium'
     Export YouTube: 'Allforio YouTube'
     Export NewPipe: 'Allforio NewPipe'
     Import History: 'Mewnforio Hanes'
@@ -581,7 +581,7 @@ Settings:
     Unknown data key: 'Allwedd ddata anhysbys'
     How do I import my subscriptions?: 'Sut ydw i''n mewnforio fy nhanysgrifiadau?'
     Manage Subscriptions: 'Rheoli Tanysgrifiadau'
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Tooltip: "Mae'r opsiwn hwn yn allforio fideos o bob rhestr chwarae i un rhestr chwarae o'r enw 'Ffefrynnau'.\nSut i allforio a mewnforio fideos mewn rhestrau chwarae ar gyfer fersiwn hŷn o Yutu Premium:\n1. Allforio eich rhestri chwarae gyda'r opsiwn hwn wedi'i alluogi.\n2. Dileu eich holl restrau chwarae presennol gan ddefnyddio'r opsiwn Dileu Pob Rhestr Chwarae o dan Gosodiadau Preifatrwydd.\n 3. Lansio'r fersiwn hŷn o Yutu Premium a mewngludo'r rhestri chwarae allforio.\""
       Label: Allforio Rhestrau Chwarae Fersiynau Yutu Premium Hŷn
     Search history file: Ffeil hanes chwilio
@@ -663,7 +663,7 @@ About:
   Downloads / Changelog: 'Llwytho i lawr / Cofnod newid'
   GitHub releases: 'Ryddhau drwy GitHub'
   Help: 'Cymorth'
-  Yutu Premium Wiki: 'Wici Yutu Premium'
+  FreeTube Wiki: 'Wici Yutu Premium'
   FAQ: 'Cwestiynau Cyffredin'
   Discussions: 'Sgyrsiau'
   Report a problem: 'Adrodd am broblem'
@@ -680,7 +680,7 @@ About:
 
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: Trwyddedwyd o dan {licenseLink}
-  Yutu Premium is made possible by {creditsPageLink}: Mae Freetube ar gael oherwydd {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Mae Freetube ar gael oherwydd {creditsPageLink}
   Please read the {roomRulesLink}: Darllenwch y {roomRulesLink}
 Profile:
   Profile Settings: 'Proffil'
@@ -775,7 +775,7 @@ Channel:
     votes: '{votes} pleidlais'
     Reveal Answers: 'Datgelu Atebion'
     Hide Answers: 'Cuddio Atebion'
-    Video hidden by Yutu Premium: Fideo wedi'i guddio gan Yutu Premium
+    Video hidden by FreeTube: Fideo wedi'i guddio gan Yutu Premium
     View Full Post: Gweld Post Llawn
     Viewing Posts Only Supported By Invidious: Dim ond Invidious sy'n cefnogi Gweld Postiadau. Ewch i dab cymunedol sianel i weld cynnwys yno heb Invidious.
   Home:

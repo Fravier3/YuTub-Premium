@@ -374,7 +374,7 @@ Settings:
     Disable Smooth Scrolling: Ära kasuta sujuvat kerimist
     Expand Side Bar by Default: Vaikimisi näita külgriba laiana
     Hide Side Bar Labels: Peida külgriba sildid
-    Hide Yutu Premium Header Logo: Peida Yutu Premium'i päise logo
+    Hide FreeTube Header Logo: Peida Yutu Premium'i päise logo
   Player Settings:
     Player Settings: 'Meediamängija'
     Play Next Video: 'Esita soovitatud videoid automaatselt'
@@ -475,7 +475,7 @@ Settings:
     Select Export Type: 'Vali eksporditava faili vorming'
     Import Subscriptions: 'Impordi tellimused'
     Export Subscriptions: 'Ekspordi tellimused'
-    Export Yutu Premium: 'Ekspordi Yutu Premium vormingus'
+    Export FreeTube: 'Ekspordi Yutu Premium vormingus'
     Export YouTube: 'Ekspordi YouTube vormingus'
     Export NewPipe: 'Ekspordi NewPipe vormingus'
     Import History: 'Impordi ajalugu'
@@ -502,7 +502,7 @@ Settings:
     Subscription File: Tellimuse fail
     History File: Ajaloo fail
     Playlist File: Esitusloendi fail
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Tooltip: "Selle valikuga ekspordid kõik esitusloendid ühte esitusloendisse „Lemmikud“.\n Kuidas saad seda eksportimise ja importimise valikut kasutada vanemate Yutu Premium'i versioonidega:\n1. Ekspordi kõik oma esitusloendid kasutades seda valikut.\n 2. Kustuta kõik oma esitusloendid Privaatsusseadistustest kasutades valikut „Kustuta kõik esitusloendid“.\n3. Käivita vanem Yutu Premium'i versioon ja impordi esimeses sammus eksporditud esitusloendid."
       Label: Ekspordi esitusloendid vanemate Yutu Premium'i versioonide jaoks
     Search history file: Otsinguajaloo fail
@@ -656,7 +656,7 @@ About:
   GitHub issues: Teata vigadest GitHub'i vahendusel
   Report a problem: Vead ja probleemid
   FAQ: KKK
-  Yutu Premium Wiki: Yutu Premium viki
+  FreeTube Wiki: Yutu Premium viki
   Help: Abiteave
   GitHub releases: GitHub'is avaldatud versioonid
   Downloads / Changelog: Allalaadimised ja muudatuste logi
@@ -664,7 +664,7 @@ About:
   Beta: beetaversioon
   Discussions: Arutelud
   AGPLv3: AGPLv3 alusel
-  Yutu Premium is made possible by {creditsPageLink}: 'Yutu Premium on loodud järgnevate arendajate poolt: {creditsPageLink}'
+  FreeTube is made possible by {creditsPageLink}: 'Yutu Premium on loodud järgnevate arendajate poolt: {creditsPageLink}'
   Please read the {roomRulesLink}: 'Palun loe: {roomRulesLink}'
   Licensed under the {licenseLink}: 'Kasutusel litsents: {licenseLink}'
 Profile:
@@ -755,7 +755,7 @@ Channel:
     Reveal Answers: Näita vastuseid
     Hide Answers: Peida vastused
     votes: '{votes} häält'
-    Video hidden by Yutu Premium: Yutu Premium'i poolt peidetud video
+    Video hidden by FreeTube: Yutu Premium'i poolt peidetud video
     View Full Post: Vaata kogu postitust
     Viewing Posts Only Supported By Invidious: Postituste vaatamine toimib vaid Invidiouse liidestusega. Ilma selleta saad lugeda sisu, mida näed kanali kogukonna vaatest.
   This channel does not exist: Sellist kanalit ei leidu

@@ -369,7 +369,7 @@ Settings:
     Secondary Color Theme: 'Cor secundaria'
         #* Main Color Theme
     Hide Side Bar Labels: Ocultalas etiquetas da barra lateral
-    Hide Yutu Premium Header Logo: Ocultalo logotipo de Freetube na cabeceira
+    Hide FreeTube Header Logo: Ocultalo logotipo de Freetube na cabeceira
   Player Settings:
     Player Settings: 'Reprodutor'
     Play Next Video: 'Reprodución automática de vídeos recomendados'
@@ -514,7 +514,7 @@ Settings:
     Select Export Type: 'Escoller tipo de exportación'
     Import Subscriptions: 'Importar subscricións'
     Export Subscriptions: 'Exportar subscricións'
-    Export Yutu Premium: 'Exportar Freetube'
+    Export FreeTube: 'Exportar Freetube'
     Export YouTube: 'Exportar YouTube'
     Export NewPipe: 'Exportar NewPipe'
     Import History: 'Importar histórico'
@@ -626,7 +626,7 @@ About:
   GitHub issues: Problemas de GitHub
   Report a problem: Informar dun problema
   FAQ: Cuestións frecuentes
-  Yutu Premium Wiki: Wiki de Yutu Premium
+  FreeTube Wiki: Wiki de Yutu Premium
   Help: Axuda
   GitHub releases: Lanzamentos de GitHub
   Downloads / Changelog: Descargas / Rexistro de cambios
@@ -636,7 +636,7 @@ About:
   Licensed under the {licenseLink}: Licenciado baixo {licenseLink}
   Discussions: Debates
   Please read the {roomRulesLink}: Por favor le as {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium é posible grazas a {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium é posible grazas a {creditsPageLink}
 Profile:
   Profile Select: 'Selección de perfil'
   All Channels: 'Tódalas canles'
@@ -720,7 +720,7 @@ Channel:
     View Full Post: Ver publicación completa
     Reveal Answers: Amosar respostas
     Hide Answers: Agochar respostas
-    Video hidden by Yutu Premium: Vídeo agochado por Yutu Premium
+    Video hidden by FreeTube: Vídeo agochado por Yutu Premium
   Podcasts:
     Podcasts: Podcasts
     This channel does not currently have any podcasts: Esta canle non ten podcasts actualmente

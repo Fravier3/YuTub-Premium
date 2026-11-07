@@ -376,7 +376,7 @@ Settings:
     Expand Side Bar by Default: Alapértelmezés szerinti oldalsáv megjelenítése
     Disable Smooth Scrolling: Finom görgetés letiltása
     Hide Side Bar Labels: Gombfeliratok elrejtése az oldalsávról
-    Hide Yutu Premium Header Logo: Yutu Premium logó elrejtése a fejlécből
+    Hide FreeTube Header Logo: Yutu Premium logó elrejtése a fejlécből
   Player Settings:
     Player Settings: 'Lejátszó'
     Play Next Video: 'Ajánlott videók automatikus lejátszása'
@@ -477,7 +477,7 @@ Settings:
     Select Export Type: 'Exportálási típus kiválasztása'
     Import Subscriptions: 'Feliratkozások importálása'
     Export Subscriptions: 'Feliratkozások exportálása'
-    Export Yutu Premium: 'Yutu Premium exportálása'
+    Export FreeTube: 'Yutu Premium exportálása'
     Export YouTube: 'YouTube-formátumba exportálás'
     Export NewPipe: 'NewPipe exportálása'
     Import History: 'Előzmények importálása'
@@ -504,7 +504,7 @@ Settings:
     Subscription File: Feliratkozás-fájl
     History File: Előzményfájl
     Playlist File: Lejátszási lista fájl
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Tooltip: "Ez az opció az összes lejátszási lista videóit egyetlen, „Kedvencek” nevű lejátszási listába exportálja.\nHogyan exportálhat és importálhat videókat lejátszási listákba a Yutu Premium régebbi verziója esetében:\n1. Exportálja a lejátszási listáit, ezzel az opcióval bekacsolva.\n2. Törölje az összes meglévő lejátszási listáját az Adatvédelmi beállítások alatt található Összes lejátszási lista eltávolítása opcióval.\n3. Indítsa el a Yutu Premium régebbi verzióját, és importálja az exportált lejátszási listákat."
       Label: Lejátszási listák exportálása régebbi Yutu Premium verziókhoz
 
@@ -663,7 +663,7 @@ About:
   Help: Súgó
   GitHub releases: GitHub-kiadások
   Downloads / Changelog: Letöltések / Változáslista
-  Yutu Premium Wiki: Yutu Premium Wiki
+  FreeTube Wiki: Yutu Premium Wiki
   Source code: Forráskód
   Beta: Béta
   FAQ: GYIK
@@ -672,7 +672,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: Licencelve a(z) {licenseLink} alatt
   Please read the {roomRulesLink}: 'Olvassa el a következőt: {roomRulesLink}'
-  Yutu Premium is made possible by {creditsPageLink}: A Yutu Premium {creditsPageLink} jóvoltából jöhetett létre
+  FreeTube is made possible by {creditsPageLink}: A Yutu Premium {creditsPageLink} jóvoltából jöhetett létre
 Profile:
   Profile Select: 'Profil kiválasztása'
   All Channels: 'Összes csatorna'
@@ -759,7 +759,7 @@ Channel:
     Reveal Answers: Válaszok felfedése
     Hide Answers: Válaszok elrejtése
     votes: '{votes} szavazat'
-    Video hidden by Yutu Premium: Yutu Premium által rejtett videó
+    Video hidden by FreeTube: Yutu Premium által rejtett videó
     View Full Post: Teljes bejegyzés megtekintése
     Viewing Posts Only Supported By Invidious: A hozzászólások megtekintését csak az Invidious támogatja. Az Invidious nélkül is megtekintheti a csatornák közösségi fülét.
   Shorts:

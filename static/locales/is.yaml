@@ -376,7 +376,7 @@ Settings:
     Secondary Color Theme: 'Aukalitur þema'
         #* Main Color Theme
     Hide Side Bar Labels: Fela skýringar á hliðarstiku
-    Hide Yutu Premium Header Logo: Fela táknmynd Yutu Premium í haus
+    Hide FreeTube Header Logo: Fela táknmynd Yutu Premium í haus
   Player Settings:
     Player Settings: 'Spilari'
     Play Next Video: 'Spila sjálfkrafa myndskeið sem mælt er með'
@@ -526,7 +526,7 @@ Settings:
     Select Export Type: 'Veldu tegund útflutnings'
     Import Subscriptions: 'Flytja inn áskriftir'
     Export Subscriptions: 'Flytja út áskriftir'
-    Export Yutu Premium: 'Flytja út Yutu Premium'
+    Export FreeTube: 'Flytja út Yutu Premium'
     Export YouTube: 'Flytja út YouTube'
     Export NewPipe: 'Flytja út NewPipe'
     Import History: 'Flytja inn áhorfsferil'
@@ -553,7 +553,7 @@ Settings:
     Subscription File: Skrá með áskriftum
     History File: Skrá með atvikaferli
     Playlist File: Spilunarlistaskrá
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Flytja út spilunarlista fyrir eldri útgáfur Yutu Premium
       Tooltip: "Þessi valkostur flytur út myndskeið úr öllum spilunarlistum inn í einn spilunarlista sem kallast 'Eftirlæti'.\nHér er skýrt hvernig eigi að flytja út eða inn myndskeið í spilunarlistum fyrir eldri útgáfur Yutu Premium:\n 1. Flyttu út spilunarlistana þína með þennan valkost virkann.\n2. Eyddu út öllum fyrirliggjandi spilunarlistum hjá þér með valkostinum 'Fjarlægja alla spilunarlista' í stillingum gagnaleyndar.\n3. Ræstu eldri útgáfu Yutu Premium og flyttu inn spilunarlistana sem þú fluttir út.\""
     Search history file: Leita í ferilskrá
@@ -644,7 +644,7 @@ About:
   Downloads / Changelog: 'Sóttar skrár / Breytingaskrá'
   GitHub releases: 'Útgáfur af GitHub'
   Help: 'Hjálp'
-  Yutu Premium Wiki: 'Yutu Premium wikivefur'
+  FreeTube Wiki: 'Yutu Premium wikivefur'
   FAQ: 'FAQ / Algengar spurningar'
   Report a problem: 'Tilkynna vandamál'
   GitHub issues: 'GitHub verkbeiðnir'
@@ -662,7 +662,7 @@ About:
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: Notkunarleyfi samkvæmt {licenseLink}
   Please read the {roomRulesLink}: Þú ættir endilega að lesa {roomRulesLink}
-  Yutu Premium is made possible by {creditsPageLink}: Yutu Premium er gert mögulegt af {creditsPageLink}
+  FreeTube is made possible by {creditsPageLink}: Yutu Premium er gert mögulegt af {creditsPageLink}
 Profile:
   Profile Select: 'Val á notkunarsniði'
   Profile Filter: 'Sía notkunarsnið'
@@ -750,7 +750,7 @@ Channel:
     Reveal Answers: Birta svör
     Hide Answers: Fela svör
     votes: '{votes} atkvæði'
-    Video hidden by Yutu Premium: Myndskeið falið af Yutu Premium
+    Video hidden by FreeTube: Myndskeið falið af Yutu Premium
     View Full Post: Skoða alla færsluna
     Viewing Posts Only Supported By Invidious: Einungis er hægt að skoða innsendar færslur á Invidious. Farðu á samfélagsflipa rásar til að skoða efni þar án Invidious.
   Shorts:

@@ -231,7 +231,7 @@ Settings:
     Select Export Type: 'Selecciona tipus d''exportació'
     Import Subscriptions: 'Importa les subscripcions'
     Export Subscriptions: 'Exporta subscripcions'
-    Export Yutu Premium: 'Exporta Yutu Premium'
+    Export FreeTube: 'Exporta Yutu Premium'
     Export YouTube: 'Exporta YouTube'
     Export NewPipe: 'Exporta NewPipe'
     Import History: 'Importa l''historial'
@@ -316,7 +316,7 @@ About:
   Donate: Dona
   Translate: Tradueix
   GitHub releases: Llançaments del GitHub
-  Yutu Premium Wiki: Yutu Premium Wiki
+  FreeTube Wiki: Yutu Premium Wiki
 Profile:
   Profile Select: 'Selecciona perfil'
   All Channels: 'Tots els canals'

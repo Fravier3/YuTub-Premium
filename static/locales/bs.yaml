@@ -256,7 +256,7 @@ Settings:
     Disable Smooth Scrolling: Onemogući glatko skrolovanje
     UI Scale: UI Skala
     Hide Side Bar Labels: Sakrij oznake bočne trake
-    Hide Yutu Premium Header Logo: Sakrij logotip zaglavlja FreeTube-a
+    Hide FreeTube Header Logo: Sakrij logotip zaglavlja FreeTube-a
     Base Theme:
       Base Theme: Osnovna tema
       Black: Crno
@@ -520,7 +520,7 @@ Settings:
     Playlist File: Datoteka popisa za reprodukciju
     Search history file: Datoteka historije pretraživanja
     Export Subscriptions: Izvoz pretplata
-    Export Yutu Premium: Izvoz FreeTube-a
+    Export FreeTube: Izvoz FreeTube-a
     Export YouTube: Izvoz s YouTubea
     Export NewPipe: Izvoz NewPipe
     Import History: Historija uvoza

@@ -361,7 +361,7 @@ Settings:
     Disable Smooth Scrolling: Poista tasainen vieritys käytöstä
     Expand Side Bar by Default: Laajenna sivupalkki oletusarvoisesti
     Hide Side Bar Labels: Piilota sivupalkin nimikkeet
-    Hide Yutu Premium Header Logo: Piilota FreeTube-otsikkologo
+    Hide FreeTube Header Logo: Piilota FreeTube-otsikkologo
   Player Settings:
     Player Settings: 'Soitin'
     Play Next Video: 'Toista automaattisesti suositellut videot'
@@ -468,7 +468,7 @@ Settings:
     Import History: Tuo historia
     Export NewPipe: Vie NewPipe-tilaukset
     Export YouTube: Vie YouTube-tilaukset
-    Export Yutu Premium: Vie FreeTube-tilaukset
+    Export FreeTube: Vie FreeTube-tilaukset
     Export Subscriptions: Vie tilaukset
     Import Subscriptions: Tuo tilaukset
     Select Export Type: Valitse Viennin tyyppi
@@ -482,7 +482,7 @@ Settings:
     Playlist File: Soittolistatiedosto
     History File: Historia-tiedosto
     Subscription File: Tilaustiedosto
-    Export Playlists For Older Yutu Premium Versions:
+    Export Playlists For Older FreeTube Versions:
       Label: Vie soittolistat FreeTuben vanhempiin versioihin
     Search history file: Hakuhistoriatiedosto
     Search history: Hakuhistoria
@@ -621,14 +621,14 @@ About:
   GitHub releases: GitHub-julkaisut
   Downloads / Changelog: Lataukset/muutosloki
   Beta: Beta
-  Yutu Premium Wiki: FreeTuben wiki
+  FreeTube Wiki: FreeTuben wiki
   Donate: Lahjoita
   Source code: Lähdekoodi
   Discussions: Keskustelut
   AGPLv3: AGPLv3
   Licensed under the {licenseLink}: 'Lisenssi: {licenseLink}'
   Please read the {roomRulesLink}: 'Lue: {roomRulesLink}'
-  Yutu Premium is made possible by {creditsPageLink}: 'FreeTuben on mahdollistanut: {creditsPageLink}'
+  FreeTube is made possible by {creditsPageLink}: 'FreeTuben on mahdollistanut: {creditsPageLink}'
 Channel:
   Subscribe: 'Tilaa'
   Unsubscribe: 'Peruuta tilaus'
@@ -669,7 +669,7 @@ Channel:
     Reveal Answers: Näytä vastaukset
     Hide Answers: Piilota vastaukset
     votes: '{votes} ääntä'
-    Video hidden by Yutu Premium: Video on piilotettu FreeTuben toimesta
+    Video hidden by FreeTube: Video on piilotettu FreeTuben toimesta
     View Full Post: Näytä koko julkaisu
   Live:
     Live: Livenä
