@@ -116,6 +116,25 @@ jobs:
           path: YutuPremium-TV.apk
           retention-days: 14
 
+      # Copia con enlace "raw" fijo: https://raw.githubusercontent.com/<repo>/apk/YutuPremium-TV.apk
+      # Vive en una rama aparte con un solo commit, para no engordar el historial de main.
+      - name: Publicar copia directa (raw) en la rama apk
+        if: github.ref == 'refs/heads/main'
+        continue-on-error: true # si falla, el release de arriba igual se publica
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -rf /tmp/apkbranch && mkdir /tmp/apkbranch
+          cp YutuPremium-TV.apk /tmp/apkbranch/
+          cd /tmp/apkbranch
+          git init -q -b apk
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add YutuPremium-TV.apk
+          git commit -q -m "APK Yutu Premium TV 1.0.${{ github.run_number }}"
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          git push -f origin apk
+
       - name: Publicar en Releases
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
