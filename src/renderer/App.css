@@ -80,3 +80,7 @@
     block-size: 65vh;
   }
 }
+
+.hasMiniPlayer .flexBox.routerView {
+  padding-block-end: 280px;
+}

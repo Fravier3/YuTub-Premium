@@ -578,3 +578,13 @@ Continuous Audio: 'Audio continuo · Puedes minimizar la app'
 Latin Music Error: 'No se pudo renovar la música latina. Toca actualizar para reintentar.'
 
 Activate Continuous Audio: 'Activar audio en segundo plano'
+
+Playback Dock:
+  Now Playing: 'Reproduciendo'
+  Explore: 'Seguir explorando'
+  Expand: 'Abrir video'
+  Play: 'Reproducir'
+  Pause: 'Pausar'
+  Close: 'Cerrar reproductor'
+  Picture in Picture: 'Ventana flotante'
+  PiP Unavailable: 'Este navegador no permite la ventana flotante. Puedes seguir navegando dentro de Yutu.'

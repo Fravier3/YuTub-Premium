@@ -4,6 +4,7 @@
     class="app"
     :class="{
       hideOutlines: outlinesHidden,
+      hasMiniPlayer: persistentPlaybackEnabled && playbackRoute && !watchPageVisible,
       isLocaleRightToLeft: isLocaleRightToLeft,
       isSideNavOpen: isSideNavOpen,
       hideLabelsSideBar: hideLabelsSideBar && !isSideNavOpen
@@ -39,9 +40,20 @@
           mode="out-in"
           name="fade"
         >
-          <component :is="Component" />
+          <component
+            :is="Component"
+            v-if="!persistentPlaybackEnabled || !watchPageVisible"
+          />
         </Transition>
       </RouterView>
+      <PersistentWatch
+        v-if="persistentPlaybackEnabled && playbackRoute"
+        :playback-route="playbackRoute"
+        :minimized="!watchPageVisible"
+        @close="playbackRoute = null"
+        @browse="router.push(lastBrowseRoute)"
+        @navigate="playbackRoute = $event"
+      />
     </FtFlexBox>
     <FtPrompt
       v-if="showReleaseNotes"
@@ -105,11 +117,13 @@
 
 <script setup>
 import { marked } from 'marked'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
 import FtFlexBox from './components/ft-flex-box/ft-flex-box.vue'
+import PersistentWatch from './components/PersistentWatch/PersistentWatch.vue'
+import { isWatchLocation, snapshotPlaybackRoute } from './helpers/persistentPlayback'
 import TopNav from './components/TopNav/TopNav.vue'
 import SideNav from './components/SideNav/SideNav.vue'
 import FtNotificationBanner from './components/FtNotificationBanner/FtNotificationBanner.vue'
@@ -135,6 +149,15 @@ import { getClipInvidious } from './helpers/api/invidious.js'
 const route = useRoute()
 const router = useRouter()
 const { locale, t } = useI18n()
+const persistentPlaybackEnabled = !process.env.IS_ELECTRON && !process.env.YUTU_TV
+const playbackRoute = shallowRef(null)
+const lastBrowseRoute = ref('/popular')
+const watchPageVisible = computed(() => isWatchLocation(route))
+watch(() => route.fullPath, () => {
+  if (!persistentPlaybackEnabled) return
+  if (isWatchLocation(route)) playbackRoute.value = snapshotPlaybackRoute(route)
+  else if (route.path !== '/') lastBrowseRoute.value = route.fullPath
+}, { immediate: true })
 
 /** @type {import('vue').ComputedRef<'local' | 'invidious'>} */
 const backendPreference = computed(() => store.getters.getBackendPreference)

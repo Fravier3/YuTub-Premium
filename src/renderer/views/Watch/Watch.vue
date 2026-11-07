@@ -9,7 +9,7 @@
   >
     <ft-loader
       v-if="isLoading"
-      :fullscreen="true"
+      :fullscreen="!minimized"
     />
     <div
       v-if="(isFamilyFriendly || !showFamilyFriendlyOnly)"
