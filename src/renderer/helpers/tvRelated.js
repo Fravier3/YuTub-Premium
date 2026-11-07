@@ -6,6 +6,7 @@
  * flechas y OK abre el video elegido, sin salir de la pantalla completa.
  */
 
+import router from '../router/index'
 import { showToast } from './utils'
 
 const MAX_ITEMS = 24
@@ -132,7 +133,8 @@ export function openRelated() {
     if (!target) return
     const href = target.dataset.href
     closeRelated(false)
-    if (href) location.hash = href
+    // replace: el video elegido sustituye al actual en el historial, así Atrás vuelve a la búsqueda
+    if (href) router.replace(href.replace(/^#/, ''))
   })
 
   document.body.appendChild(panel)
