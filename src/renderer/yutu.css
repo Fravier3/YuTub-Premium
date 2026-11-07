@@ -253,19 +253,31 @@ a {
   block-size: 64px;
   border: 0;
   border-radius: 12px;
+  padding-inline: 4px;
   background: #272727;
   color: #f1f1f1;
-  font-size: 28px;
+  font-size: 28px; /* respaldo */
+  font-size: clamp(14px, 2.4vw, 28px);
+  line-height: 1.1;
   text-transform: uppercase;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .tvKeyWide {
   flex: 3 1 0;
+  font-size: clamp(11px, 1.8vw, 24px);
 }
 
+/* Botones con palabras: el texto se achica con la pantalla para que siempre quepa */
 .tvKeyMid {
   flex: 2 1 0;
-  font-size: 22px;
+  font-size: 16px; /* respaldo */
+  font-size: clamp(8px, 1.4vw, 18px);
+}
+
+.tvKeyMid[data-action='clear'] {
+  white-space: normal; /* "Borrar todo" puede ir en dos líneas */
 }
 
 .tvKeyPrimary {
