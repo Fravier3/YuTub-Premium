@@ -118,6 +118,8 @@ export default defineComponent({
       upcomingTimeLeft: null,
       /** @type {'dash' | 'audio' | 'legacy'} */
       activeFormat: 'legacy',
+      /** @type {'dash' | 'legacy' | null} */
+      formatBeforeBackground: null,
       thumbnail: '',
       videoId: '',
       videoTitle: '',
@@ -360,8 +362,49 @@ export default defineComponent({
   },
   mounted: function () {
     this.onMountedDependOnLocalStateLoading()
+
+    // Segundo plano en el teléfono: al minimizar la app, el audio sigue sonando
+    if (!process.env.IS_ELECTRON) {
+      document.addEventListener('visibilitychange', this.handleVisibilityChange)
+      window.addEventListener('pagehide', this.handlePageHide)
+    }
+  },
+  beforeUnmount: function () {
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange)
+    window.removeEventListener('pagehide', this.handlePageHide)
   },
   methods: {
+    /**
+     * iOS pausa el video cuando la app pasa a segundo plano, pero deja seguir el audio.
+     * Si el video se está reproduciendo en un dispositivo táctil y la app se oculta,
+     * cambiamos al formato de solo audio (en la misma posición) y al volver restauramos el anterior.
+     */
+    handleVisibilityChange: function () {
+      const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
+      if (!isTouchDevice) return
+
+      if (document.visibilityState === 'hidden') {
+        if (this.activeFormat === 'audio' || this.isLive || this.isPostLiveDvr || this.manifestSrc === null) return
+
+        const video = document.querySelector('.ft-shaka-video-player video, video')
+        if (!video || video.paused || video.ended) return
+
+        this.formatBeforeBackground = this.activeFormat
+        this.enableAudioFormat()
+      } else if (this.formatBeforeBackground) {
+        const previous = this.formatBeforeBackground
+        this.formatBeforeBackground = null
+        if (this.activeFormat === 'audio') {
+          this.handleFormatChange(previous)
+        }
+      }
+    },
+
+    handlePageHide: function () {
+      // La app se está cerrando de verdad: no restaurar nada al volver
+      this.formatBeforeBackground = null
+    },
+
     async reloadView() {
       await this.handleRouteChange()
 

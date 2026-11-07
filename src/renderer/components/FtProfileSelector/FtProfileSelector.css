@@ -22,7 +22,7 @@
 .profileList {
   display: inline;
   position: absolute;
-  inset-block-start: 60px;
+  inset-block-start: calc(var(--yt-top) + var(--yt-safe-top));
   inset-inline-end: 10px;
   min-inline-size: 250px;
   block-size: auto;

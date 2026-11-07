@@ -26,7 +26,7 @@
 .moreOptionContainer {
   position: fixed;
   background-color: var(--side-nav-color);
-  inset-block-end: 60px;
+  inset-block-end: calc(var(--yt-nav-bottom) + var(--yt-safe-bottom));
   inline-size: 70px;
   z-index: 0;
   box-shadow: 3px -3px 5px 0 rgb(0 0 0 / 20%);
@@ -35,12 +35,16 @@
 @media only screen and (width <= 680px) {
   .sideNavMoreOptions {
     display: block;
+    block-size: 100%;
+    overflow: hidden;
   }
 
   .sideNav,
   .closed {
     margin-block-start: 0;
-    block-size: 60px;
+    box-sizing: border-box;
+    block-size: calc(var(--yt-nav-bottom) + var(--yt-safe-bottom));
+    padding-block-end: var(--yt-safe-bottom);
     inline-size: 100%;
     inset-block: auto 0;
     overflow-y: inherit;
@@ -52,6 +56,11 @@
     block-size: 40px;
     padding-block: 10px;
     padding-inline: 0;
+  }
+
+  /* Historial y Ajustes ya están en la barra / en el menú "Más": no repetirlos debajo del botón */
+  .sideNavMoreOptions > .navOption:not(.moreOptionNav) {
+    display: none;
   }
 
   .navLabel {
