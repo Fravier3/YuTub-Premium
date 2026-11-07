@@ -625,6 +625,116 @@ export async function getInvidiousPopularFeed() {
 }
 
 /**
+ * Fuentes de la portada latina. Cada una es una búsqueda por país (parámetro `region`)
+ * ordenada por vistas del último mes. Se usa búsqueda y no "popular"/"trending" porque
+ * esas listas ya no están disponibles de forma fiable en las instancias.
+ */
+const LATIN_MUSIC_SOURCES = [
+  { q: 'música latina', region: 'MX' },
+  { q: 'reggaeton', region: 'PR' },
+  { q: 'música latina', region: 'CO' },
+  { q: 'bachata', region: 'DO' },
+  { q: 'cumbia', region: 'AR' },
+]
+
+const LATIN_POPULAR_SOURCES = [
+  { q: 'lo más visto', region: 'MX' },
+  { q: 'videos populares', region: 'CO' },
+  { q: 'tendencias hoy', region: 'AR' },
+  { q: 'virales', region: 'PE' },
+]
+
+const LATIN_FEED_TTL_MS = 30 * 60 * 1000
+/** @type {{ time: number, music: any[], popular: any[] } | null} */
+let latinFeedCache = null
+
+/**
+ * Junta varias fuentes: quita repetidos y Shorts, y las intercala para que no domine un solo país.
+ * @param {any[][]} lists
+ * @param {number} limit
+ */
+function interleaveLatinResults(lists, limit) {
+  const seen = new Set()
+  const merged = []
+  const longest = Math.max(0, ...lists.map((list) => list.length))
+
+  for (let i = 0; i < longest; i++) {
+    for (const list of lists) {
+      const item = list[i]
+      if (!item || seen.has(item.videoId)) continue
+      seen.add(item.videoId)
+      merged.push(item)
+    }
+  }
+
+  return merged.slice(0, limit)
+}
+
+/** @param {{ q: string, region: string }} source */
+async function fetchLatinSource(source) {
+  const results = await invidiousAPICall({
+    resource: 'search',
+    id: '',
+    doLogError: false,
+    params: {
+      q: source.q,
+      region: source.region,
+      sort_by: 'view_count',
+      date: 'month',
+      type: 'video'
+    }
+  })
+
+  return results.filter((item) => item.type === 'video' && item.lengthSeconds >= 60 && !item.liveNow)
+    .map((item) => {
+      normalizeOneInvidiousVideoAttributes(item)
+      setPublishedTimestamp(item)
+      return item
+    })
+}
+
+/** @param {{ q: string, region: string }[]} sources */
+async function fetchLatinSources(sources, limit) {
+  const settled = await Promise.allSettled(sources.map(fetchLatinSource))
+  const lists = settled.filter((r) => r.status === 'fulfilled').map((r) => r.value)
+
+  if (lists.length === 0) {
+    const firstError = settled.find((r) => r.status === 'rejected')
+    throw firstError?.reason ?? new Error('Sin resultados')
+  }
+
+  return interleaveLatinResults(lists, limit)
+}
+
+/**
+ * Portada de Yutu Premium: música latina y videos populares de Latinoamérica.
+ * @param {boolean} forceRefresh
+ * @returns {Promise<{ music: any[], popular: any[] }>}
+ */
+export async function getInvidiousLatinFeed(forceRefresh = false) {
+  if (!forceRefresh && latinFeedCache && Date.now() - latinFeedCache.time < LATIN_FEED_TTL_MS) {
+    return latinFeedCache
+  }
+
+  const [music, popular] = await Promise.allSettled([
+    fetchLatinSources(LATIN_MUSIC_SOURCES, 24),
+    fetchLatinSources(LATIN_POPULAR_SOURCES, 24)
+  ])
+
+  if (music.status === 'rejected' && popular.status === 'rejected') {
+    throw music.reason
+  }
+
+  latinFeedCache = {
+    time: Date.now(),
+    music: music.status === 'fulfilled' ? music.value : [],
+    popular: popular.status === 'fulfilled' ? popular.value : []
+  }
+
+  return latinFeedCache
+}
+
+/**
  * @param {string} query
  * @param {number} page
  * @param {any} searchSettings

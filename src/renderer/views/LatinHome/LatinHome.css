@@ -1,0 +1,20 @@
+.card {
+  inline-size: 85%;
+  margin-block: 0 40px;
+  margin-inline: auto;
+}
+
+.headingIcon {
+  color: var(--primary-color);
+}
+
+.emptyMessage {
+  text-align: center;
+  padding-block: 40px;
+}
+
+@media only screen and (width <= 680px) {
+  .card {
+    inline-size: 90%;
+  }
+}

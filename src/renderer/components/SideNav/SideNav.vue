@@ -9,8 +9,29 @@
       :class="applyHiddenLabels"
     >
       <router-link
-        v-if="!hidePopularVideos && (backendFallback || backendPreference === 'invidious')"
         class="navOption topNavOption mobileShow"
+        role="button"
+        to="/latin"
+        :title="$t('Latin Home')"
+      >
+        <div
+          class="thumbnailContainer"
+        >
+          <FontAwesomeIcon
+            :icon="['fas', 'house']"
+            class="navIcon"
+            :class="applyNavIconExpand"
+          />
+        </div>
+        <p
+          class="navLabel"
+        >
+          {{ $t("Latin Home") }}
+        </p>
+      </router-link>
+      <router-link
+        v-if="!hidePopularVideos && (backendFallback || backendPreference === 'invidious')"
+        class="navOption mobileHidden"
         role="button"
         to="/popular"
         :title="$t('Most Popular')"

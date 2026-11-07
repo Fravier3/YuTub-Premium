@@ -232,7 +232,7 @@ const state = {
   hideLabelsSideBar: false,
   hideChapters: false,
   showDistractionFreeTitles: false,
-  landingPage: process.env.SUPPORTS_LOCAL_API ? 'subscriptions' : 'popular',
+  landingPage: 'latin',
   listType: 'grid',
   maxVideoPlaybackRate: 3,
   onlyShowLatestFromChannel: false,

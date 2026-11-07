@@ -764,6 +764,11 @@ Channel:
     Courses: Cursos
     This channel does not currently have any courses: Este canal no tiene actualmente ningún curso
   View All: Ver todo
+Latin Home: 'Inicio'
+Latin Feed:
+  Latin Music: 'Música latina'
+  Popular in Latin America: 'Populares en Latinoamérica'
+  Nothing to show: 'No se pudieron cargar los videos. Revisa tu conexión o cambia la instancia en Ajustes.'
 Video:
   Background Audio: 'Audio en segundo plano'
   Background Audio On: 'Audio en segundo plano activado: sigue sonando al minimizar'
