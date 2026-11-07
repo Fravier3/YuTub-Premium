@@ -302,3 +302,88 @@ a {
   color: #888;
   font-size: 22px;
 }
+
+/* ---------- Videos relacionados desde la pantalla completa (Android TV) ---------- */
+.tvRelated {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: 99990;
+  box-sizing: border-box;
+  padding-block: 28px 20px;
+  padding-inline: 40px;
+  background: linear-gradient(to top, rgb(15 15 15 / 98%) 78%, rgb(15 15 15 / 0%));
+  color: #f1f1f1;
+  cursor: none;
+}
+
+.tvRelatedTitle {
+  margin-block: 0 14px;
+  margin-inline: 0;
+  font-size: 26px;
+}
+
+.tvRelatedGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  max-block-size: 52vh;
+  padding: 8px;
+  margin: -8px;
+  overflow: hidden;
+}
+
+.tvRelatedItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: start;
+  min-inline-size: 0;
+}
+
+.tvRelatedThumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  background: #272727;
+  overflow: hidden;
+}
+
+.tvRelatedThumb img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.tvRelatedDuration {
+  position: absolute;
+  inset-inline-end: 6px;
+  inset-block-end: 6px;
+  padding-inline: 5px;
+  border-radius: 4px;
+  background: rgb(0 0 0 / 80%);
+  font-size: 16px;
+}
+
+.tvRelatedName {
+  font-size: 20px;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tvRelatedChannel {
+  color: #aaa;
+  font-size: 17px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

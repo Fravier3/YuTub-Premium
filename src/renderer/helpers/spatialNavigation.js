@@ -9,6 +9,7 @@
  */
 
 import { closeTvSearch, isTvSearchOpen } from './tvSearch'
+import { closeRelated, isRelatedOpen, openRelated } from './tvRelated'
 
 const SEEK_SECONDS = 10
 const FOCUSABLE = 'a[href], button, input, select, textarea, summary, [tabindex], [role="button"], [role="menuitem"], [role="option"]'
@@ -35,6 +36,8 @@ function isVisible(el) {
 function getScope() {
   const tvSearch = document.querySelector('.tvSearch')
   if (tvSearch) return tvSearch
+  const related = document.querySelector('.tvRelated')
+  if (related) return related
   const prompts = document.querySelectorAll('.prompt')
   const open = Array.from(prompts).filter((p) => !p.hasAttribute('inert')).pop()
   if (open) return open
@@ -126,7 +129,9 @@ function pickNext(from, candidates, dir, current) {
 /** @param {HTMLElement} el */
 function focusElement(el) {
   el.focus({ preventScroll: true })
-  if (!getFullWindowPlayer()) {
+  if (el.closest('.tvRelated')) {
+    el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' })
+  } else if (!getFullWindowPlayer()) {
     el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' })
   }
 }
@@ -165,7 +170,7 @@ function handleKeyDown(event) {
   if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return
 
   const isNavKey = event.key.startsWith('Arrow') || event.key === 'Enter'
-  if (isNavKey && document.activeElement && document.activeElement !== document.body) wakePlayerControls()
+  if (isNavKey && !isRelatedOpen() && document.activeElement && document.activeElement !== document.body) wakePlayerControls()
 
   const dirs = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down' }
   const dir = dirs[event.key]
@@ -175,7 +180,7 @@ function handleKeyDown(event) {
   if (active && isTextInput(active) && !active.hasAttribute('data-tv-search') && (dir === 'left' || dir === 'right')) return
 
   // Página del video, foco en el video: saltar y pausar
-  if (isPlayerMode() && !isTvSearchOpen() && !getScope().classList?.contains('prompt')) {
+  if (isPlayerMode() && !isTvSearchOpen() && !isRelatedOpen() && !getScope().classList?.contains('prompt')) {
     const video = getVideo()
     if (dir === 'left') {
       video.currentTime = Math.max(0, video.currentTime - SEEK_SECONDS)
@@ -221,36 +226,21 @@ function handleKeyDown(event) {
 
   if (next) {
     focusElement(next)
+  } else if (isRelatedOpen()) {
+    // Arriba desde la primera fila de relacionados: cerrar el panel y volver a los controles
+    if (dir === 'up') closeRelated(true)
   } else if (getFullWindowPlayer()) {
-    // Arriba desde los controles: volver al modo video (←/→ saltan, OK pausa)
-    if (dir === 'up') active.blur()
+    if (dir === 'down') {
+      // Más abajo de los controles: videos relacionados (el video sigue sonando)
+      openRelated()
+    } else if (dir === 'up') {
+      // Arriba desde los controles: volver al modo video (←/→ saltan, OK pausa)
+      active.blur()
+    }
   } else if (dir === 'down' || dir === 'up') {
     // No hay nada más en esa dirección: bajar/subir la página por si carga más contenido
     window.scrollBy({ top: dir === 'down' ? 300 : -300, behavior: 'smooth' })
   }
-}
-
-/**
- * Lo llama el APK cuando el teclado de pantalla pulsa Enter/Buscar: el teclado de Android manda esa
- * tecla como "acción del sistema" y la caja de búsqueda no la reconoce, así que se envía un Enter real.
- * @returns {boolean} true si había un campo de texto enfocado
- */
-function submitFocusedInput() {
-  const active = document.activeElement
-  if (!(active instanceof HTMLInputElement)) return false
-
-  active.dispatchEvent(new KeyboardEvent('keydown', {
-    key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true, cancelable: true
-  }))
-  active.blur() // al perder el foco, el teclado de pantalla se oculta
-  return true
-}
-
-/** Para que el teclado muestre la tecla "Buscar" en la caja de búsqueda. */
-function setEnterKeyHints() {
-  document.querySelectorAll('input.ft-input').forEach((input) => {
-    input.setAttribute('enterkeyhint', input.closest('.searchContainer') ? 'search' : 'done')
-  })
 }
 
 const isShown = (el) => el instanceof HTMLElement && el.getClientRects().length > 0 && getComputedStyle(el).display !== 'none'
@@ -260,6 +250,11 @@ const isShown = (el) => el instanceof HTMLElement && el.getClientRects().length 
  * @returns {boolean} true si se encargó (el APK entonces no sale de la página)
  */
 function handleBack() {
+  if (isRelatedOpen()) {
+    closeRelated(true)
+    return true
+  }
+
   if (isTvSearchOpen()) {
     closeTvSearch(true)
     return true
@@ -309,10 +304,6 @@ function openPlayerSettings() {
 
 export function initSpatialNavigation() {
   document.addEventListener('keydown', handleKeyDown, true)
-  document.addEventListener('focusin', setEnterKeyHints, true)
-  window.addEventListener('hashchange', () => setTimeout(setEnterKeyHints, 300))
-  setTimeout(setEnterKeyHints, 500)
-  window.yutuTvSubmitInput = submitFocusedInput
   window.yutuTvBack = handleBack
   window.yutuTvOpenSettings = openPlayerSettings
 }
