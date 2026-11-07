@@ -1,7 +1,7 @@
 /**
- * Audio en segundo plano (estilo "Premium").
+ * Audio nativo continuo para la app web.
  *
- * iOS pausa los <video> cuando la app se minimiza, pero deja sonar un <audio> nativo.
+ * Usa un <audio> nativo; la continuidad final depende de las políticas de iOS.
  * Este módulo mantiene un único <audio> (singleton) que:
  *  - inicia el flujo real durante la reproducción, antes de minimizar;
  *  - reproduce solo el audio (AAC/MP4) en la misma posición del video;
@@ -11,6 +11,7 @@
 /** @type {HTMLAudioElement | null} */
 let audio = null
 let active = false
+const delegatedAudio = new WeakMap()
 
 function getAudio() {
   if (audio) return audio
@@ -28,6 +29,26 @@ export function isBackgroundAudioSupported() {
 
 export const isBackgroundAudioActive = () => active && !!audio && !audio.paused && !audio.ended
 
+/** Read the user's volume/mute, excluding the technical mute of the visual track. */
+export function getVideoAudioState(video) {
+  const owner = delegatedAudio.get(video) ?? video
+  return { muted: owner.muted, volume: owner.volume }
+}
+
+export function setVideoAudioMuted(video, muted) {
+  const owner = delegatedAudio.get(video) ?? video
+  owner.muted = muted
+  return muted
+}
+
+/** Recover once from mute values persisted by the old audio handoff. */
+export function repairStoredMutePreference(storage) {
+  const key = 'yutu-mute-preference-v1'
+  if (storage.getItem(key)) return
+  storage.removeItem('muted')
+  storage.setItem(key, '1')
+}
+
 /** A suspended visual track cannot overwrite a still-playing native audio session. */
 export function setVideoMediaSessionPlaybackState(state) {
   if (!('mediaSession' in navigator)) return
@@ -35,16 +56,20 @@ export function setVideoMediaSessionPlaybackState(state) {
   navigator.mediaSession.playbackState = state
 }
 
-/**
- * Elige el audio AAC (mp4) de mayor calidad: es lo único que iOS reproduce siempre.
- * @param {{ type?: string, itag?: string | number, bitrate?: string | number, url?: string }[]} adaptiveFormats
- * @returns {string | null}
- */
-export function pickAudioUrl(adaptiveFormats) {
-  const candidates = (adaptiveFormats ?? []).filter(f => typeof f.type === 'string' && f.type.startsWith('audio/mp4') && f.url)
-  if (candidates.length === 0) return null
-  candidates.sort((a, b) => (parseInt(b.bitrate) || 0) - (parseInt(a.bitrate) || 0))
-  return candidates[0].url
+/** Select browser-compatible audio, with muxed MP4 as a fallback when no audio-only stream works. */
+export function pickAudioSources(adaptiveFormats = [], formatStreams = [], canPlay = type => {
+  const probe = document.createElement('audio')
+  return !!probe.canPlayType(type)
+}) {
+  const audioFormats = (adaptiveFormats ?? []).filter(format => format.url && format.type?.startsWith('audio/') && canPlay(format.type))
+  audioFormats.sort((a, b) => Number(b.type.startsWith('audio/mp4')) - Number(a.type.startsWith('audio/mp4')) || (parseInt(b.bitrate) || 0) - (parseInt(a.bitrate) || 0))
+  const muxed = (formatStreams ?? []).filter(format => format.url && format.type?.startsWith('video/mp4') && canPlay(format.type))
+  muxed.sort((a, b) => (parseInt(a.resolution) || 0) - (parseInt(b.resolution) || 0))
+  return [...new Set([...audioFormats, ...muxed].map(format => format.url))]
+}
+
+export function pickAudioUrl(adaptiveFormats, formatStreams = []) {
+  return pickAudioSources(adaptiveFormats, formatStreams)[0] ?? null
 }
 
 /**
@@ -122,9 +147,10 @@ function setMediaSession(el, { title, artist, artwork }) {
  * The video becomes the visual track; native audio controls and Media Session
  * own the sound. Returns a controller scoped to this video/route.
  */
-export function connectContinuousAudio(video, { url, host, title, artist, artwork, isAudioOnly, onReady, onEnded, onError }) {
+export function connectContinuousAudio(video, { url, urls = [], host, title, artist, artwork, isAudioOnly, onReady, onEnded, onError }) {
   const el = getAudio()
-  const originalMuted = video.muted
+  const sources = [...new Set([url, ...urls].filter(Boolean))]
+  let sourceIndex = 0
   let disposed = false
   let failed = false
   let starting = false
@@ -134,6 +160,7 @@ export function connectContinuousAudio(video, { url, host, title, artist, artwor
   let resumeVisual = false
   let backgroundSuspended = document.hidden
   let videoPauseTimer
+  let lastVideoVolume = video.volume
   const removers = []
   const listen = (target, event, handler, options) => {
     target.addEventListener(event, handler, options)
@@ -153,17 +180,24 @@ export function connectContinuousAudio(video, { url, host, title, artist, artwor
     seek(video, el.currentTime)
     video.play().catch(() => {})
   }
+  const restoreVideoAudio = () => {
+    const state = getVideoAudioState(video)
+    delegatedAudio.delete(video)
+    ownsAudio = false
+    active = false
+    el.pause()
+    video.muted = state.muted
+    video.volume = state.volume
+    onReady(false)
+  }
   const fail = () => {
     if (disposed) return
-    ownsAudio = false
+    restoreVideoAudio()
     failed = true
-    active = false
-    video.muted = originalMuted
-    onReady(false)
-    if (!document.hidden && !isAudioOnly()) video.play().catch(() => {})
     onError?.()
+    if (!document.hidden) video.play().catch(() => {})
   }
-  el.src = url
+  el.src = sources[sourceIndex]
   el.preload = 'auto'
   el.controls = true
   el.style.display = 'block'
@@ -175,28 +209,38 @@ export function connectContinuousAudio(video, { url, host, title, artist, artwor
     if (disposed || failed || starting || ended) return false
     if (ownsAudio && !el.paused) return true
     starting = true
-    seek(el, video.currentTime)
+    const userAudio = getVideoAudioState(video)
     el.playbackRate = video.playbackRate
-    el.volume = video.volume
-    el.muted = originalMuted
+    el.volume = userAudio.volume
+    el.muted = userAudio.muted
+    delegatedAudio.set(video, el)
     video.muted = true
     if ('audioSession' in navigator) {
       try { navigator.audioSession.type = 'playback' } catch { /* optional API */ }
     }
     try {
-      await el.play()
-      if (disposed) return false
-      ownsAudio = true
-      active = true
-      setMediaSession(el, { title, artist, artwork })
-      onReady(true)
-      if (video.paused && !isAudioOnly()) playVisual()
-      return true
-    } catch {
-      if (!disposed) {
-        video.muted = originalMuted
-        onReady(false)
+      while (sourceIndex < sources.length) {
+        seek(el, video.currentTime)
+        try {
+          await el.play()
+          if (disposed) return false
+          ownsAudio = true
+          active = true
+          setMediaSession(el, { title, artist, artwork })
+          onReady(true)
+          if (video.paused && !isAudioOnly()) playVisual()
+          return true
+        } catch (error) {
+          if (disposed) return false
+          // Permission failures require a gesture; changing formats won't help.
+          if (error.name === 'NotAllowedError' || sourceIndex + 1 >= sources.length) break
+          sourceIndex++
+          el.src = sources[sourceIndex]
+          el.load()
+        }
       }
+      restoreVideoAudio()
+      if (!document.hidden && video.paused) video.play().catch(() => {})
       return false
     } finally {
       starting = false
@@ -222,10 +266,14 @@ export function connectContinuousAudio(video, { url, host, title, artist, artwor
   })
   listen(video, 'ratechange', () => { el.playbackRate = video.playbackRate })
   listen(video, 'volumechange', () => {
-    el.volume = video.volume
-    // Keep keyboard mute working without ever enabling two audible tracks.
-    if (ownsAudio && !video.muted) {
-      el.muted = !el.muted
+    if (!delegatedAudio.has(video)) return
+    if (video.volume !== lastVideoVolume) {
+      lastVideoVolume = video.volume
+      el.volume = video.volume
+    }
+    // Never toggle the audible mute in response to a technical video mute event.
+    if (!video.muted) {
+      el.muted = false
       video.muted = true
     }
   })
@@ -254,7 +302,17 @@ export function connectContinuousAudio(video, { url, host, title, artist, artwor
     video.pause()
     onEnded()
   })
-  listen(el, 'error', fail)
+  listen(el, 'error', () => {
+    // play() rejects for startup errors; let its loop select the next format.
+    if (starting || disposed) return
+    if (sourceIndex + 1 < sources.length) {
+      restoreVideoAudio()
+      sourceIndex++
+      el.src = sources[sourceIndex]
+      el.load()
+      start().then(started => { if (!started) fail() })
+    } else fail()
+  })
   listen(window, 'blur', () => {
     backgroundSuspended = true
     cancelVideoPause()
@@ -299,8 +357,11 @@ export function connectContinuousAudio(video, { url, host, title, artist, artwor
       disposed = true
       cancelVideoPause()
       removers.forEach(remove => remove())
+      const userAudio = getVideoAudioState(video)
+      delegatedAudio.delete(video)
       stopBackgroundAudio()
-      video.muted = originalMuted
+      video.muted = userAudio.muted
+      video.volume = userAudio.volume
       el.controls = false
       el.style.display = 'none'
       document.body.appendChild(el)
