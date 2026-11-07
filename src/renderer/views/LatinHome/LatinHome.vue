@@ -1,7 +1,7 @@
 <template>
   <div>
     <ft-loader
-      v-if="isLoading"
+      v-if="isLoading && music.length === 0 && popular.length === 0"
       :fullscreen="true"
     />
     <template v-else>
@@ -51,7 +51,7 @@
 
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { onMounted, ref, shallowRef } from 'vue'
+import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import FtLoader from '../../components/FtLoader/FtLoader.vue'
@@ -59,6 +59,7 @@ import FtCard from '../../components/ft-card/ft-card.vue'
 import FtElementList from '../../components/FtElementList/FtElementList.vue'
 import FtRefreshWidget from '../../components/FtRefreshWidget/FtRefreshWidget.vue'
 
+import { LATIN_FEED_TTL } from '../../helpers/latinMusicFeed'
 import { getInvidiousLatinFeed } from '../../helpers/api/invidious'
 import { copyToClipboard, getRelativeTimeFromDate, showToast } from '../../helpers/utils'
 
@@ -69,17 +70,33 @@ const music = shallowRef([])
 const popular = shallowRef([])
 const lastRefresh = ref('')
 
-onMounted(() => load(false))
+let refreshTimer
+let fetchedAt = 0
+function refreshIfStale() {
+  if (!document.hidden && Date.now() - fetchedAt >= LATIN_FEED_TTL) load(false)
+}
+onMounted(() => {
+  load(false)
+  refreshTimer = window.setInterval(refreshIfStale, 60_000)
+  document.addEventListener('visibilitychange', refreshIfStale)
+})
+onBeforeUnmount(() => {
+  window.clearInterval(refreshTimer)
+  document.removeEventListener('visibilitychange', refreshIfStale)
+})
 
 async function load(forceRefresh) {
+  if (isLoading.value) return
   isLoading.value = true
 
   try {
     const feed = await getInvidiousLatinFeed(forceRefresh)
+    fetchedAt = feed.time
     music.value = feed.music
     popular.value = feed.popular
     lastRefresh.value = getRelativeTimeFromDate(new Date(feed.time), true)
   } catch (err) {
+    fetchedAt = Date.now() - LATIN_FEED_TTL + 5 * 60_000
     showToast(`${t('Invidious API Error (Click to copy)')}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })

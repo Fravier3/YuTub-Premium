@@ -1271,3 +1271,8 @@ KeyboardShortcutPrompt:
   End: Seek to the end of the video
   Skip to Next Video: Skip to the next video in a playlist or next recommended video
   Skip to Previous Video: Skip to the previous video in a playlist
+
+Latin Music: 'Latin music'
+Latin Music Refresh: 'Latin hits · Selection refreshed every 30 minutes'
+Continuous Audio: 'Continuous audio · You can minimize the app'
+Latin Music Error: 'Could not refresh Latin music. Tap refresh to try again.'

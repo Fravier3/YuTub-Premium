@@ -22,7 +22,11 @@
   position: sticky;
   inset-block-start: 0;
   inline-size: 100%;
-  z-index: 4;
+  z-index: 10;
+  isolation: isolate;
+  // Keep the fixed header on its own opaque layer above the scrolling video.
+  transform: translateZ(0);
+  backface-visibility: hidden;
 
   @media only screen and (width >= 961px) {
     display: grid;
@@ -35,6 +39,20 @@
 
   @media only screen and (width <= 680px) {
     position: fixed;
+    // Separate the status-bar area from the controls (iOS scroll-edge compositing).
+    inset-block-start: var(--yt-safe-top);
+    block-size: var(--yt-top);
+    padding-block-start: 0;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset-inline: 0;
+      inset-block-end: 100%;
+      block-size: var(--yt-safe-top);
+      background-color: var(--card-bg-color);
+      pointer-events: none;
+    }
 
     &:has(+ .sideNav + .routerView .floatingRefreshSection) {
       box-shadow: none;
@@ -220,8 +238,8 @@
     @media only screen and (width <= 680px) {
       background-color: var(--side-nav-color);
       inset-inline: 0;
-      position: fixed;
-      inset-block-start: calc(var(--yt-top) + var(--yt-safe-top));
+      position: absolute;
+      inset-block-start: 100%;
 
       @include top-nav-is-colored {
         background-color: var(--primary-color-hover);

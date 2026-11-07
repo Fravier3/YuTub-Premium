@@ -212,3 +212,22 @@
     }
   }
 }
+
+.backgroundAudioBar {
+  padding: 12px;
+  background-color: var(--card-bg-color);
+  border-radius: 12px;
+  color: var(--secondary-text-color);
+  font-size: 13px;
+
+  span {
+    display: block;
+    margin-block-end: 8px;
+  }
+}
+
+/* Audio controls above own the sound while the video is the visual track. */
+.continuousAudioReady :deep(.shaka-mute-button),
+.continuousAudioReady :deep(.shaka-volume-bar-container) {
+  display: none;
+}

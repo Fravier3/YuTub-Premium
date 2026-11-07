@@ -1163,3 +1163,8 @@ Screenshot Clipboard Success: Captura de pantalla guardada en el portapapeles
 Screenshot Clipboard Error: Error al copiar la captura de pantalla al portapapeles
 SponsorBlock Enabled on Channel: Se activó SponsorBlock en {channel}
 SponsorBlock Disabled on Channel: Se desactivó SponsorBlock en {channel}
+
+Latin Music: 'Música latina'
+Latin Music Refresh: 'Éxitos latinos · Selección renovada cada 30 minutos'
+Continuous Audio: 'Audio continuo · Puedes minimizar la app'
+Latin Music Error: 'No se pudo renovar la música latina. Toca actualizar para reintentar.'
