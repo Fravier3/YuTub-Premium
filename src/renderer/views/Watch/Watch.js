@@ -81,6 +81,7 @@ export default defineComponent({
     'ft-age-restricted': FtAgeRestricted
   },
   beforeRouteLeave: async function (to, from, next) {
+    if (this.routeOverride) { next(); return }
     this.handleRouteChange()
     window.removeEventListener('beforeunload', this.handleWatchProgressAutoSave)
     document.removeEventListener('keydown', this.resetAutoplayInterruptionTimeout)
@@ -91,6 +92,11 @@ export default defineComponent({
     }
 
     next()
+  },
+  props: {
+    routeOverride: { type: Object, default: null },
+    navigationRouter: { type: Object, default: null },
+    minimized: { type: Boolean, default: false }
   },
   setup: function () {
     const { t, locale } = useI18n()
@@ -186,6 +192,8 @@ export default defineComponent({
     }
   },
   computed: {
+    playbackRoute() { return this.routeOverride ?? this.$route },
+    playbackRouter() { return this.navigationRouter ?? this.$router },
     historyEntry: function () {
       return this.$store.getters.getHistoryCacheById[this.videoId]
     },
@@ -284,7 +292,7 @@ export default defineComponent({
       return JSON.parse(this.$store.getters.getForbiddenTitles.toLowerCase())
     },
     isUserPlaylistRequested: function () {
-      return this.$route.query.playlistType === 'user'
+      return this.playbackRoute.query.playlistType === 'user'
     },
     userPlaylistsReady: function () {
       return this.$store.getters.getPlaylistsReady
@@ -341,7 +349,7 @@ export default defineComponent({
     }
   },
   watch: {
-    async $route() {
+    async 'playbackRoute.fullPath'() {
       await this.reloadView()
     },
     userPlaylistsReady() {
@@ -349,7 +357,7 @@ export default defineComponent({
     },
   },
   created: function () {
-    this.videoId = this.$route.params.id
+    this.videoId = this.playbackRoute.params.id
     this.activeFormat = this.defaultVideoFormat
     // So that the value for this session remains unchanged even if setting changed
     this.autoplayNextRecommendedVideo = this.autoplayNextRecommendedVideoByDefault
@@ -361,7 +369,18 @@ export default defineComponent({
   mounted: function () {
     this.onMountedDependOnLocalStateLoading()
   },
+  beforeUnmount() {
+    window.removeEventListener('beforeunload', this.handleWatchProgressAutoSave)
+    document.removeEventListener('keydown', this.resetAutoplayInterruptionTimeout)
+    document.removeEventListener('click', this.resetAutoplayInterruptionTimeout)
+    clearTimeout(this.autoplayInterruptionTimeout)
+    this.abortAutoplayCountdown(true)
+  },
   methods: {
+    async stopPersistentPlayback() {
+      this.handleRouteChange()
+      if (this.$refs.player) await this.destroyPlayer()
+    },
     async reloadView() {
       await this.handleRouteChange()
 
@@ -370,7 +389,7 @@ export default defineComponent({
       }
 
       // react to route changes...
-      this.videoId = this.$route.params.id
+      this.videoId = this.playbackRoute.params.id
       this.resetVideoState()
 
       this.firstLoad = true
@@ -1350,13 +1369,13 @@ export default defineComponent({
     },
 
     checkIfPlaylist: function () {
-      if (this.$route.query == null) {
+      if (this.playbackRoute.query == null) {
         this.watchingPlaylist = false
         return
       }
 
-      this.playlistId = this.$route.query.playlistId
-      this.playlistItemId = this.$route.query.playlistItemId
+      this.playlistId = this.playbackRoute.query.playlistId
+      this.playlistItemId = this.playbackRoute.query.playlistItemId
 
       if (this.playlistId == null || this.playlistId.length === 0) {
         this.playlistType = ''
@@ -1385,7 +1404,7 @@ export default defineComponent({
 
       // Still possible to be a user playlist from history
       // (but user playlist could be already removed)
-      this.playlistType = this.$route.query.playlistType
+      this.playlistType = this.playbackRoute.query.playlistType
       if (this.playlistType !== 'user') {
         // Remote playlist
         this.playlistItemId = null
@@ -1405,10 +1424,10 @@ export default defineComponent({
     },
 
     checkIfTimestamp: function () {
-      const oneTimeTimestamp = parseInt(this.$route.query.oneTimeTimestamp)
+      const oneTimeTimestamp = parseInt(this.playbackRoute.query.oneTimeTimestamp)
       this.oneTimeTimestamp = isNaN(oneTimeTimestamp) || oneTimeTimestamp < 0 ? null : oneTimeTimestamp
 
-      const timestamp = parseInt(this.$route.query.timestamp)
+      const timestamp = parseInt(this.playbackRoute.query.timestamp)
       this.timestamp = isNaN(timestamp) || timestamp < 0 ? null : timestamp
     },
 
@@ -1509,7 +1528,7 @@ export default defineComponent({
           if (this.watchingPlaylist) {
             this.$refs.watchVideoPlaylist.playNextVideo()
           } else {
-            this.$router.push({
+            this.playbackRouter.push({
               path: `/watch/${nextVideoId}`
             })
             showToast(this.t('Playing Next Video'))
@@ -1538,7 +1557,7 @@ export default defineComponent({
       if (this.watchingPlaylist) {
         this.$refs.watchVideoPlaylist?.playNextVideo()
       } else if (!this.hideRecommendedVideos && this.nextRecommendedVideo) {
-        this.$router.push({
+        this.playbackRouter.push({
           path: `/watch/${this.nextRecommendedVideo.videoId}`
         })
         showToast(this.t('Playing Next Video'))
@@ -1922,6 +1941,7 @@ export default defineComponent({
     },
 
     updateTitle: function () {
+      if (this.minimized) return
       this.setAppTitle(this.videoTitle)
     },
 
@@ -1973,9 +1993,9 @@ export default defineComponent({
       if (timestamp > 0) {
         // Reload at the middle should restart at current timestamp
         try {
-          await this.$router.replace({
-            path: this.$route.path,
-            query: { ...this.$route.query, oneTimeTimestamp: timestamp },
+          await this.playbackRouter.replace({
+            path: this.playbackRoute.path,
+            query: { ...this.playbackRoute.query, oneTimeTimestamp: timestamp },
           })
         } catch (failure) {
           if (isNavigationFailure(failure, NavigationFailureType.duplicated)) {

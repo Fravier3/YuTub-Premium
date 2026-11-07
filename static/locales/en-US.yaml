@@ -1278,3 +1278,13 @@ Continuous Audio: 'Continuous audio · You can minimize the app'
 Latin Music Error: 'Could not refresh Latin music. Tap refresh to try again.'
 
 Activate Continuous Audio: 'Activate background audio'
+
+Playback Dock:
+  Now Playing: 'Now playing'
+  Explore: 'Keep exploring'
+  Expand: 'Open video'
+  Play: 'Play'
+  Pause: 'Pause'
+  Close: 'Close player'
+  Picture in Picture: 'Picture in Picture'
+  PiP Unavailable: 'This browser does not support the floating window. You can keep browsing inside Yutu.'
