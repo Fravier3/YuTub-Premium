@@ -14,6 +14,12 @@
     <meta name="apple-mobile-web-app-title" content="Yutu Premium" />
     <link rel="manifest" href="static/manifest.json" />
     <script>
+    // App de Android TV (el APK añade "YutuTV" al user agent): modo control remoto
+    if (/YutuTV/.test(navigator.userAgent)) {
+      document.documentElement.classList.add("yutu-tv");
+    }
+    </script>
+    <script>
     // iPhone en modo app: si el sistema no informa la zona reservada (hora/isla dinámica), se reserva a mano
     (function () {
       var ua = navigator.userAgent;

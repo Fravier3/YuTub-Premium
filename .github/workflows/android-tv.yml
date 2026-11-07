@@ -1,0 +1,112 @@
+name: APK Android TV
+on:
+  push:
+    branches: [main, claude/beautiful-archimedes-xcfubr]
+    paths:
+      - 'android/**'
+      - '.github/workflows/android-tv.yml'
+  workflow_dispatch:
+  schedule:
+    # Una vez por semana: mantiene viva la clave de firma guardada en la caché (GitHub borra cachés sin uso a los 7 días)
+    - cron: '17 6 * * 1'
+
+permissions:
+  contents: write
+
+jobs:
+  keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/cache/restore@v4
+        with:
+          path: android/keystore
+          key: yutu-keystore-v1
+
+  build:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.9
+
+      # Clave de firma: si defines los secretos ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD
+      # y ANDROID_KEY_ALIAS se usan esos; si no, se crea una clave propia una sola vez y se guarda en la caché.
+      - name: Restaurar clave de firma
+        uses: actions/cache@v4
+        with:
+          path: android/keystore
+          key: yutu-keystore-v1
+
+      - name: Preparar clave de firma
+        env:
+          SECRET_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          SECRET_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          SECRET_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          mkdir -p android/keystore
+          if [ -n "$SECRET_KEYSTORE" ]; then
+            echo "$SECRET_KEYSTORE" | base64 -d > android/keystore/yutu.jks
+            echo "$SECRET_PASSWORD" > android/keystore/password.txt
+            echo "$SECRET_ALIAS" > android/keystore/alias.txt
+            echo "Usando la clave de los secretos del repositorio."
+          elif [ ! -f android/keystore/yutu.jks ]; then
+            PASS=$(openssl rand -hex 16)
+            keytool -genkeypair -v -keystore android/keystore/yutu.jks -storetype PKCS12 \
+              -alias yutu -keyalg RSA -keysize 4096 -validity 36500 \
+              -storepass "$PASS" -keypass "$PASS" \
+              -dname "CN=Yutu Premium, O=Yutu Premium, C=PR"
+            echo "$PASS" > android/keystore/password.txt
+            echo "yutu" > android/keystore/alias.txt
+            echo "Clave nueva creada."
+          else
+            echo "Usando la clave guardada en la caché."
+          fi
+
+      - name: Compilar y firmar APK
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+        run: |
+          export KEYSTORE_PATH="$GITHUB_WORKSPACE/android/keystore/yutu.jks"
+          export KEYSTORE_PASSWORD="$(cat android/keystore/password.txt)"
+          export KEY_PASSWORD="$KEYSTORE_PASSWORD"
+          export KEY_ALIAS="$(cat android/keystore/alias.txt)"
+          gradle -p android assembleRelease --no-daemon --stacktrace
+
+      - name: Verificar firma
+        run: |
+          APK=android/app/build/outputs/apk/release/app-release.apk
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          "$APKSIGNER" verify --verbose --print-certs "$APK"
+          cp "$APK" YutuPremium-TV.apk
+
+      - name: Guardar APK como archivo de la ejecución
+        uses: actions/upload-artifact@v4
+        with:
+          name: YutuPremium-TV
+          path: YutuPremium-TV.apk
+          retention-days: 14
+
+      - name: Publicar en Releases
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: tv-v1.0.${{ github.run_number }}
+          name: Yutu Premium TV 1.0.${{ github.run_number }}
+          make_latest: true
+          files: YutuPremium-TV.apk
+          body: |
+            APK firmado de Yutu Premium para Android TV (y teléfonos/tablets Android).
+
+            **Instalar:** descarga `YutuPremium-TV.apk`, cópialo a la TV (USB o la app "Send Files to TV") y ábrelo,
+            o instálalo con `adb install -r YutuPremium-TV.apk`. Hay que permitir "instalar apps de orígenes desconocidos".
+
+            La interfaz se actualiza sola desde la web; este APK solo se vuelve a instalar cuando cambia la parte nativa.

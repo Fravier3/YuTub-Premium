@@ -1,0 +1,44 @@
+plugins {
+    id 'com.android.application'
+}
+
+def versionCodeEnv = (System.getenv('VERSION_CODE') ?: '1') as int
+def keystorePath = System.getenv('KEYSTORE_PATH')
+
+android {
+    namespace 'app.yutupremium.tv'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'app.yutupremium.tv'
+        minSdk 21
+        targetSdk 34
+        versionCode versionCodeEnv
+        versionName "1.0.${versionCodeEnv}"
+    }
+
+    signingConfigs {
+        release {
+            if (keystorePath) {
+                storeFile file(keystorePath)
+                storePassword System.getenv('KEYSTORE_PASSWORD')
+                keyAlias System.getenv('KEY_ALIAS')
+                keyPassword System.getenv('KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (keystorePath) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
