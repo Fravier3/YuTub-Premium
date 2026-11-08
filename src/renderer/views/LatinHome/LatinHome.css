@@ -1,20 +1,100 @@
-.card {
-  inline-size: 85%;
-  margin-block: 0 40px;
-  margin-inline: auto;
+.tvHome {
+  inline-size: 100%;
+  min-inline-size: 0; /* sin esto las filas horizontales estiran toda la página */
+  max-inline-size: 100%;
+  min-block-size: 60vh;
 }
 
-.headingIcon {
-  color: var(--primary-color);
+.tvShelf {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  margin-block-end: 28px;
+}
+
+.tvShelfTitle {
+  margin-block: 0 12px;
+  margin-inline: 8px;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.tvShelfRow {
+  display: flex;
+  gap: 20px;
+  overflow: hidden; /* se desplaza con las flechas del control, sin barra */
+  padding-block: 8px 12px;
+  padding-inline: 8px;
+}
+
+.tvCard {
+  flex: 0 0 clamp(260px, 22vw, 400px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-inline-size: 0;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 14px;
+  scroll-margin: 24px;
+}
+
+/* La primera fila (Recomendados) lleva tarjetas grandes, como en la TV original */
+.tvShelfLarge .tvCard {
+  flex-basis: clamp(380px, 38vw, 640px);
+}
+
+.tvThumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  background: var(--secondary-card-bg-color);
+  overflow: hidden;
+}
+
+.tvThumb img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.tvDuration {
+  position: absolute;
+  inset-inline-end: 8px;
+  inset-block-end: 8px;
+  padding-block: 1px;
+  padding-inline: 6px;
+  border-radius: 6px;
+  background: rgb(0 0 0 / 80%);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.tvTitle {
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tvShelfLarge .tvTitle {
+  font-size: 22px;
+}
+
+.tvMeta {
+  color: var(--tertiary-text-color);
+  font-size: 15px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .emptyMessage {
   text-align: center;
-  padding-block: 40px;
-}
-
-@media only screen and (width <= 680px) {
-  .card {
-    inline-size: 90%;
-  }
+  padding-block: 60px;
 }

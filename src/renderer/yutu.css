@@ -416,3 +416,69 @@ a {
   font-size: 18px;
   pointer-events: none;
 }
+
+/* ---------- Barra de arriba en Android TV: avatar + búsqueda a la izquierda, logo "Premium" a la derecha ---------- */
+.yutu-tv .topNav {
+  display: flex !important;
+  align-items: center;
+  gap: 16px;
+  padding-inline: 24px !important;
+  box-shadow: none !important;
+}
+
+.yutu-tv .topNav .menuButton,
+.yutu-tv .topNav .navIconButton,
+.yutu-tv .topNav .navNewWindowButton,
+.yutu-tv .topNav .navSearchButton,
+.yutu-tv .topNav .navFilterButton {
+  display: none !important;
+}
+
+.yutu-tv .topNav .profiles {
+  order: 1;
+}
+
+.yutu-tv .topNav .middle {
+  order: 2;
+  flex: 0 1 620px !important;
+  max-inline-size: 620px !important;
+}
+
+.yutu-tv .topNav .searchContainer {
+  position: static !important;
+  display: flex !important;
+  background: none !important;
+}
+
+.yutu-tv .topNav .side:first-child {
+  order: 3;
+  margin-inline: auto 0;
+}
+
+.yutu-tv .topNav .logo {
+  padding-inline: 0 !important;
+}
+
+/* Solo la palabra "Premium" junto al logo */
+.yutu-tv .logoName {
+  display: none;
+}
+
+.yutu-tv .topNav .logoText {
+  display: flex !important;
+}
+
+.yutu-tv .logoText sup {
+  position: static !important;
+  margin-inline-start: 0 !important;
+  color: var(--primary-text-color) !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  vertical-align: baseline;
+}
+
+/* El contenido de la portada de TV (filas horizontales) no debe ensanchar la página */
+.yutu-tv .flexBox.routerView {
+  min-inline-size: 0;
+}
