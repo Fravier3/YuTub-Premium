@@ -8,16 +8,6 @@
       v-else
       class="card"
     >
-      <h2>
-        <FontAwesomeIcon
-          :icon="['fas', 'users']"
-          class="headingIcon"
-        />
-        {{ $t("Latin Music") }}
-      </h2>
-      <p class="feedDescription">
-        {{ $t('Latin Music Refresh') }}
-      </p>
       <p
         v-if="feedError"
         role="status"
@@ -31,7 +21,6 @@
     </ft-card>
     <ft-refresh-widget
       :disable-refresh="isLoading"
-      :last-refresh-timestamp="lastPopularRefreshTimestamp"
       :title="$t('Most Popular')"
       @click="fetchPopularInfo"
     />
@@ -39,8 +28,7 @@
 </template>
 
 <script setup>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { computed, onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
+import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 
 import FtLoader from '../../components/FtLoader/FtLoader.vue'
 import FtCard from '../../components/ft-card/ft-card.vue'
@@ -49,7 +37,7 @@ import FtRefreshWidget from '../../components/FtRefreshWidget/FtRefreshWidget.vu
 import store from '../../store/index'
 
 import { getInvidiousPopularFeed } from '../../helpers/api/invidious'
-import { copyToClipboard, getRelativeTimeFromDate, showToast } from '../../helpers/utils'
+import { copyToClipboard, showToast } from '../../helpers/utils'
 import { useI18n } from 'vue-i18n'
 import { LATIN_FEED_TTL } from '../../helpers/latinMusicFeed'
 import { KeyboardShortcuts } from '../../../constants'
@@ -58,10 +46,6 @@ const { t } = useI18n()
 
 const isLoading = ref(false)
 const feedError = ref(false)
-
-const lastPopularRefreshTimestamp = computed(() => {
-  return getRelativeTimeFromDate(store.getters.getLastPopularRefreshTimestamp, true)
-})
 
 // Do not reuse the previous global/US feed after updating the app.
 const shownResults = shallowRef([])
