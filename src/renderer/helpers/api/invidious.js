@@ -727,6 +727,54 @@ export async function getInvidiousLatinFeed(forceRefresh = false) {
   return latinFeedCache
 }
 
+/** Filas extra de la portada de la versión de TV. */
+const TV_TRAILER_SOURCES = [
+  { q: 'tráiler oficial español latino', region: 'MX' },
+  { q: 'trailer oficial estreno película', region: 'CO' },
+  { q: 'tráiler serie estreno', region: 'AR' },
+]
+
+const TV_NATURE_SOURCES = [
+  { q: 'naturaleza relajante 4K', region: 'US' },
+  { q: 'paisajes y sonidos de la naturaleza 4K', region: 'ES' },
+]
+
+/** @returns {Promise<any[]>} */
+export const getInvidiousTrailers = () => fetchLatinSources(TV_TRAILER_SOURCES, 24)
+
+/** @returns {Promise<any[]>} */
+export const getInvidiousNature = () => fetchLatinSources(TV_NATURE_SOURCES, 24)
+
+/**
+ * Videos parecidos a los que ya viste: los relacionados de los últimos videos del historial,
+ * intercalados y sin los que ya viste.
+ * @param {string[]} recentIds los últimos videos vistos (se usan hasta 3)
+ * @param {string[]} watchedIds todo el historial, para no repetir
+ * @param {number} limit
+ */
+export async function getInvidiousRecommendedFromHistory(recentIds, watchedIds = [], limit = 24) {
+  const watched = new Set(watchedIds)
+  const settled = await Promise.allSettled(recentIds.slice(0, 3).map((id) => invidiousAPICall({
+    resource: 'videos',
+    id,
+    doLogError: false,
+    timeoutMs: 12_000
+  })))
+
+  const lists = settled
+    .filter((r) => r.status === 'fulfilled')
+    .map((r) => (r.value.recommendedVideos ?? [])
+      .filter((item) => item.videoId && !watched.has(item.videoId) && item.lengthSeconds >= 60 && !item.liveNow)
+      .map((item) => {
+        normalizeOneInvidiousVideoAttributes(item)
+        return item
+      }))
+
+  const merged = interleaveLatinResults(lists, limit)
+  if (merged.length === 0) throw new Error('Sin recomendados')
+  return merged
+}
+
 /**
  * @param {string} query
  * @param {number} page

@@ -80,7 +80,7 @@
           class="logoText"
         >
           <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-          Yutu<sup>Premium</sup>
+          <span class="logoName">Yutu</span><sup>Premium</sup>
           <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
         </div>
       </RouterLink>

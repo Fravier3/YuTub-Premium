@@ -863,6 +863,10 @@ Channel:
     Video hidden by FreeTube: Video hidden by Yutu Premium
 Latin Home: 'Home'
 Latin Feed:
+  Recommended: 'Recommended'
+  Trailers: 'Trailers'
+  Nature and More: 'Nature and more'
+  Views: 'views'
   Latin Music: 'Latin music'
   Popular in Latin America: 'Popular in Latin America'
   Nothing to show: 'Could not load videos. Check your connection or change the instance in Settings.'
