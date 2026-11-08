@@ -44,18 +44,6 @@
         @click="historyForward"
       />
       <button
-        v-if="!hideSearchBar"
-        class="navSearchButton navButton"
-        :aria-label="t('Search Bar.Open Search Container')"
-        :title="t('Search Bar.Open Search Container')"
-        @click="toggleSearchContainer"
-      >
-        <FontAwesomeIcon
-          class="navIcon"
-          :icon="['fas', 'search']"
-        />
-      </button>
-      <button
         class="navNewWindowButton navButton"
         :aria-label="t('Open New Window')"
         :title="newWindowText"
@@ -80,7 +68,7 @@
           class="logoText"
         >
           <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-          <span class="logoName">Yutu</span><sup>Premium</sup>
+          <span class="logoName">Premium</span>
           <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
         </div>
       </RouterLink>
@@ -121,7 +109,35 @@
         </button>
       </div>
     </div>
-    <FtProfileSelector class="side profiles" />
+    <div class="side headerActions">
+      <button
+        v-if="!hideSearchBar"
+        class="navSearchButton navButton"
+        :aria-label="t('Search Bar.Open Search Container')"
+        :title="t('Search Bar.Open Search Container')"
+        @click="toggleSearchContainer"
+      >
+        <svg
+          class="navIcon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          aria-hidden="true"
+        >
+          <circle
+            cx="10.5"
+            cy="10.5"
+            r="7.5"
+          />
+          <path
+            d="m16 16 5 5"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <FtProfileSelector class="profiles" />
+    </div>
   </nav>
 </template>
 
@@ -602,8 +618,12 @@ function removeSearchHistoryEntryInDbAndCache(query) {
   store.commit('removeFromSessionSearchHistory', query)
 }
 
-function toggleSearchContainer() {
+async function toggleSearchContainer() {
   showSearchContainer.value = !showSearchContainer.value
+  if (showSearchContainer.value) {
+    await nextTick()
+    searchInput.value?.focus()
+  }
 }
 
 /**

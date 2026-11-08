@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Premium Wordmark';
+  src: url('../../assets/font/Oswald.ttf') format('truetype');
+  font-weight: 200 700;
+  font-display: swap;
+}
+
 @mixin top-nav-is-colored {
   @at-root {
     .topNavBarColor &,
@@ -198,26 +205,18 @@
 
     .logoText {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       margin-inline-start: 6px;
       color: var(--primary-text-color);
-      font-size: 20px;
-      font-weight: 700;
+      font-family: 'Premium Wordmark', 'Arial Narrow', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
       letter-spacing: -0.04em;
       line-height: 1;
       white-space: nowrap;
 
-      sup {
-        color: var(--tertiary-text-color);
-        font-size: 9px;
-        font-weight: 500;
-        letter-spacing: 0;
-        line-height: 1;
-        margin-inline-start: 2px;
-      }
-
       @media only screen and (width <= 680px) {
-        font-size: 18px;
+        font-size: 27px;
       }
 
       @include top-nav-is-colored {
@@ -249,5 +248,44 @@
     .searchInput {
       flex: 1;
     }
+  }
+}
+
+.headerActions {
+  justify-content: flex-end;
+  margin-inline-start: auto;
+  gap: 8px;
+
+  .navSearchButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 44px;
+    block-size: 44px;
+    padding: 10px;
+  }
+}
+
+@media only screen and (width <= 680px) {
+  .topNav {
+    padding-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right));
+    box-shadow: none;
+  }
+
+  .side {
+    margin-inline: 0;
+
+    .logo {
+      padding-inline: 0;
+
+      .logoIcon {
+        inline-size: 36px;
+        block-size: 26px;
+      }
+    }
+  }
+
+  .middle {
+    min-inline-size: 0;
   }
 }
