@@ -628,3 +628,20 @@ a {
     max-inline-size: calc(100vw - 48px);
   }
 }
+
+/* ---------- Video en Android TV: solo el reproductor, sin nada alrededor ---------- */
+.yutu-tv.tv-watch,
+.yutu-tv.tv-watch body {
+  background: #000;
+}
+
+.tv-watch .topNav,
+.tv-watch .sideNav,
+.tv-watch .infoArea,
+.tv-watch .sidebarArea {
+  display: none !important;
+}
+
+.tv-watch .flexBox.routerView {
+  margin: 0 !important;
+}
