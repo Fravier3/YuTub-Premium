@@ -90,3 +90,11 @@ Height adjust for profile list so it won't cover navbar.  */
   inset-block-start: 10px;
   inset-inline-end: 5px;
 }
+
+.profileAvatar {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}

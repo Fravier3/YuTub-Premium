@@ -628,3 +628,15 @@ a {
     max-inline-size: calc(100vw - 48px);
   }
 }
+
+/* iOS Home Screen has a native status-bar scrim that Safari tabs do not use.
+   Keep toolbar glyphs below its lower edge, including existing installations. */
+@media only screen and (width <= 680px) {
+  .iosStandalone {
+    --yt-top: 76px;
+  }
+
+  .iosStandalone .app .topNav {
+    padding-block-start: 20px;
+  }
+}

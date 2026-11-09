@@ -13,12 +13,13 @@
       @mousedown="handleIconMouseDown"
       @keydown.enter.space.prevent="toggleProfileList"
     >
-      <div
-        class="initial"
-        dir="auto"
+      <img
+        class="profileAvatar"
+        :src="puppyAvatar"
+        alt=""
+        width="40"
+        height="40"
       >
-        {{ activeProfileInitial }}
-      </div>
     </div>
     <FtCard
       v-show="profileListShown"
@@ -83,6 +84,7 @@
 </template>
 
 <script setup>
+import puppyAvatar from '../../assets/img/puppy-avatar.webp'
 import { computed, nextTick, ref, useId, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -119,12 +121,6 @@ let mouseDownOnIcon = false
 const profileList = computed(() => store.getters.getProfileList)
 /** @type {import('vue').ComputedRef<Profile>} */
 const activeProfile = computed(() => store.getters.getActiveProfile)
-
-const activeProfileInitial = computed(() => {
-  return activeProfile.value?.name
-    ? getFirstCharacter(translateProfileName(activeProfile.value), locale.value)
-    : ''
-})
 
 /** @type {import('vue').ComputedRef<Record<Profile['_id'], string>>} */
 const profileInitials = computed(() => {
