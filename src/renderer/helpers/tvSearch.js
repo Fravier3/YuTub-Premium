@@ -45,6 +45,7 @@ export function prepareSearchInput() {
   // Solo lectura: para Android deja de ser un campo editable y OK llega como una tecla normal (el texto se escribe con el teclado propio)
   input.setAttribute('readonly', '')
   input.setAttribute('data-tv-search', '')
+  input.setAttribute('placeholder', 'Buscar')
 }
 
 /**

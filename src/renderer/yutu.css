@@ -434,8 +434,9 @@ a {
   display: none !important;
 }
 
-.yutu-tv .topNav .profiles {
+.yutu-tv .topNav .headerActions {
   order: 1;
+  margin-inline-start: 0 !important;
 }
 
 .yutu-tv .topNav .middle {
@@ -459,23 +460,124 @@ a {
   padding-inline: 0 !important;
 }
 
-/* Solo la palabra "Premium" junto al logo */
-.yutu-tv .logoName {
-  display: none;
-}
-
 .yutu-tv .topNav .logoText {
   display: flex !important;
 }
 
-.yutu-tv .logoText sup {
-  position: static !important;
-  margin-inline-start: 0 !important;
-  color: var(--primary-text-color) !important;
-  font-size: 24px !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.03em !important;
-  vertical-align: baseline;
+/* Caja de búsqueda como la de YouTube en TV: píldora gris, sin borde */
+.yutu-tv .searchContainer .ft-input {
+  border: 0 !important;
+  background-color: rgb(255 255 255 / 12%) !important;
+}
+
+/* La X de borrar nunca pisa el texto: deja sitio a la izquierda mientras se ve */
+.yutu-tv .clearTextButtonVisible.search .ft-input {
+  padding-inline-start: 56px !important;
+}
+
+/* ---------- Barra lateral en Android TV: solo iconos, como YouTube ---------- */
+.yutu-tv .sideNav,
+.yutu-tv .sideNav .inner {
+  inline-size: 76px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  scrollbar-width: none;
+}
+
+.yutu-tv .sideNav .inner {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  block-size: 100%;
+  padding-block: 10px 18px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.yutu-tv .sideNav .navLabel,
+.yutu-tv .sideNav hr,
+.yutu-tv .sideNav .navChannel,
+.yutu-tv .sideNav .thumbnailContainer,
+.yutu-tv .sideNav a[href='#/about'] {
+  display: none !important;
+}
+
+.yutu-tv .sideNav .navOption {
+  display: grid !important;
+  place-items: center;
+  inline-size: 54px !important;
+  block-size: 54px !important;
+  min-block-size: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0;
+  border-radius: 50% !important;
+  background: none;
+  color: rgb(255 255 255 / 78%);
+  cursor: pointer;
+}
+
+.yutu-tv .sideNav .navIcon {
+  display: none;
+}
+
+/* Iconos de línea al estilo YouTube (se dibujan con una máscara para poder cambiar de color) */
+.yutu-tv .sideNav .navOption::before {
+  content: '';
+  inline-size: 28px;
+  block-size: 28px;
+  background-color: currentcolor;
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-mask: var(--tv-nav-icon) center / contain no-repeat;
+  mask: var(--tv-nav-icon) center / contain no-repeat;
+}
+
+.yutu-tv .sideNav .navOption.router-link-active {
+  color: #fff;
+  background: rgb(255 255 255 / 10%) !important;
+}
+
+.yutu-tv .sideNav .navOption:focus,
+.yutu-tv .sideNav .navOption:hover {
+  box-shadow: none !important;
+  background: #f1f1f1 !important;
+  color: #0f0f0f !important;
+}
+
+.yutu-tv .sideNav .tvSearchNav {
+  --tv-nav-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/></svg>");
+}
+
+.yutu-tv .sideNav a[href='#/latin'] {
+  --tv-nav-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z'/></svg>");
+}
+
+.yutu-tv .sideNav a[href='#/popular'] {
+  --tv-nav-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M11.57 13.16c-1.36.28-2.17 1.16-2.17 2.41 0 1.34 1.11 2.42 2.49 2.42 2.05 0 3.71-1.66 3.71-3.71 0-1.07-.15-2.12-.46-3.12-.79 1.07-2.2 1.72-3.57 2zM13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM12 20c-3.31 0-6-2.69-6-6 0-1.53.3-3.04.86-4.43 1.01 1.01 2.41 1.63 3.97 1.63 2.66 0 4.75-1.83 5.28-4.43C17.34 8.97 18 11.44 18 14c0 3.31-2.69 6-6 6z'/></svg>");
+}
+
+.yutu-tv .sideNav a[href='#/subscriptions'] {
+  --tv-nav-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M4 6h16v2H4zm2-4h12v2H6zm14 8H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2zm0 10H4v-8h16v8zm-10-7.27v6.53L16 16z'/></svg>");
+}
+
+.yutu-tv .sideNav a[href='#/subscribedchannels'] {
+  --tv-nav-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M16.5 13c-1.2 0-3.07.34-4.5 1-1.43-.67-3.3-1-4.5-1C5.33 13 1 14.08 1 16.25V19h22v-2.75c0-2.17-4.33-3.25-6.5-3.25zm-4 4.5h-10v-1.25c0-.54 2.56-1.75 5-1.75s5 1.21 5 1.75v1.25zm9 0H14v-1.25c0-.46-.2-.86-.52-1.22.88-.3 1.96-.53 3.02-.53 2.44 0 5 1.21 5 1.75v1.25zM7.5 12c1.93 0 3.5-1.57 3.5-3.5S9.43 5 7.5 5 4 6.57 4 8.5 5.57 12 7.5 12zm0-5.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 5.5c1.93 0 3.5-1.57 3.5-3.5S18.43 5 16.5 5 13 6.57 13 8.5s1.57 3.5 3.5 3.5zm0-5.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z'/></svg>");
+}
+
+.yutu-tv .sideNav a[href='#/userplaylists'] {
+  --tv-nav-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z'/></svg>");
+}
+
+.yutu-tv .sideNav a[href='#/history'] {
+  --tv-nav-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z'/></svg>");
+}
+
+/* Configuración abajo del todo, como en YouTube */
+.yutu-tv .sideNav a[href='#/settings'] {
+  margin-block-start: auto !important;
+
+  --tv-nav-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M19.43 12.98c.04-.32.07-.64.07-.98 0-.34-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65A.488.488 0 0 0 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1a.566.566 0 0 0-.18-.03c-.17 0-.34.09-.43.25l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46a.5.5 0 0 0 .61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.06.02.12.03.18.03.17 0 .34-.09.43-.25l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zm-1.98-1.71c.04.31.05.52.05.73 0 .21-.02.43-.05.73l-.14 1.13.89.7 1.08.84-.7 1.21-1.27-.51-1.04-.42-.9.68c-.43.32-.84.56-1.25.73l-1.06.43-.16 1.13-.2 1.35h-1.4l-.19-1.35-.16-1.13-1.06-.43c-.43-.18-.83-.41-1.23-.71l-.91-.7-1.06.43-1.27.51-.7-1.21 1.08-.84.89-.7-.14-1.13c-.03-.31-.05-.54-.05-.74s.02-.43.05-.73l.14-1.13-.89-.7-1.08-.84.7-1.21 1.27.51 1.04.42.9-.68c.43-.32.84-.56 1.25-.73l1.06-.43.16-1.13.2-1.35h1.39l.19 1.35.16 1.13 1.06.43c.43.18.83.41 1.23.71l.91.7 1.06-.43 1.27-.51.7 1.21-1.07.85-.89.7.14 1.13zM12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z'/></svg>");
 }
 
 /* El contenido de la portada de TV (filas horizontales) no debe ensanchar la página */
