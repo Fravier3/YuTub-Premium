@@ -31,9 +31,6 @@
   inline-size: 100%;
   z-index: 10;
   isolation: isolate;
-  // Keep the fixed header on its own opaque layer above the scrolling video.
-  transform: translateZ(0);
-  backface-visibility: hidden;
 
   @media only screen and (width >= 961px) {
     display: grid;
@@ -210,13 +207,13 @@
       color: var(--primary-text-color);
       font-family: 'Premium Wordmark', 'Arial Narrow', sans-serif;
       font-size: 28px;
-      font-weight: 600;
+      font-weight: 400;
       letter-spacing: -0.04em;
       line-height: 1;
       white-space: nowrap;
 
       @media only screen and (width <= 680px) {
-        font-size: 27px;
+        font-size: 24px;
       }
 
       @include top-nav-is-colored {
@@ -279,13 +276,44 @@
       padding-inline: 0;
 
       .logoIcon {
-        inline-size: 36px;
-        block-size: 26px;
+        inline-size: 30px;
+        block-size: 20px;
       }
     }
   }
 
   .middle {
     min-inline-size: 0;
+  }
+}
+
+.mobileHeaderAction {
+  display: none;
+}
+
+@media only screen and (width <= 680px) {
+  .headerActions {
+    gap: 0;
+
+    .profiles {
+      display: none;
+    }
+
+    .mobileHeaderAction,
+    .navSearchButton {
+      display: grid;
+      place-items: center;
+      box-sizing: border-box;
+      inline-size: 44px;
+      block-size: 44px;
+      padding: 10px;
+      text-decoration: none;
+    }
+
+    svg {
+      display: block;
+      inline-size: 24px;
+      block-size: 24px;
+    }
   }
 }

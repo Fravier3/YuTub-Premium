@@ -194,7 +194,7 @@ a {
 .topNav .logoText,
 .topNav .colorOption {
   flex-shrink: 0;
-  backface-visibility: hidden;
+  transform: none;
 }
 
 /* Mientras el foco esté en el reproductor, los controles no se esconden */
@@ -583,4 +583,48 @@ a {
 /* El contenido de la portada de TV (filas horizontales) no debe ensanchar la página */
 .yutu-tv .flexBox.routerView {
   min-inline-size: 0;
+}
+
+/* Mobile chrome stays opaque and uses vector glyphs without GPU text flattening. */
+@media only screen and (width <= 680px) {
+  :root:not(.yutu-tv) .sideNav {
+    display: none;
+  }
+
+  :root:not(.yutu-tv) .topNav {
+    transform: none;
+    backface-visibility: visible;
+    background: var(--bg-color);
+  }
+
+  :root:not(.yutu-tv) .topNav::before {
+    background: var(--bg-color);
+  }
+
+  :root:not(.yutu-tv) .flexBox.routerView {
+    margin-block-start: calc(var(--yt-top) + var(--yt-safe-top)) !important;
+    padding-block-end: calc(var(--yt-nav-bottom) + var(--yt-safe-bottom) + 20px);
+  }
+
+  :root:not(.yutu-tv) .flexBox.routerView > .routerView {
+    margin-block-start: 0;
+  }
+
+  :root:not(.yutu-tv) .hasMiniPlayer .flexBox.routerView {
+    padding-block-end: 300px;
+  }
+
+  :root:not(.yutu-tv) .floatingRefreshSection {
+    background: transparent;
+    box-shadow: none;
+    border: 0;
+  }
+}
+
+@media only screen and (width <= 680px) {
+  .mobileDock .profileList {
+    inset-block: auto 0;
+    inset-inline-end: 0;
+    max-inline-size: calc(100vw - 48px);
+  }
 }

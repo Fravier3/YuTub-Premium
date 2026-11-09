@@ -1,5 +1,26 @@
 <template>
   <div>
+    <nav
+      class="browseChips"
+      :aria-label="$t('Search Filters.Search Filters')"
+    >
+      <button
+        class="selected"
+        @click="fetchPopularInfo"
+      >
+        {{ $t('Mobile Browse.All') }}
+      </button>
+      <RouterLink to="/search/m%C3%BAsica%20latina">{{ $t('Latin Music') }}</RouterLink>
+      <RouterLink to="/search/podcasts%20en%20espa%C3%B1ol">{{ $t('Mobile Browse.Podcasts') }}</RouterLink>
+      <RouterLink to="/search/videojuegos">{{ $t('Trending.Gaming') }}</RouterLink>
+      <button
+        :disabled="isLoading"
+        :aria-label="$t('Most Popular')"
+        @click="fetchPopularInfo"
+      >
+        <FontAwesomeIcon :icon="['fas', 'rotate-right']" />
+      </button>
+    </nav>
     <ft-loader
       v-if="isLoading && shownResults.length === 0"
       :fullscreen="true"
@@ -20,6 +41,7 @@
       />
     </ft-card>
     <ft-refresh-widget
+      class="feedRefresh"
       :disable-refresh="isLoading"
       :title="$t('Most Popular')"
       @click="fetchPopularInfo"
@@ -28,6 +50,7 @@
 </template>
 
 <script setup>
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 
 import FtLoader from '../../components/FtLoader/FtLoader.vue'
