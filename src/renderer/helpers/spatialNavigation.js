@@ -73,50 +73,54 @@ function getCandidates() {
 }
 
 /**
- * Elige el candidato más cercano en la dirección pedida.
+ * Elige el siguiente elemento en la dirección pedida. La regla es estricta:
+ * derecha solo va a elementos que están a la derecha, arriba solo a los que están arriba, etc.
+ * Entre ellos gana el que está alineado en la misma fila/columna (se solapa con el actual) y, si hay
+ * varios, el más cercano; lo que está en otra fila solo cuenta si no queda nada alineado.
  * @param {DOMRect} from
  * @param {HTMLElement[]} candidates
  * @param {'left' | 'right' | 'up' | 'down'} dir
  */
 function pickNext(from, candidates, dir, current) {
-  const cx = from.left + from.width / 2
-  const cy = from.top + from.height / 2
+  const horizontal = dir === 'left' || dir === 'right'
+  const TOLERANCE = 4
   let best = null
   let bestScore = Infinity
 
   for (const el of candidates) {
     if (el === current) continue
     const r = el.getBoundingClientRect()
-    const x = r.left + r.width / 2
-    const y = r.top + r.height / 2
 
+    // 1) Debe estar del lado correcto, sin solaparse con el actual en ese eje
     let primary
-    let ortho
     switch (dir) {
       case 'right':
-        if (x <= cx + 1 && r.left < from.right - 1) continue
+        if (r.left < from.right - TOLERANCE) continue
         primary = Math.max(0, r.left - from.right)
-        ortho = Math.abs(y - cy)
         break
       case 'left':
-        if (x >= cx - 1 && r.right > from.left + 1) continue
+        if (r.right > from.left + TOLERANCE) continue
         primary = Math.max(0, from.left - r.right)
-        ortho = Math.abs(y - cy)
         break
       case 'down':
-        if (y <= cy + 1 && r.top < from.bottom - 1) continue
+        if (r.top < from.bottom - TOLERANCE) continue
         primary = Math.max(0, r.top - from.bottom)
-        ortho = Math.abs(x - cx)
         break
       default: // up
-        if (y >= cy - 1 && r.bottom > from.top + 1) continue
+        if (r.bottom > from.top + TOLERANCE) continue
         primary = Math.max(0, from.top - r.bottom)
-        ortho = Math.abs(x - cx)
         break
     }
 
-    // Se prefiere lo que está alineado: la distancia lateral pesa el doble
-    const score = primary + ortho * 2
+    // 2) Alineación: distancia entre los rangos del otro eje (0 si se solapan = misma fila/columna)
+    const [aStart, aEnd, bStart, bEnd] = horizontal
+      ? [from.top, from.bottom, r.top, r.bottom]
+      : [from.left, from.right, r.left, r.right]
+    const gap = Math.max(0, bStart - aEnd, aStart - bEnd)
+    const centerOffset = Math.abs((bStart + bEnd) / 2 - (aStart + aEnd) / 2)
+
+    // Lo que está en otra fila pesa mucho más que lo que está más lejos pero alineado
+    const score = primary + gap * 6 + centerOffset * 0.1
     if (score < bestScore) {
       bestScore = score
       best = el
@@ -229,7 +233,12 @@ function handleKeyDown(event) {
   }
 
   const from = current.getBoundingClientRect()
-  const next = pickNext(from, candidates, dir, current)
+  let next = pickNext(from, candidates, dir, current)
+
+  // Entrar al menú lateral desde el contenido: el foco cae en la sección actual (como en YouTube)
+  if (dir === 'left' && next?.closest('.sideNav') && !current.closest('.sideNav')) {
+    next = candidates.find((el) => el.matches('.sideNav .router-link-active')) ?? next
+  }
 
   if (next) {
     focusElement(next)

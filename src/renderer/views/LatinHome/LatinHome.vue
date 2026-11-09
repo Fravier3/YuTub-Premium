@@ -27,6 +27,7 @@
                 :src="thumbnailUrl(video.videoId)"
                 alt=""
                 loading="lazy"
+                @error="nextThumbnail($event, instanceUrl, video.videoId)"
               >
               <span
                 v-if="duration(video)"
@@ -55,6 +56,7 @@ import { useI18n } from 'vue-i18n'
 import FtLoader from '../../components/FtLoader/FtLoader.vue'
 
 import store from '../../store/index'
+import { hdThumbnailUrl, nextThumbnail } from '../../helpers/tvThumbnails'
 import { LATIN_FEED_TTL } from '../../helpers/latinMusicFeed'
 import {
   getInvidiousLatinFeed,
@@ -107,7 +109,7 @@ const shelves = computed(() => {
 })
 
 const instanceUrl = computed(() => store.getters.getCurrentInvidiousInstanceUrl)
-const thumbnailUrl = (id) => `${instanceUrl.value}/vi/${id}/mqdefault.jpg`
+const thumbnailUrl = (id) => hdThumbnailUrl(instanceUrl.value, id)
 const duration = (video) => video.liveNow ? 'EN VIVO' : (video.lengthSeconds > 0 ? formatDurationAsTimestamp(video.lengthSeconds) : '')
 
 const meta = (video) => {

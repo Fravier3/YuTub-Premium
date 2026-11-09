@@ -35,6 +35,7 @@
           class="thumbnailImage"
           :class="{ blur: blurThumbnails }"
           alt=""
+          @error="handleThumbnailError"
         >
       </RouterLink>
       <div
@@ -324,6 +325,7 @@ import {
 } from '../../helpers/utils.js'
 import { deArrowData, deArrowThumbnail } from '../../helpers/sponsorblock.js'
 import thumbnailPlaceholder from '../../assets/img/thumbnail_placeholder.svg'
+import { hdThumbnailUrl, nextThumbnail } from '../../helpers/tvThumbnails'
 
 const props = defineProps({
   data: {
@@ -798,9 +800,19 @@ const thumbnail = computed(() => {
     case 'end':
       return `${baseUrl}/vi/${id.value}/mq3.jpg`
     default:
-      return `${baseUrl}/vi/${id.value}/mqdefault.jpg`
+      // En la versión de TV se piden miniaturas HD (con respaldo automático a menor calidad)
+      return process.env.YUTU_TV
+        ? hdThumbnailUrl(baseUrl, id.value)
+        : `${baseUrl}/vi/${id.value}/mqdefault.jpg`
   }
 })
+
+/** Versión TV: si la miniatura HD no existe, baja de calidad. */
+function handleThumbnailError(event) {
+  if (!process.env.YUTU_TV || ['start', 'middle', 'end', 'hidden'].includes(thumbnailPreference.value)) return
+  const baseUrl = backendPreference.value === 'invidious' ? currentInvidiousInstanceUrl.value : 'https://i.ytimg.com'
+  nextThumbnail(event, baseUrl, id.value)
+}
 
 /** @type {import('vue').ComputedRef<boolean>} */
 const hideVideoViews = computed(() => store.getters.getHideVideoViews)

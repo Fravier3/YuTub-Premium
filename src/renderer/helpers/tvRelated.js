@@ -7,6 +7,8 @@
  */
 
 import router from '../router/index'
+import store from '../store/index'
+import { hdThumbnailUrl, nextThumbnail } from './tvThumbnails'
 import { showToast } from './utils'
 
 const MAX_ITEMS = 24
@@ -116,7 +118,17 @@ export function openRelated() {
     const thumb = el('span', 'tvRelatedThumb')
     if (item.image) {
       const img = document.createElement('img')
-      img.src = item.image
+      const instance = store.getters.getCurrentInvidiousInstanceUrl
+      const videoId = item.href.split('/').pop()
+      // HD primero; si falla, baja de calidad y por último usa la miniatura original
+      img.src = instance && videoId ? hdThumbnailUrl(instance, videoId) : item.image
+      img.addEventListener('error', () => {
+        if (instance && videoId && Number(img.dataset.thumbLevel ?? 0) < 2) {
+          nextThumbnail({ target: img }, instance, videoId)
+        } else if (img.src !== item.image) {
+          img.src = item.image
+        }
+      })
       img.alt = ''
       thumb.appendChild(img)
     }
