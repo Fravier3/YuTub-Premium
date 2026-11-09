@@ -20,3 +20,43 @@
   padding-inline: 12px;
   font-size: 14px;
 }
+
+.browseChips {
+  display: none;
+}
+
+@media only screen and (width <= 680px) {
+  .browseChips {
+    display: flex;
+    gap: 8px;
+    padding-block: 8px 12px;
+    padding-inline: 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .browseChips a,
+  .browseChips button {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    min-block-size: 34px;
+    padding-inline: 12px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--secondary-card-bg-color);
+    color: var(--primary-text-color);
+    font: inherit;
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  .browseChips .selected {
+    background: var(--primary-text-color);
+    color: var(--bg-color);
+  }
+
+  .feedRefresh {
+    display: none;
+  }
+}

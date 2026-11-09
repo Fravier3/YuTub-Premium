@@ -110,6 +110,22 @@
       </div>
     </div>
     <div class="side headerActions">
+      <RouterLink
+        class="mobileHeaderAction navButton"
+        to="/subscribedchannels"
+        :aria-label="t('Channels.Channels')"
+        :title="t('Channels.Channels')"
+      >
+        <YutuIcon name="chats" />
+      </RouterLink>
+      <RouterLink
+        class="mobileHeaderAction navButton"
+        to="/subscriptions"
+        :aria-label="t('Subscriptions.Subscriptions')"
+        :title="t('Subscriptions.Subscriptions')"
+      >
+        <YutuIcon name="bell" />
+      </RouterLink>
       <button
         v-if="!hideSearchBar"
         class="navSearchButton navButton"
@@ -117,24 +133,7 @@
         :title="t('Search Bar.Open Search Container')"
         @click="toggleSearchContainer"
       >
-        <svg
-          class="navIcon"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.7"
-          aria-hidden="true"
-        >
-          <circle
-            cx="10.5"
-            cy="10.5"
-            r="7.5"
-          />
-          <path
-            d="m16 16 5 5"
-            stroke-linecap="round"
-          />
-        </svg>
+        <YutuIcon name="search" />
       </button>
       <FtProfileSelector class="profiles" />
     </div>
@@ -147,6 +146,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, useTem
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
+import YutuIcon from '../YutuIcon/YutuIcon.vue'
 import FtInput from '../FtInput/FtInput.vue'
 import FtProfileSelector from '../FtProfileSelector/FtProfileSelector.vue'
 import FtIconButton from '../FtIconButton/FtIconButton.vue'

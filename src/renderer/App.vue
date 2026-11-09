@@ -16,6 +16,10 @@
     <SideNav
       :inert="isAnyPromptOpen"
     />
+    <MobileDock
+      v-if="persistentPlaybackEnabled"
+      :inert="isAnyPromptOpen"
+    />
     <FtFlexBox
       class="flexBox routerView"
       role="main"
@@ -124,6 +128,7 @@ import { useRoute, useRouter } from 'vue-router'
 import FtFlexBox from './components/ft-flex-box/ft-flex-box.vue'
 import PersistentWatch from './components/PersistentWatch/PersistentWatch.vue'
 import { isWatchLocation, snapshotPlaybackRoute } from './helpers/persistentPlayback'
+import MobileDock from './components/MobileDock/MobileDock.vue'
 import TopNav from './components/TopNav/TopNav.vue'
 import SideNav from './components/SideNav/SideNav.vue'
 import FtNotificationBanner from './components/FtNotificationBanner/FtNotificationBanner.vue'
