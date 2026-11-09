@@ -43,10 +43,13 @@
       aria-controls="dockAccount"
       @click="accountOpen = !accountOpen"
     >
-      <span
+      <img
         class="avatar"
-        :style="{ backgroundColor: profile.bgColor, color: profile.textColor }"
-      >{{ initial }}</span>
+        :src="puppyAvatar"
+        alt=""
+        width="26"
+        height="26"
+      >
     </button>
     <div
       v-if="accountOpen"
@@ -63,17 +66,16 @@
   </nav>
 </template>
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import store from '../../store/index'
+import puppyAvatar from '../../assets/img/puppy-avatar.webp'
 import YutuIcon from '../YutuIcon/YutuIcon.vue'
 import FtProfileSelector from '../FtProfileSelector/FtProfileSelector.vue'
 const { t } = useI18n()
 const route = useRoute()
 const accountOpen = ref(false)
-const profile = computed(() => store.getters.getActiveProfile)
-const initial = computed(() => Array.from(profile.value.name || 'Y')[0].toUpperCase())
 watch(() => route.fullPath, () => { accountOpen.value = false })
 function createPlaylist() {
   accountOpen.value = false
