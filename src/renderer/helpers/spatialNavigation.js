@@ -320,7 +320,36 @@ function openPlayerSettings() {
   return true
 }
 
+/**
+ * Al abrir la app el foco empieza en el icono de la sección actual del menú (Inicio), como en YouTube,
+ * y el logo de arriba (solo decorativo) no se puede seleccionar con el control.
+ */
+function initStartFocus() {
+  const markLogo = () => document.querySelector('.topNav .logo')?.setAttribute('tabindex', '-1')
+  markLogo()
+  new MutationObserver(markLogo).observe(document.body, { childList: true, subtree: true })
+
+  let userMoved = false
+  document.addEventListener('keydown', () => { userMoved = true }, { once: true, capture: true })
+
+  let attempts = 0
+  const timer = setInterval(() => {
+    attempts++
+    const active = document.activeElement
+    const focusIsFree = !active || active === document.body || active.matches('.topNav .logo')
+    const target = document.querySelector('.sideNav .router-link-active') ?? document.querySelector('.sideNav a[href="#/latin"]')
+
+    if (userMoved || attempts > 40) {
+      clearInterval(timer)
+    } else if (target && focusIsFree) {
+      target.focus({ preventScroll: true })
+      clearInterval(timer)
+    }
+  }, 150)
+}
+
 export function initSpatialNavigation() {
+  initStartFocus()
   document.addEventListener('keydown', handleKeyDown, true)
   window.yutuTvBack = handleBack
   window.yutuTvOpenSettings = openPlayerSettings

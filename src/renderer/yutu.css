@@ -462,6 +462,12 @@ a {
 
 .yutu-tv .topNav .logoText {
   display: flex !important;
+
+  /* letra condensada y gruesa como la de YouTube */
+  font-family: 'Premium TV', 'Roboto Condensed', 'Arial Narrow', sans-serif !important;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
 }
 
 /* Caja de búsqueda como la de YouTube en TV: píldora gris, sin borde */
@@ -656,4 +662,12 @@ a {
   .iosStandalone .app .topNav {
     padding-block-start: 20px;
   }
+}
+
+/* Palabra "Premium" del logo en Android TV: letra condensada y gruesa como la de YouTube */
+@font-face {
+  font-family: 'Premium TV';
+  src: url('./assets/font/roboto-condensed-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
 }
