@@ -8,6 +8,14 @@
       class="inner"
       :class="applyHiddenLabels"
     >
+      <button
+        v-if="IS_YUTU_TV"
+        type="button"
+        class="navOption tvSearchNav"
+        :title="$t('Search Bar.Search')"
+        :aria-label="$t('Search Bar.Search')"
+        @click="openTvSearch"
+      />
       <router-link
         v-if="IS_YUTU_TV"
         class="navOption topNavOption mobileShow"
@@ -268,6 +276,11 @@ const { locale, t } = useI18n()
 
 const SUPPORTS_LOCAL_API = process.env.SUPPORTS_LOCAL_API
 const IS_YUTU_TV = process.env.YUTU_TV
+
+/** Versión TV: abre el teclado de búsqueda propio (tvSearch.js). */
+function openTvSearch() {
+  window.yutuTvOpenSearch?.()
+}
 
 /** @type {import('vue').ComputedRef<boolean>} */
 const isOpen = computed(() => {
