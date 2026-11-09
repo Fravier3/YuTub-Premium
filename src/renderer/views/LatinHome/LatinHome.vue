@@ -57,6 +57,7 @@ import FtLoader from '../../components/FtLoader/FtLoader.vue'
 
 import store from '../../store/index'
 import { hdThumbnailUrl, nextThumbnail } from '../../helpers/tvThumbnails'
+import { loadSeenIds, pickRandom, rememberShown, varied } from '../../helpers/tvVariety'
 import { LATIN_FEED_TTL } from '../../helpers/latinMusicFeed'
 import {
   getInvidiousLatinFeed,
@@ -150,26 +151,36 @@ async function load(forceRefresh) {
   isLoading.value = true
   const next = feed.value.music.length > 0 ? { ...feed.value } : emptyFeed()
   // Las filas van apareciendo a medida que llegan, sin esperar a las demás
-  const publish = () => { feed.value = { ...next } }
+  const publish = () => {
+    feed.value = { ...next }
+    // Ya hay contenido en pantalla: el APK puede quitar su pantalla de inicio
+    window.YutuTV?.appReady?.()
+  }
 
   try {
     // El historial se carga en segundo plano al abrir la app: esperarlo para saber qué has visto
     if (store.getters.getHistoryCacheSorted.length === 0) await store.dispatch('grabHistory')
     const history = store.getters.getHistoryCacheSorted
     const watchedIds = history.map((entry) => entry.videoId)
-    const recentIds = [...new Set(watchedIds)].slice(0, 3)
+    // Recomendados parte de 3 videos al azar entre los últimos que viste, así cambia pero siempre se parece a tus gustos
+    const recentIds = pickRandom([...new Set(watchedIds)].slice(0, 15), 3)
+    // Lo que salió las últimas veces se deja para el final: cada vez que abres la app hay videos nuevos
+    const seen = loadSeenIds()
 
-    // Primero lo que se ve al abrir; el resto después, para no saturar la instancia
     const firstWave = await Promise.allSettled([
       recentIds.length > 0
-        ? getInvidiousRecommendedFromHistory(recentIds, watchedIds).then((items) => { next.recommended = items; publish() })
+        ? getInvidiousRecommendedFromHistory(recentIds, watchedIds).then((items) => { next.recommended = varied(items, seen); publish() })
         : Promise.resolve(),
-      getInvidiousLatinFeed(forceRefresh).then((latin) => { next.music = latin.music; next.popular = latin.popular; publish() })
+      getInvidiousLatinFeed(forceRefresh).then((latin) => {
+        next.music = varied(latin.music, seen)
+        next.popular = varied(latin.popular, seen)
+        publish()
+      })
     ])
 
     const secondWave = await Promise.allSettled([
-      getInvidiousTrailers().then((items) => { next.trailers = items; publish() }),
-      getInvidiousNature().then((items) => { next.nature = items; publish() })
+      getInvidiousTrailers().then((items) => { next.trailers = varied(items, seen); publish() }),
+      getInvidiousNature().then((items) => { next.nature = varied(items, seen); publish() })
     ])
 
     const failures = [...firstWave, ...secondWave].filter((result) => result.status === 'rejected')
@@ -179,6 +190,9 @@ async function load(forceRefresh) {
 
     fetchedAt = Date.now()
     cache = { time: fetchedAt, feed: { ...next } }
+
+    // Recordar lo que se mostró para que la próxima vez salgan otros videos
+    rememberShown(shelves.value.flatMap((shelf) => shelf.items.slice(0, 12).map((video) => video.videoId)))
   } catch (err) {
     fetchedAt = Date.now() - LATIN_FEED_TTL + 5 * 60_000
     showToast(`${t('Invidious API Error (Click to copy)')}: ${err}`, 10000, () => {

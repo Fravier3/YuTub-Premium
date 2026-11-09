@@ -135,6 +135,8 @@ function focusElement(el) {
   el.focus({ preventScroll: true })
   if (el.closest('.tvRelated')) {
     el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' })
+  } else if (el.closest('.sideNav, .topNav')) {
+    // El menú lateral y la barra de arriba son fijos: moverse por ellos no debe desplazar los videos
   } else if (!getFullWindowPlayer()) {
     el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' })
   }

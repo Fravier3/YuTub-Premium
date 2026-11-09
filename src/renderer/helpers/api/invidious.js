@@ -672,8 +672,8 @@ async function fetchLatinSource(source) {
     params: {
       q: source.q,
       region: source.region,
-      sort_by: 'view_count',
-      date: 'month',
+      sort_by: source.sort_by ?? 'view_count',
+      date: source.date ?? 'month',
       type: 'video'
     }
   })
@@ -727,23 +727,58 @@ export async function getInvidiousLatinFeed(forceRefresh = false) {
   return latinFeedCache
 }
 
-/** Filas extra de la portada de la versión de TV. */
-const TV_TRAILER_SOURCES = [
-  { q: 'tráiler oficial español latino', region: 'MX' },
-  { q: 'trailer oficial estreno película', region: 'CO' },
-  { q: 'tráiler serie estreno', region: 'AR' },
+/**
+ * Filas extra de la portada de la versión de TV. Cada vez que se abre la app se eligen al azar
+ * algunas búsquedas de estos grupos (con otro país, fecha y orden), para que salgan videos distintos.
+ */
+const TV_TRAILER_QUERIES = [
+  'tráiler oficial español latino',
+  'trailer oficial estreno película',
+  'tráiler serie estreno',
+  'tráiler oficial netflix',
+  'trailer oficial marvel dc',
+  'tráiler anime estreno',
+  'tráiler película terror estreno',
+  'tráiler comedia estreno',
+  'avance próximos estrenos cine',
+  'tráiler videojuego estreno',
+  'tráiler documental estreno',
+  'tráiler película acción estreno'
 ]
 
-const TV_NATURE_SOURCES = [
-  { q: 'naturaleza relajante 4K', region: 'US' },
-  { q: 'paisajes y sonidos de la naturaleza 4K', region: 'ES' },
+const TV_NATURE_QUERIES = [
+  'naturaleza relajante 4K',
+  'paisajes y sonidos de la naturaleza 4K',
+  'documental naturaleza 4K',
+  'animales salvajes 4K',
+  'playa olas relajantes 4K',
+  'lluvia relajante bosque 4K',
+  'viaje de ensueño drone 4K',
+  'montañas y cascadas 4K'
 ]
 
-/** @returns {Promise<any[]>} */
-export const getInvidiousTrailers = () => fetchLatinSources(TV_TRAILER_SOURCES, 24)
+const TV_REGIONS = ['MX', 'CO', 'AR', 'ES', 'US', 'CL', 'PE']
+const TV_DATES = ['week', 'month', 'year']
+const TV_SORTS = ['view_count', 'relevance']
+
+const randomItem = (list) => list[Math.floor(Math.random() * list.length)]
+
+/** @param {string[]} queries @param {number} count */
+function randomSources(queries, count) {
+  const chosen = [...queries].sort(() => Math.random() - 0.5).slice(0, count)
+  return chosen.map((q) => ({
+    q,
+    region: randomItem(TV_REGIONS),
+    date: randomItem(TV_DATES),
+    sort_by: randomItem(TV_SORTS)
+  }))
+}
 
 /** @returns {Promise<any[]>} */
-export const getInvidiousNature = () => fetchLatinSources(TV_NATURE_SOURCES, 24)
+export const getInvidiousTrailers = () => fetchLatinSources(randomSources(TV_TRAILER_QUERIES, 3), 30)
+
+/** @returns {Promise<any[]>} */
+export const getInvidiousNature = () => fetchLatinSources(randomSources(TV_NATURE_QUERIES, 3), 30)
 
 /**
  * Videos parecidos a los que ya viste: los relacionados de los últimos videos del historial,

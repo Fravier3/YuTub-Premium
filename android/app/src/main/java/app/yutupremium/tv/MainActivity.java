@@ -6,8 +6,13 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +28,11 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -93,6 +102,98 @@ public class MainActivity extends Activity {
             web.loadUrl(HOME_URL);
         }
         web.requestFocus();
+
+        if (savedInstanceState == null) showSplash();
+    }
+
+    /**
+     * Pantalla de inicio como la de YouTube: fondo negro, una línea roja con un triángulo que avanza y luego
+     * el logo con "Yutu Premium TV" debajo. Dura unos segundos y se va cuando la app ya tiene contenido.
+     */
+    private void showSplash() {
+        final float d = getResources().getDisplayMetrics().density;
+        final int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        splashStartedAt = SystemClock.uptimeMillis();
+
+        splash = new FrameLayout(this);
+        splash.setBackgroundColor(Color.BLACK);
+        splash.setClickable(true);
+
+        // Logo + texto (aparecen al final de la animación)
+        final LinearLayout brand = new LinearLayout(this);
+        brand.setOrientation(LinearLayout.VERTICAL);
+        brand.setGravity(Gravity.CENTER_HORIZONTAL);
+        brand.setAlpha(0f);
+        final ImageView logo = new ImageView(this);
+        logo.setImageResource(R.drawable.splash_logo);
+        logo.setAdjustViewBounds(true);
+        brand.addView(logo, new LinearLayout.LayoutParams((int) (240 * d), ViewGroup.LayoutParams.WRAP_CONTENT));
+        final TextView label = new TextView(this);
+        label.setText("Yutu Premium TV");
+        label.setTextColor(Color.WHITE);
+        label.setTextSize(30);
+        label.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+        label.setLetterSpacing(0.06f);
+        label.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        labelParams.topMargin = (int) (26 * d);
+        brand.addView(label, labelParams);
+        splash.addView(brand, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+
+        // Línea roja que se dibuja con un triángulo al frente
+        final int lineWidth = (int) (screenWidth * 0.42f);
+        final View line = new View(this);
+        line.setBackgroundColor(Color.parseColor("#F20000"));
+        line.setPivotX(0f);
+        line.setScaleX(0f);
+        FrameLayout.LayoutParams lineParams = new FrameLayout.LayoutParams(lineWidth, (int) (4 * d), Gravity.CENTER);
+        splash.addView(line, lineParams);
+        final TextView arrow = new TextView(this);
+        arrow.setText("\u25B6");
+        arrow.setTextColor(Color.WHITE);
+        arrow.setTextSize(22);
+        arrow.setAlpha(0f);
+        FrameLayout.LayoutParams arrowParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        splash.addView(arrow, arrowParams);
+
+        root.addView(splash, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        final float start = -lineWidth / 2f - 28 * d;
+        arrow.setTranslationX(start);
+        arrow.animate().alpha(1f).setDuration(250).start();
+        arrow.animate().translationX(lineWidth / 2f - 14 * d).setDuration(900).setInterpolator(new DecelerateInterpolator()).start();
+        line.setTranslationX(0f);
+        line.animate().scaleX(1f).setDuration(900).setInterpolator(new DecelerateInterpolator()).withEndAction(() -> {
+            line.animate().alpha(0f).setDuration(300).start();
+            arrow.animate().alpha(0f).setDuration(300).start();
+            brand.setScaleX(0.92f);
+            brand.setScaleY(0.92f);
+            brand.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(600).start();
+        }).start();
+
+        handler.postDelayed(this::tryFinishSplash, SPLASH_MIN_MS);
+        handler.postDelayed(this::finishSplash, SPLASH_MAX_MS);
+    }
+
+    /** Quita la pantalla de inicio cuando pasó el tiempo mínimo y la app ya tiene contenido. */
+    private void tryFinishSplash() {
+        if (splash == null) return;
+        long elapsed = SystemClock.uptimeMillis() - splashStartedAt;
+        if (appReady && elapsed >= SPLASH_MIN_MS) {
+            finishSplash();
+        } else if (elapsed < SPLASH_MAX_MS) {
+            handler.postDelayed(this::tryFinishSplash, 200);
+        }
+    }
+
+    private void finishSplash() {
+        final FrameLayout view = splash;
+        if (view == null) return;
+        splash = null;
+        view.animate().alpha(0f).setDuration(400).withEndAction(() -> {
+            root.removeView(view);
+            web.requestFocus();
+        }).start();
     }
 
     /**
@@ -122,6 +223,14 @@ public class MainActivity extends Activity {
     /** La app web avisa cuando el foco está en la barra de búsqueda (caja o lupa). */
     private volatile boolean searchFocused = false;
 
+    // ---- Pantalla de inicio (logo sobre fondo negro, como YouTube) ----
+    private static final long SPLASH_MIN_MS = 3200;
+    private static final long SPLASH_MAX_MS = 9000;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private FrameLayout splash;
+    private long splashStartedAt;
+    private volatile boolean appReady = false;
+
     private Intent voiceIntent() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -132,6 +241,12 @@ public class MainActivity extends Activity {
 
     /** Puente para que la app web use la búsqueda por voz del sistema. */
     private class Bridge {
+        /** La app avisa cuando ya mostró contenido: la pantalla de inicio puede irse. */
+        @JavascriptInterface
+        public void appReady() {
+            appReady = true;
+        }
+
         @JavascriptInterface
         public void setSearchFocused(boolean focused) {
             searchFocused = focused;
@@ -260,6 +375,7 @@ public class MainActivity extends Activity {
     /** Teclas multimedia del control remoto: reproducir/pausar y saltar ±10 s. */
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        if (splash != null) return true; // durante la pantalla de inicio las teclas no hacen nada
         // OK sobre la barra de búsqueda: abrir el teclado propio. Se hace aquí porque, en un campo de texto,
         // Android no siempre entrega el OK a la página.
         if (searchFocused && customView == null && isSelectKey(event.getKeyCode())) {

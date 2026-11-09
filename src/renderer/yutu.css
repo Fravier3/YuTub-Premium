@@ -629,6 +629,23 @@ a {
   }
 }
 
+/* ---------- Video en Android TV: solo el reproductor, sin nada alrededor ---------- */
+.yutu-tv.tv-watch,
+.yutu-tv.tv-watch body {
+  background: #000;
+}
+
+.tv-watch .topNav,
+.tv-watch .sideNav,
+.tv-watch .infoArea,
+.tv-watch .sidebarArea {
+  display: none !important;
+}
+
+.tv-watch .flexBox.routerView {
+  margin: 0 !important;
+}
+
 /* iOS Home Screen has a native status-bar scrim that Safari tabs do not use.
    Keep toolbar glyphs below its lower edge, including existing installations. */
 @media only screen and (width <= 680px) {
