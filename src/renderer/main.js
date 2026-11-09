@@ -295,6 +295,14 @@ router.isReady().then(() => {
     initTvSearch()
     initTvRelated()
     initSpatialNavigation()
+
+    // En un video no se muestra nada más que el reproductor (ni menús ni información): clase en <html>
+    const syncWatchScreen = (path) => document.documentElement.classList.toggle('tv-watch', path.startsWith('/watch/'))
+    router.afterEach((to) => syncWatchScreen(to.path))
+    syncWatchScreen(router.currentRoute.value.path)
+
+    // Respaldo: si la portada tarda, la pantalla de inicio del APK se retira igual a los pocos segundos
+    setTimeout(() => window.YutuTV?.appReady?.(), 5000)
   }
 })
 
