@@ -115,3 +115,16 @@ input:not([type='checkbox']) { inline-size: 100%;
 
   .avatarChoices img { inline-size: 46px;
     block-size: 46px; } }
+
+.sessionBanner { display: grid;
+  gap: 6px;
+  padding: 14px;
+  margin-block: 14px;
+  border-radius: 16px;
+  background: rgb(128 128 128 / 12%);
+  font-size: 14px;
+  overflow-wrap: anywhere; }
+
+.sessionBanner.connected { background: rgb(40 170 110 / 14%);
+  border: 1px solid rgb(40 170 110 / 35%); }
+.sessionBanner small { opacity: 0.8; }

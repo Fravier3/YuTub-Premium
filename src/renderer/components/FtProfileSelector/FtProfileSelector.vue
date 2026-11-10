@@ -1,3 +1,4 @@
+<!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
 <template>
   <div>
     <div
@@ -38,6 +39,12 @@
       >
         {{ identity.profile.name }}
       </button>
+      <p
+        v-if="!isElectron && !isTv"
+        class="sessionAccountLabel"
+      >
+        {{ identity.user ? 'Sesión iniciada: ' + identity.user.email : 'Sin sesión iniciada' }}
+      </p>
       <h3
         :id="id + 'title'"
         class="profileListTitle"

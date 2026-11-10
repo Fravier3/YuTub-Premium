@@ -39,11 +39,16 @@
     <button
       class="dockItem account"
       :aria-label="t('Profile.Toggle Profile List')"
-      :title="t('Profile.Toggle Profile List')"
+      :title="identity.user ? 'Sesión iniciada: ' + identity.user.email : 'Perfil local · sin sesión iniciada'"
       :aria-expanded="accountOpen"
       aria-controls="dockAccount"
       @click="accountOpen = !accountOpen"
     >
+      <span
+        v-if="identity.user"
+        class="sessionDot"
+        aria-hidden="true"
+      />
       <img
         class="avatar"
         :src="currentAvatar"
@@ -65,6 +70,9 @@
       >
         {{ identity.profile.name }} — {{ t('Profile.Profile Select') }}
       </button>
+      <p class="sessionMenuStatus">
+        {{ identity.user ? 'Sesión iniciada: ' + identity.user.email : 'Sin sesión iniciada' }}
+      </p>
       <FtProfileSelector />
       <RouterLink to="/history">{{ t('History.History') }}</RouterLink>
       <RouterLink to="/userplaylists">{{ t('Playlists') }}</RouterLink>
