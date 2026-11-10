@@ -1035,6 +1035,10 @@ Playing Next Video Interval: Reproduciendo el vídeo a continuación. Haz clic p
 Default Invidious instance has been cleared: La instancia de Invidious predeterminada ha sido borrada
 Default Invidious instance has been set to {instance}: La instancia de Invidious predeterminada ha sido establecida como {instance}
 Search Bar:
+  Mobile Placeholder: Buscar en Yutu
+  Voice Search: Búsqueda por voz
+  Use Suggestion: Usar esta búsqueda
+  Keyboard Dictation: Usa el micrófono del teclado para dictar tu búsqueda.
   Clear Input: Vaciar entrada
   Remove: Eliminar
   Open Search Container: Abrir contenedor de búsquedas

@@ -630,13 +630,14 @@ export default defineComponent({
      * @returns {shaka.extern.PlayerConfiguration}
      */
     function getPlayerConfig(format, useAutoQuality = false) {
+      const web = !process.env.IS_ELECTRON && !process.env.YUTU_TV
       return {
-        // YouTube uses these values and they seem to work well in FreeTube too,
-        // so we might as well use them
+        // Keep a useful forward reserve without retaining five minutes of decoded
+        // media on memory-constrained phones. Do not alter the selected quality.
         streaming: {
-          bufferingGoal: 180,
-          rebufferingGoal: 0.02,
-          bufferBehind: 300
+          bufferingGoal: web ? 90 : 180,
+          rebufferingGoal: web ? 2 : 0.02,
+          bufferBehind: web ? 30 : 300
         },
         manifest: {
           disableVideo: format === 'audio',

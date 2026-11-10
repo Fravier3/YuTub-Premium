@@ -145,3 +145,10 @@ button:focus-visible {
 .pipVideo {
   margin-inline-end: 48px;
 }
+
+.minimized .miniVideoHitTarget,
+.minimized .miniTitle {
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}

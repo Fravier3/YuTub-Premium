@@ -1235,3 +1235,5 @@ a {
     -webkit-backdrop-filter: none;
   }
 }
+
+body.mobileSearchActive { overflow: hidden; }
