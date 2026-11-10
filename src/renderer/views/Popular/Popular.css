@@ -60,3 +60,10 @@
     display: none;
   }
 }
+
+.homeSection { margin-block-end: 28px; }
+
+.homeSection h2 { font-size: 20px;
+  margin-block: 12px 18px;
+  margin-inline: 16px;
+  font-weight: 650; }

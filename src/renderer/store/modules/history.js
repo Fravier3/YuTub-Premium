@@ -1,3 +1,4 @@
+import { forgetListening, clearListening } from '../../helpers/yutuIdentity'
 import { DBHistoryHandlers } from '../../../datastores/handlers/index'
 
 const state = {
@@ -68,6 +69,7 @@ const actions = {
   async removeFromHistory({ commit }, videoId) {
     try {
       await DBHistoryHandlers.delete(videoId)
+      forgetListening(videoId)
       commit('removeFromHistoryCacheById', videoId)
     } catch (errMessage) {
       console.error(errMessage)
@@ -77,6 +79,7 @@ const actions = {
   async removeAllHistory({ commit }) {
     try {
       await DBHistoryHandlers.deleteAll()
+      clearListening()
       commit('setHistoryCacheSorted', [])
       commit('setHistoryCacheById', {})
     } catch (errMessage) {

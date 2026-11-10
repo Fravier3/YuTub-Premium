@@ -3,8 +3,10 @@
     ref="dockElement"
     class="persistentWatch"
     :style="minimized && position ? { left: position.x + 'px', top: position.y + 'px', right: 'auto', bottom: 'auto' } : undefined"
-    :class="{ minimized }"
+    :class="{ minimized, settling }"
     :aria-label="t('Playback Dock.Now Playing')"
+    @click.capture="guardGestureClick"
+    @keydown.esc.capture="swipeCancel"
     @touchstart.capture.passive="swipeStart"
     @touchmove.capture="swipeMove"
     @touchend.capture="swipeEnd"
@@ -107,6 +109,7 @@
 </template>
 
 <script setup>
+import { animate } from 'motion/mini'
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref, useTemplateRef, watch } from 'vue'
 import { routeLocationKey, routerKey, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -166,6 +169,9 @@ function togglePlayback() {
 }
 const dockElement = useTemplateRef('dockElement')
 const position = ref(null)
+const settling = ref(false)
+let motion
+let gestureClickUntil = 0
 let drag = null
 let suppressClickUntil = 0
 let swipe = null
@@ -211,26 +217,67 @@ function expandUnlessDragged() {
   if (Date.now() >= suppressClickUntil) expand()
 }
 function swipeStart(event) {
-  if (props.minimized || event.touches.length !== 1 ||
+  swipe = null
+  if (props.minimized || settling.value || event.touches.length !== 1 ||
       !event.target.closest('.videoAreaMargin') ||
-      event.target.closest('button, input, [role="slider"], .shaka-bottom-controls')) return
+      event.target.closest('button, input, [role="slider"], .shaka-bottom-controls, .shaka-seek-bar-container')) return
   const touch = event.touches[0]
-  swipe = { x: touch.clientX, y: touch.clientY, down: false }
+  motion?.stop()
+  swipe = { x: touch.clientX, y: touch.clientY, down: false, horizontal: false }
 }
 function swipeMove(event) {
   if (!swipe || event.touches.length !== 1) return
   const touch = event.touches[0]
+  const dx = touch.clientX - swipe.x
   const dy = touch.clientY - swipe.y
-  if (dy > 16 && dy > Math.abs(touch.clientX - swipe.x) * 1.5) {
+  if (!swipe.down && Math.abs(dx) > 16 && Math.abs(dx) > Math.abs(dy)) swipe.horizontal = true
+  if (swipe.horizontal) return
+  if (swipe.down || (dy > 12 && dy > Math.abs(dx) * 1.5)) {
     swipe.down = true
     if (event.cancelable) event.preventDefault()
+    // Shaka interprets touchend as a tap/double-tap seek. A vertical drag
+    // belongs exclusively to minimization, never to the video controls.
+    event.stopPropagation?.()
+    const area = dockElement.value?.querySelector('.videoAreaMargin')
+    if (area?.style) {
+      const progress = Math.min(1, Math.max(0, dy) / 300)
+      const target = Math.min(220 / (area.offsetWidth || window.innerWidth), 0.8)
+      area.style.transform = `translateY(${Math.max(0, dy) * 0.65}px) scale(${1 - progress * (1 - target)})`
+      area.style.borderRadius = `${progress * 16}px`
+    }
+  }
+}
+function guardGestureClick(event) {
+  if (Date.now() < gestureClickUntil) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+}
+function resetPreview() {
+  const area = dockElement.value?.querySelector('.videoAreaMargin')
+  if (area?.style) {
+    area.style.transform = ''
+    area.style.borderRadius = ''
   }
 }
 function swipeEnd(event) {
-  if (swipe?.down && event.changedTouches[0].clientY - swipe.y > 70) browse()
+  if (swipe?.down) {
+    event.preventDefault?.()
+    event.stopPropagation?.()
+    gestureClickUntil = Date.now() + 500
+    if (event.changedTouches[0].clientY - swipe.y > 70) browse()
+    else returnPreview()
+  }
   swipe = null
 }
-function swipeCancel() { swipe = null }
+function returnPreview() {
+  const area = dockElement.value?.querySelector('.videoAreaMargin')
+  if (area?.style && area.style.transform) {
+    motion = animate(area, { transform: [area.style.transform, 'none'], borderRadius: '0px' }, { duration: 0.22, ease: [0.22, 1, 0.36, 1] })
+    motion.then(resetPreview)
+  } else resetPreview()
+}
+function swipeCancel() { swipe = null; returnPreview() }
 function keepInViewport() {
   if (props.minimized && position.value) position.value = clampPosition(position.value.x, position.value.y)
 }
@@ -247,7 +294,20 @@ let savedScroll = 0
 let restoreTimer
 function browse() {
   savedScroll = window.scrollY
+  const area = dockElement.value?.querySelector('.videoAreaMargin')
+  const before = area?.getBoundingClientRect?.()
+  settling.value = true
   emit('browse')
+  nextTick(() => {
+    resetPreview()
+    const element = dockElement.value
+    if (!before || !element?.getBoundingClientRect || !props.minimized) { settling.value = false; return }
+    const after = element.getBoundingClientRect()
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    const transform = `translate(${before.left - after.left}px, ${before.top - after.top}px) scale(${before.width / after.width})`
+    motion = animate(element, { transform: [transform, 'none'] }, { duration: reduced ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] })
+    motion.then(() => { settling.value = false })
+  })
 }
 async function expand() {
   await router.push(props.playbackRoute.fullPath)
@@ -256,7 +316,7 @@ async function expand() {
   clearTimeout(restoreTimer)
   restoreTimer = setTimeout(() => window.scrollTo({ top: savedScroll, behavior: 'instant' }), 550)
 }
-onBeforeUnmount(() => clearTimeout(restoreTimer))
+onBeforeUnmount(() => { clearTimeout(restoreTimer); motion?.stop() })
 async function enterPip() {
   try {
     await enterVideoPictureInPicture(getVideo())

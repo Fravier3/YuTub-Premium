@@ -123,3 +123,13 @@
     -webkit-backdrop-filter: none;
   }
 }
+
+.accountMenu .accountProfileLink {
+  background: transparent;
+  color: inherit;
+  border: 0;
+  padding: 12px;
+  text-align: start;
+  font: inherit;
+  cursor: pointer;
+}

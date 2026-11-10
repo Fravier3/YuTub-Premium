@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
-import { createRenderer, defineComponent, h, nextTick, onBeforeUnmount, ref } from 'vue'
+import { createRenderer, defineComponent, h, nextTick, onBeforeUnmount, ref, markRaw } from 'vue'
 import { routerKey } from 'vue-router'
 import { parse, compileScript } from 'vue/compiler-sfc'
 
@@ -41,6 +41,7 @@ test('PiP uses the same existing video and respects Safari reporting no support'
 const { descriptor } = parse(await readFile(new URL('../src/renderer/components/PersistentWatch/PersistentWatch.vue', import.meta.url), 'utf8'))
 let compiled = compileScript(descriptor, { id: 'dock-test', inlineTemplate: true }).content
 compiled = compiled
+  .replace(/import \{ animate \} from [^\n]+/, 'const animate = (element, frames) => { globalThis.__dockAnimation = frames; return { then(callback) { callback() }, stop() {} } }')
   .replace(/import Watch from [^\n]+/, 'const Watch = globalThis.__dockTestWatch')
   .replace(/import \{ useI18n \} from [^\n]+/, 'const useI18n = () => ({ t: key => key })')
   .replace(/import \{ FontAwesomeIcon \} from [^\n]+/, 'const FontAwesomeIcon = { render: () => null }')
@@ -51,12 +52,12 @@ compiled = compiled
   .replace(/from ['"]vue-router['"]/g, `from '${import.meta.resolve('vue-router')}'`)
 
 function makeNode(tag) {
-  return {
-    tag, children: [], props: {}, parent: null, paused: false, ended: false, readyState: 4,
+  return markRaw({
+    tag, children: [], props: {}, style: {}, offsetWidth: 430, parent: null, paused: false, ended: false, readyState: 4,
     pause() { this.paused = true }, play() { this.paused = false; return Promise.resolve() },
     getBoundingClientRect() { return { left: 100, top: 300, width: 300, height: 220 } },
-    querySelector(selector) { return find(this, node => node.tag === selector) }
-  }
+    querySelector(selector) { return find(this, node => selector.startsWith('.') ? node.props.class === selector.slice(1) : node.tag === selector) }
+  })
 }
 function find(node, predicate) {
   if (predicate(node)) return node
@@ -103,7 +104,7 @@ test('minimizing, browsing, expanding and controls retain exactly one video elem
       playbackRouter = props.navigationRouter
       onBeforeUnmount(() => { unmounts++ })
       expose({ videoTitle: 'Current song', stopPersistentPlayback: async () => { stopped++ } })
-      return () => h('div', { class: 'videoLayout' }, [h('video', { id: props.routeOverride.params.id }), slots['player-overlay']?.()])
+      return () => h('div', { class: 'videoLayout' }, [h('div', { class: 'videoAreaMargin' }, [h('video', { id: props.routeOverride.params.id }), slots['player-overlay']?.()])])
     }
   })
   const Dock = (await import(dataModule(compiled))).default
@@ -122,9 +123,21 @@ test('minimizing, browsing, expanding and controls retain exactly one video elem
   const section = find(root, node => node.tag === 'section')
   const swipeTarget = { closest: selector => selector === '.videoAreaMargin' ? {} : null }
   section.props.onTouchstartCapturePassive({ target: swipeTarget, touches: [{ clientX: 200, clientY: 180 }] })
-  let prevented = false
-  section.props.onTouchmoveCapture({ touches: [{ clientX: 204, clientY: 280 }], cancelable: true, preventDefault() { prevented = true } })
+  // Starting on the actual seek slider belongs to seeking, never minimization.
+  const seekTarget = { closest: () => ({}) }
+  section.props.onTouchstartCapturePassive({ target: seekTarget, touches: [{ clientX: 200, clientY: 180 }] })
+  section.props.onTouchmoveCapture({ touches: [{ clientX: 201, clientY: 280 }], cancelable: true, preventDefault() { throw new Error('seek gesture intercepted') } })
   section.props.onTouchendCapture({ changedTouches: [{ clientY: 280 }] })
+  assert.equal(find(root, node => node.props.class === 'miniVideoHitTarget'), undefined)
+  section.props.onTouchstartCapturePassive({ target: swipeTarget, touches: [{ clientX: 200, clientY: 180 }] })
+  let propagated = 0
+  let prevented = false
+  section.props.onTouchmoveCapture({ touches: [{ clientX: 204, clientY: 280 }], cancelable: true, stopPropagation() { propagated++ }, preventDefault() { prevented = true } })
+  section.props.onTouchendCapture({ changedTouches: [{ clientY: 280 }], stopPropagation() { propagated++ } })
+  assert.equal(propagated, 2, 'vertical move and release never reach Shaka tap-to-seek')
+  const area = find(root, node => node.props.class === 'videoAreaMargin')
+  assert.match(area.style.transform, /scale\(/, 'the actual video shrinks progressively under the finger')
+  assert.equal(video.currentTime, 123, 'minimization never seeks')
   assert.equal(prevented, true, 'vertical swipe is handled without scrolling the page')
   await nextTick()
   assert.equal(find(root, node => node.tag === 'video'), video)

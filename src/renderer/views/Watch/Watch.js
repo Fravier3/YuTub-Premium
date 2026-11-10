@@ -1,3 +1,4 @@
+import { rememberListening } from '../../helpers/yutuIdentity'
 import { startWebManifest } from '../../helpers/webManifest'
 import { defineComponent, shallowRef } from 'vue'
 import { isNavigationFailure, NavigationFailureType } from 'vue-router'
@@ -1310,6 +1311,7 @@ export default defineComponent({
         type: 'video',
       }
 
+      rememberListening(videoData)
       this.updateHistory(videoData)
     },
 

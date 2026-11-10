@@ -15,7 +15,7 @@
     >
       <img
         class="profileAvatar"
-        :src="puppyAvatar"
+        :src="currentAvatar"
         alt=""
         width="40"
         height="40"
@@ -30,6 +30,14 @@
       @focusout="handleProfileListFocusOut"
       @keydown.esc.stop="handleProfileListEscape"
     >
+      <button
+        v-if="!isElectron && !isTv"
+        class="editYutuProfile"
+        type="button"
+        @click="identity.open = true; profileListShown = false"
+      >
+        {{ identity.profile.name }}
+      </button>
       <h3
         :id="id + 'title'"
         class="profileListTitle"
@@ -84,7 +92,7 @@
 </template>
 
 <script setup>
-import puppyAvatar from '../../assets/img/puppy-avatar.webp'
+import { currentAvatar, identity } from '../../helpers/yutuIdentity'
 import { computed, nextTick, ref, useId, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -110,6 +118,8 @@ import { getFirstCharacter } from '../../helpers/strings'
  * @property {string|undefined} subscriptions[].thumbnail
  */
 
+const isElectron = process.env.IS_ELECTRON
+const isTv = process.env.YUTU_TV
 const { locale, t } = useI18n()
 
 const id = useId()
