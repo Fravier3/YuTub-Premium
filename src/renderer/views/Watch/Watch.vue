@@ -120,6 +120,7 @@
             </div>
           </div>
         </div>
+        <slot name="player-overlay" />
       </div>
     </div>
     <ft-age-restricted

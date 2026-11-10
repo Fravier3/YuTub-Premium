@@ -149,3 +149,15 @@
     inset-inline: 0 auto;
   }
 }
+
+.mobileChannelName {
+  display: none;
+}
+
+.extraVideoActions {
+  display: flex;
+}
+
+.moreVideoActions {
+  display: none;
+}

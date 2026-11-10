@@ -30,6 +30,11 @@
     </div>
     <div class="videoMetrics">
       <div class="datePublishedAndViewCount">
+        <RouterLink
+          v-if="!hideUploader"
+          class="mobileChannelName"
+          :to="`/channel/${channelId}`"
+        >{{ channelName }}</RouterLink>
         {{ publishedString }} {{ dateString }}
         <template
           v-if="!hideVideoViews"
@@ -125,26 +130,57 @@
             theme="secondary"
             @click="handleExternalPlayer"
           />
-          <FtIconButton
-            v-if="!isUpcoming"
-            :title="t('Change Format.Change Media Formats')"
-            theme="secondary"
-            :icon="['fas', 'file-video']"
-            :dropdown-options="formatTypeOptions"
-            @click="changeFormat"
-          />
-          <FtIconButton
-            :title="t('Video.Reload Page')"
-            :icon="['fas', 'rotate-right']"
-            theme="secondary"
-            @click="reloadPlayer"
-          />
+          <div
+            class="extraVideoActions"
+            :class="{ open: extraActionsOpen }"
+          >
+            <FtIconButton
+              v-if="!isUpcoming"
+              :title="t('Change Format.Change Media Formats')"
+              theme="secondary"
+              class="formatAction"
+              :icon="['fas', 'file-video']"
+              :dropdown-options="formatTypeOptions"
+              @click="changeFormat"
+            />
+            <FtIconButton
+              class="reloadAction"
+              :title="t('Video.Reload Page')"
+              :icon="['fas', 'rotate-right']"
+              theme="secondary"
+              @click="reloadPlayer"
+            />
+          </div>
           <FtShareButton
             v-if="!hideSharingActions"
             :id="id"
             :get-timestamp="getTimestamp"
             :playlist-id="playlistId"
           />
+          <button
+            class="moreVideoActions"
+            :aria-label="t('More')"
+            :aria-expanded="extraActionsOpen"
+            @click="extraActionsOpen = !extraActionsOpen"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            ><circle
+              cx="5"
+              cy="12"
+              r="2"
+            /><circle
+              cx="12"
+              cy="12"
+              r="2"
+            /><circle
+              cx="19"
+              cy="12"
+              r="2"
+            /></svg>
+          </button>
         </span>
       </div>
     </div>
@@ -153,7 +189,7 @@
 
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import FtCard from '../ft-card/ft-card.vue'
@@ -260,6 +296,8 @@ const props = defineProps({
     required: true
   },
 })
+
+const extraActionsOpen = ref(false)
 
 const emit = defineEmits([
   'change-format',

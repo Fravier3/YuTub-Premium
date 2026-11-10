@@ -3,17 +3,10 @@
   inline-size: 100%;
 }
 
-.browseActions,
 .miniControls {
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.browseActions {
-  justify-content: flex-end;
-  padding-block: 8px;
-  padding-inline: 12px;
 }
 
 button {
@@ -101,4 +94,54 @@ button:focus-visible {
   .minimized {
     inline-size: min(260px, calc(100vw - 24px));
   }
+}
+
+.playerActions {
+  position: absolute;
+  inset-block-start: 8px;
+  inset-inline: 8px;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  transition: opacity 150ms;
+}
+
+.playerActions button {
+  pointer-events: auto;
+  padding: 10px;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 35%);
+  color: #fff;
+}
+
+.playerActions svg {
+  inline-size: 24px;
+  block-size: 24px;
+}
+
+.persistentWatch:has(.shaka-controls-container):not(:has(.shaka-controls-container[shown='true'])) .playerActions:not(:focus-within) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.persistentWatch:has(.shaka-controls-container):not(:has(.shaka-controls-container[shown='true'])) .playerActions:not(:focus-within) button {
+  pointer-events: none;
+}
+
+.miniVideoHitTarget {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.pipVideo {
+  margin-inline-end: 48px;
 }

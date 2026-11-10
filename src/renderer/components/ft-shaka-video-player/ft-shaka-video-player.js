@@ -925,6 +925,17 @@ export default defineComponent({
         removeFromArrayIfExists(uiConfig.overflowMenuButtons, 'playback_rate')
       }
 
+      if (!process.env.IS_ELECTRON && !process.env.YUTU_TV && onlyUseOverFlowMenu.value) {
+        uiConfig.bigButtons = [
+          ...(props.watchingPlaylist ? ['ft_skip_previous'] : []),
+          'play_pause_buffering',
+          ...(props.watchingPlaylist || props.autoplayPossible ? ['ft_skip_next'] : [])
+        ]
+        for (const name of ['ft_skip_previous', 'play_pause', 'ft_skip_next']) {
+          removeFromArrayIfExists(uiConfig.controlPanelElements, name)
+        }
+      }
+
       return uiConfig
     })
 
@@ -2002,6 +2013,7 @@ export default defineComponent({
       }
 
       shakaControls.registerElement('ft_skip_next', new SkipNextButtonFactory())
+      shakaControls.registerBigElement('ft_skip_next', new SkipNextButtonFactory())
       shakaOverflowMenu.registerElement('ft_skip_next', new SkipNextButtonFactory())
 
       // skip to previous video button
@@ -2016,6 +2028,7 @@ export default defineComponent({
       }
 
       shakaControls.registerElement('ft_skip_previous', new SkipPreviousButtonFactory())
+      shakaControls.registerBigElement('ft_skip_previous', new SkipPreviousButtonFactory())
       shakaOverflowMenu.registerElement('ft_skip_previous', new SkipPreviousButtonFactory())
     }
 
