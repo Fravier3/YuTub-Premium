@@ -111,3 +111,8 @@ Height adjust for profile list so it won't cover navbar.  */
   font: inherit;
   cursor: pointer;
 }
+
+.sessionAccountLabel { margin-block: 8px;
+  margin-inline: 12px;
+  font-size: 12px;
+  overflow-wrap: anywhere; }

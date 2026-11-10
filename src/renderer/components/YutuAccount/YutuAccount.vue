@@ -25,6 +25,17 @@
             ×
           </button>
         </header>
+        <div
+          class="sessionBanner"
+          :class="{ connected: !!identity.user }"
+          role="status"
+          aria-live="polite"
+        >
+          <strong>{{ identity.user ? 'Sesión iniciada' : identity.sessionStatus === 'restoring' ? 'Recuperando sesión…' : 'Sin sesión iniciada' }}</strong>
+          <span v-if="identity.user">{{ identity.user.email }}</span>
+          <span v-else>Tu perfil está en este dispositivo. Inicia sesión para conectarlo a tu cuenta.</span>
+          <small>{{ identity.user ? syncLabel : 'Perfil guardado solo en este dispositivo' }}</small>
+        </div>
         <img
           class="accountPortrait"
           :src="preview"
@@ -143,6 +154,7 @@
 
 import { computed, reactive, ref, watch } from 'vue'
 import { avatarOptions, identity, saveProfile, authenticate, syncAccount, signOutAccount } from '../../helpers/yutuIdentity'
+const syncLabel = computed(() => ({ local: 'Guardado en este dispositivo', pending: 'Cambios pendientes de sincronizar', syncing: 'Sincronizando…', synced: 'Datos sincronizados', error: 'Sincronización pendiente · puedes reintentar' })[identity.syncState])
 const draft = reactive({ ...identity.profile })
 const email = ref('')
 const password = ref('')
