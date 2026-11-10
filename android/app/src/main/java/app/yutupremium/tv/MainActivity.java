@@ -5,6 +5,9 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
@@ -28,7 +31,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.view.animation.DecelerateInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -140,39 +143,67 @@ public class MainActivity extends Activity {
         brand.addView(label, labelParams);
         splash.addView(brand, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
 
-        // Línea roja que se dibuja con un triángulo al frente
+        // Línea roja que va detrás de un triángulo: la línea se llena según avanza el triángulo
         final int lineWidth = (int) (screenWidth * 0.42f);
         final View line = new View(this);
         line.setBackgroundColor(Color.parseColor("#F20000"));
         line.setPivotX(0f);
         line.setScaleX(0f);
-        FrameLayout.LayoutParams lineParams = new FrameLayout.LayoutParams(lineWidth, (int) (4 * d), Gravity.CENTER);
-        splash.addView(line, lineParams);
-        final TextView arrow = new TextView(this);
-        arrow.setText("\u25B6");
-        arrow.setTextColor(Color.WHITE);
-        arrow.setTextSize(22);
+        splash.addView(line, new FrameLayout.LayoutParams(lineWidth, (int) (4 * d), Gravity.CENTER));
+        // El triángulo se agrega después de la línea para dibujarse encima y tapar su extremo
+        final TriangleView arrow = new TriangleView(this);
         arrow.setAlpha(0f);
-        FrameLayout.LayoutParams arrowParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
-        splash.addView(arrow, arrowParams);
+        splash.addView(arrow, new FrameLayout.LayoutParams((int) (22 * d), (int) (26 * d), Gravity.CENTER));
 
         root.addView(splash, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        final float start = -lineWidth / 2f - 28 * d;
-        arrow.setTranslationX(start);
-        arrow.animate().alpha(1f).setDuration(250).start();
-        arrow.animate().translationX(lineWidth / 2f - 14 * d).setDuration(900).setInterpolator(new DecelerateInterpolator()).start();
-        line.setTranslationX(0f);
-        line.animate().scaleX(1f).setDuration(900).setInterpolator(new DecelerateInterpolator()).withEndAction(() -> {
-            line.animate().alpha(0f).setDuration(300).start();
-            arrow.animate().alpha(0f).setDuration(300).start();
-            brand.setScaleX(0.92f);
-            brand.setScaleY(0.92f);
-            brand.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(600).start();
-        }).start();
+        // Un solo avance mueve las dos cosas: la punta del triángulo siempre queda justo en el borde de la línea
+        final ValueAnimator draw = ValueAnimator.ofFloat(0f, 1f);
+        draw.setDuration(1100);
+        draw.setInterpolator(new AccelerateDecelerateInterpolator());
+        draw.addUpdateListener(animation -> {
+            float f = (float) animation.getAnimatedValue();
+            float edge = -lineWidth / 2f + f * lineWidth;
+            line.setScaleX(f);
+            arrow.setTranslationX(edge - arrow.getWidth() / 2f);
+            arrow.setAlpha(Math.min(1f, f * 8f));
+        });
+        draw.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                line.animate().alpha(0f).setDuration(300).start();
+                arrow.animate().alpha(0f).setDuration(300).start();
+                brand.setScaleX(0.92f);
+                brand.setScaleY(0.92f);
+                brand.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(600).start();
+            }
+        });
+        // Se arranca cuando las vistas ya tienen tamaño (el ancho del triángulo se usa en cada paso)
+        splash.post(draw::start);
 
         handler.postDelayed(this::tryFinishSplash, SPLASH_MIN_MS);
         handler.postDelayed(this::finishSplash, SPLASH_MAX_MS);
+    }
+
+    /** Triángulo blanco "play" dibujado a mano (sin depender de la fuente del sistema, que a veces lo pinta como emoji). */
+    private static class TriangleView extends View {
+        private final android.graphics.Paint paint = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+        private final android.graphics.Path path = new android.graphics.Path();
+
+        TriangleView(Context context) {
+            super(context);
+            paint.setColor(Color.WHITE);
+        }
+
+        @Override
+        protected void onDraw(android.graphics.Canvas canvas) {
+            path.reset();
+            path.moveTo(0f, 0f);
+            path.lineTo(getWidth(), getHeight() / 2f);
+            path.lineTo(0f, getHeight());
+            path.close();
+            canvas.drawPath(path, paint);
+        }
     }
 
     /** Quita la pantalla de inicio cuando pasó el tiempo mínimo y la app ya tiene contenido. */
@@ -193,6 +224,8 @@ public class MainActivity extends Activity {
         view.animate().alpha(0f).setDuration(400).withEndAction(() -> {
             root.removeView(view);
             web.requestFocus();
+            // El WebView puede mover el foco al recuperarlo: se vuelve a poner en Inicio
+            web.evaluateJavascript("window.yutuTvFocusStart && window.yutuTvFocusStart()", null);
         }).start();
     }
 

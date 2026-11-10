@@ -332,19 +332,24 @@ function initStartFocus() {
   let userMoved = false
   document.addEventListener('keydown', () => { userMoved = true }, { once: true, capture: true })
 
+  /** Pone el foco en la sección actual del menú (Inicio) mientras el usuario no haya tocado el control. */
+  const focusStart = () => {
+    if (userMoved) return false
+    const target = document.querySelector('.sideNav .router-link-active') ?? document.querySelector('.sideNav a[href="#/latin"]')
+    if (!target) return false
+    if (document.activeElement !== target) target.focus({ preventScroll: true })
+    return true
+  }
+
+  // El APK la vuelve a llamar al quitar su pantalla de inicio (el WebView puede mover el foco entonces)
+  window.yutuTvFocusStart = focusStart
+
+  // Se reafirma durante los primeros segundos: el WebView puede enfocar por su cuenta el primer botón de la página
   let attempts = 0
   const timer = setInterval(() => {
     attempts++
-    const active = document.activeElement
-    const focusIsFree = !active || active === document.body || active.matches('.topNav .logo')
-    const target = document.querySelector('.sideNav .router-link-active') ?? document.querySelector('.sideNav a[href="#/latin"]')
-
-    if (userMoved || attempts > 40) {
-      clearInterval(timer)
-    } else if (target && focusIsFree) {
-      target.focus({ preventScroll: true })
-      clearInterval(timer)
-    }
+    focusStart()
+    if (userMoved || attempts > 80) clearInterval(timer)
   }, 150)
 }
 
