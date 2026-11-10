@@ -141,6 +141,8 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    previousVideoAvailable: { type: Boolean, default: false },
+    nextVideoAvailable: { type: Boolean, default: false },
     autoplayPossible: {
       type: Boolean,
       default: false
@@ -912,8 +914,10 @@ export default defineComponent({
         removeFromArrayIfExists(uiConfig.overflowMenuButtons, 'toggle_stereoscopic')
       }
 
-      if (!props.watchingPlaylist) {
+      if (!props.watchingPlaylist && !props.previousVideoAvailable) {
         removeFromArrayIfExists(uiConfig.controlPanelElements, 'ft_skip_previous')
+      }
+      if (!props.watchingPlaylist && !props.nextVideoAvailable) {
         removeFromArrayIfExists(uiConfig.controlPanelElements, 'ft_skip_next')
       }
 
@@ -927,9 +931,9 @@ export default defineComponent({
 
       if (!process.env.IS_ELECTRON && !process.env.YUTU_TV && onlyUseOverFlowMenu.value) {
         uiConfig.bigButtons = [
-          ...(props.watchingPlaylist ? ['ft_skip_previous'] : []),
+          ...(props.watchingPlaylist || props.previousVideoAvailable ? ['ft_skip_previous'] : []),
           'play_pause_buffering',
-          ...(props.watchingPlaylist || props.autoplayPossible ? ['ft_skip_next'] : [])
+          ...(props.watchingPlaylist || props.nextVideoAvailable ? ['ft_skip_next'] : [])
         ]
         for (const name of ['ft_skip_previous', 'play_pause', 'ft_skip_next']) {
           removeFromArrayIfExists(uiConfig.controlPanelElements, name)
@@ -2058,10 +2062,12 @@ export default defineComponent({
       shakaControls.registerElement('ft_screenshot', null)
       shakaOverflowMenu.registerElement('ft_screenshot', null)
 
-      shakaControls.registerElement('ft_next_previous', null)
-      shakaOverflowMenu.registerElement('ft_next_previous', null)
+      shakaControls.registerElement('ft_skip_next', null)
+      shakaControls.registerBigElement('ft_skip_next', null)
+      shakaOverflowMenu.registerElement('ft_skip_next', null)
 
       shakaControls.registerElement('ft_skip_previous', null)
+      shakaControls.registerBigElement('ft_skip_previous', null)
       shakaOverflowMenu.registerElement('ft_skip_previous', null)
     }
 

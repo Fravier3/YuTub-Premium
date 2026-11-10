@@ -18,7 +18,7 @@ export class SkipButton extends shaka.ui.Element {
 
     /** @private */
     this.button_ = document.createElement('button')
-    this.button_.classList.add(`skip-${type}-button`, 'shaka-tooltip', 'ft-shaka-skip-button')
+    this.button_.classList.add(`skip-${type}-button`, 'shaka-tooltip', 'shaka-no-propagation', 'ft-shaka-skip-button')
 
     const icon = type === 'next' ? PlayerIcons.SKIP_NEXT_FILLED : PlayerIcons.SKIP_PREVIOUS_FILLED
     // eslint-disable-next-line no-new
@@ -39,7 +39,9 @@ export class SkipButton extends shaka.ui.Element {
 
     // listener
 
-    this.eventManager.listen(this.button_, 'click', () => {
+    this.eventManager.listen(this.button_, 'click', event => {
+      event.preventDefault()
+      event.stopPropagation()
       const eventName = type === 'next' ? 'nextVideo' : 'previousVideo'
       events.dispatchEvent(new CustomEvent(eventName))
     })

@@ -39,6 +39,8 @@
           :theatre-possible="theatrePossible"
           :use-theatre-mode="useTheatreMode"
           :autoplay-possible="autoplayPossible"
+          :previous-video-available="previousVideoAvailable"
+          :next-video-available="nextVideoAvailable"
           :autoplay-enabled="autoplayEnabled"
           :watching-playlist="watchingPlaylist"
           :vr-projection="vrProjection"
