@@ -177,9 +177,16 @@ export async function authenticate(email, password, create = false) {
   identity.error = ''
   try {
     const client = await getClient()
-    const { data, error } = create
-      ? await client.auth.signUp({ email, password, options: { emailRedirectTo: 'https://fravier3.github.io/YuTub-Premium/' } })
-      : await client.auth.signInWithPassword({ email, password })
+    if (create) {
+      const response = await fetch(URL + '/functions/v1/yutu-signup', {
+        method: 'POST',
+        headers: { apikey: PUBLIC_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+      const result = await response.json()
+      if (!response.ok || !result.created) throw new Error(result.error || 'No se pudo crear la cuenta.')
+    }
+    const { data, error } = await client.auth.signInWithPassword({ email, password })
     if (error) throw error
     if (data.session) await loadAccount(data.session)
     else {

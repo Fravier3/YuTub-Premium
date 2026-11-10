@@ -76,3 +76,18 @@ test('confirmation session is captured before hash routing and immediately creat
   assert.equal(callbackModule.identity.syncState, 'synced')
   assert.ok(rows.has('callback-account'), 'first login saves profile automatically without another Save click')
 })
+
+test('new registration uses only the Yutu endpoint then logs in with password automatically', async () => {
+  failWrite = false
+  globalThis.fetch = async (url, options) => {
+    assert.equal(url, 'https://syyealdlapxmpeccaary.supabase.co/functions/v1/yutu-signup')
+    assert.equal(options.method, 'POST')
+    assert.equal(JSON.parse(options.body).email, 'new-account')
+    return { ok: true, json: async () => ({ created: true }) }
+  }
+  await module.authenticate('new-account', 'password', true)
+  assert.equal(module.identity.user.id, 'new-account')
+  assert.equal(module.identity.sessionStatus, 'signed-in')
+  assert.equal(module.identity.syncState, 'synced')
+  assert.ok(rows.has('new-account'))
+})
