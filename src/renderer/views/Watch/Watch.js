@@ -109,6 +109,8 @@ export default defineComponent({
   data: function () {
     return {
       descriptionOpen: false,
+      descriptionTop: 0,
+      descriptionScrollY: 0,
       startNextVideoInFullscreen: false,
       startNextVideoInFullwindow: false,
       startNextVideoInPip: false,
@@ -1591,12 +1593,26 @@ export default defineComponent({
 
     openDescription: function (event) {
       this.descriptionTrigger = event?.currentTarget
+      this.descriptionScrollY = window.scrollY
       this.descriptionOpen = true
-      this.$nextTick(() => this.$refs.descriptionClose?.focus({ preventScroll: true }))
+      this.$nextTick(() => {
+        if (window.matchMedia('(max-width: 680px)').matches) {
+          const area = this.$el.querySelector('.videoArea')
+          const safeTop = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--yt-safe-top')) || 0
+          if (area) {
+            window.scrollTo({ top: Math.max(0, area.getBoundingClientRect().top + window.scrollY - safeTop), behavior: 'instant' })
+            this.descriptionTop = Math.min(area.getBoundingClientRect().bottom, window.innerHeight - 120)
+          }
+        }
+        this.$refs.descriptionClose?.focus({ preventScroll: true })
+      })
     },
     closeDescription: function () {
       this.descriptionOpen = false
-      this.$nextTick(() => this.descriptionTrigger?.focus({ preventScroll: true }))
+      this.$nextTick(() => {
+        window.scrollTo({ top: this.descriptionScrollY, behavior: 'instant' })
+        this.descriptionTrigger?.focus({ preventScroll: true })
+      })
     },
     handleRouteChange: function () {
       this.descriptionOpen = false

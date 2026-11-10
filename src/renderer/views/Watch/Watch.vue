@@ -135,6 +135,7 @@
       <section
         v-if="descriptionOpen"
         class="watchDetailsPanel"
+        :style="{ '--details-top': descriptionTop + 'px' }"
         :aria-label="$t('Watch UI.Description')"
         @keydown.esc="closeDescription"
       >
