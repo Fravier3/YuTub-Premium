@@ -1086,14 +1086,24 @@ a {
     background: var(--bg-color);
   }
 
-  :root .watchPage .detailsOpen .videoArea {
-    position: sticky;
-    inset-block-start: var(--yt-safe-top);
-    z-index: 8;
+  :root .watchPage .detailsOpen .watchDetailsPanel {
+    position: fixed;
+    z-index: 9;
+    inset-inline: 0;
+    inset-block: var(--details-top) 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  body:has(.watchPage .detailsOpen) {
+    overflow: hidden;
   }
 
   :root .watchPage .detailsScroll {
-    max-block-size: max(160px, calc(100dvh - 56.25vw - var(--yt-safe-top) - 140px));
+    flex: 1;
+    min-block-size: 0;
+    max-block-size: none;
     overflow-y: auto;
     overscroll-behavior: contain;
   }
@@ -1188,4 +1198,9 @@ a {
   display: block;
   inline-size: 22px;
   block-size: 22px;
+}
+
+.sheetHandle,
+.detailsHeader {
+  flex-shrink: 0;
 }
