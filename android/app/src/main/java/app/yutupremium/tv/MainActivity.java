@@ -480,13 +480,14 @@ public class MainActivity extends Activity {
             web.getWebChromeClient().onHideCustomView();
             return;
         }
-        // Primero que la página cierre lo que esté abierto (menú de calidad, controles); si no, retroceder
+        // Primero que la página cierre lo que esté abierto (menú de calidad, controles, teclado...);
+        // si no hay nada, un paso atrás dentro de la app. Atrás NUNCA cierra la app (para salir está el botón Inicio del control).
         web.evaluateJavascript("(function(){return !!(window.yutuTvBack && window.yutuTvBack());})()", value -> {
             if ("true".equals(value)) return;
             if (web.canGoBack()) {
                 web.goBack();
             } else {
-                finish();
+                web.evaluateJavascript("window.yutuTvGoHome && window.yutuTvGoHome()", null);
             }
         });
     }

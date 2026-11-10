@@ -10,6 +10,8 @@
 
 import { closeTvSearch, isTvSearchOpen } from './tvSearch'
 import { closeRelated, isRelatedOpen, openRelated } from './tvRelated'
+import { prefetchVideo } from './tvPrefetch'
+import router from '../router/index'
 
 const SEEK_SECONDS = 10
 const FOCUSABLE = 'a[href], button, input, select, textarea, summary, [tabindex], [role="button"], [role="menuitem"], [role="option"]'
@@ -131,8 +133,20 @@ function pickNext(from, candidates, dir, current) {
 }
 
 /** @param {HTMLElement} el */
+let prefetchTimer = 0
+
+/** Si el usuario se queda un momento sobre un video, se adelantan los pedidos que necesita para reproducirlo. */
+function schedulePrefetch(el) {
+  clearTimeout(prefetchTimer)
+  const link = el.matches('a[href*="#/watch/"]') ? el : el.querySelector('a[href*="#/watch/"]')
+  const target = link?.getAttribute('href') ?? el.dataset?.href ?? ''
+  const match = target.match(/#?\/watch\/([\w-]{6,})/)
+  if (match) prefetchTimer = window.setTimeout(() => prefetchVideo(match[1]), 350)
+}
+
 function focusElement(el) {
   el.focus({ preventScroll: true })
+  schedulePrefetch(el)
   if (el.closest('.tvRelated')) {
     el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' })
   } else if (el.closest('.sideNav, .topNav')) {
@@ -343,6 +357,15 @@ function initStartFocus() {
 
   // El APK la vuelve a llamar al quitar su pantalla de inicio (el WebView puede mover el foco entonces)
   window.yutuTvFocusStart = focusStart
+
+  /** Atrás sin nada que cerrar: nunca sale de la app; vuelve a Inicio o, si ya está en Inicio, al menú. */
+  window.yutuTvGoHome = () => {
+    if (!router.currentRoute.value.path.startsWith('/latin')) {
+      router.replace('/latin')
+      return
+    }
+    document.querySelector('.sideNav a[href="#/latin"]')?.focus({ preventScroll: true })
+  }
 
   // Se reafirma durante los primeros segundos: el WebView puede enfocar por su cuenta el primer botón de la página
   let attempts = 0

@@ -671,3 +671,9 @@ a {
   font-weight: 700;
   font-display: swap;
 }
+
+/* Abrir un video no espera ninguna transición */
+.yutu-tv .fade-enter-active,
+.yutu-tv .fade-leave-active {
+  transition: none !important;
+}
