@@ -117,7 +117,7 @@
           v-else
           class="cloudAccount"
         >
-          <summary>Iniciar sesión o crear cuenta · opcional</summary>
+          <summary>Iniciar sesión o crear cuenta · sin confirmar correo</summary>
           <p>Guarda tu perfil y tus últimos 100 videos para llevar tus recomendaciones a otro dispositivo.</p>
           <form @submit.prevent="login">
             <label>Correo electrónico<input
@@ -136,7 +136,7 @@
             <label class="createAccountChoice"><input
               v-model="creating"
               type="checkbox"
-            >Crear una cuenta nueva</label>
+            >Crear una cuenta nueva · sin correo de confirmación</label>
             <button
               class="accountPrimary"
               type="submit"
