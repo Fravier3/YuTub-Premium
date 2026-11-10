@@ -45,6 +45,7 @@ import { sortCaptions } from '../../helpers/player/utils'
 import { getPrefetchedManifestUrl, getVideoInfo as getTvVideoInfo } from '../../helpers/tvPrefetch'
 import { MANIFEST_TYPE_SABR } from '../../helpers/player/SabrManifestParser'
 import { useI18n } from 'vue-i18n'
+import { adjacentPlayback, chooseNextVideo, recordPlayback } from '../../helpers/playbackTrail'
 
 /**
  * @typedef {{
@@ -108,6 +109,8 @@ export default defineComponent({
   },
   data: function () {
     return {
+      playbackTrail: { items: [], index: -1 },
+      skipPending: false,
       descriptionOpen: false,
       descriptionTop: 0,
       descriptionScrollY: 0,
@@ -307,9 +310,15 @@ export default defineComponent({
 
       return this.$store.getters.getPlaylist(this.playlistId)
     },
+    previousVideoAvailable: function () {
+      return this.watchingPlaylist || !!adjacentPlayback(this.playbackTrail, -1)
+    },
+    nextVideoAvailable: function () {
+      return this.watchingPlaylist || !!adjacentPlayback(this.playbackTrail, 1) || (!this.hideRecommendedVideos && !!this.nextRecommendedVideo)
+    },
     nextRecommendedVideo: function () {
-      return this.recommendedVideos.find((video) =>
-        !this.isHiddenVideo(this.forbiddenTitles, this.channelsHidden, video)
+      return chooseNextVideo(this.recommendedVideos, this.videoId, video =>
+        this.isHiddenVideo(this.forbiddenTitles, this.channelsHidden, video)
       )
     },
     startTimeSeconds: function () {
@@ -358,6 +367,7 @@ export default defineComponent({
       if (process.env.YUTU_TV) window.yutuTvRelatedVideos = list
     },
     async 'playbackRoute.fullPath'() {
+      this.playbackTrail = recordPlayback(this.playbackTrail, this.playbackRoute.fullPath)
       await this.reloadView()
     },
     userPlaylistsReady() {
@@ -365,6 +375,7 @@ export default defineComponent({
     },
   },
   created: function () {
+    this.playbackTrail = recordPlayback(this.playbackTrail, this.playbackRoute.fullPath)
     this.videoId = this.playbackRoute.params.id
     this.activeFormat = this.defaultVideoFormat
     // So that the value for this session remains unchanged even if setting changed
@@ -1563,22 +1574,43 @@ export default defineComponent({
       }
     },
 
-    // Skip to the next video if in a playlist
-    // else next recommended video if autoplay enabled
-    handleSkipToNext: function () {
+    handleSkipToNext: async function () {
+      if (this.skipPending || this.isLoading) return
+      this.abortAutoplayCountdown(true)
       if (this.watchingPlaylist) {
         this.$refs.watchVideoPlaylist?.playNextVideo()
-      } else if (!this.hideRecommendedVideos && this.nextRecommendedVideo) {
-        this.playbackRouter.push({
-          path: `/watch/${this.nextRecommendedVideo.videoId}`
-        })
-        showToast(this.t('Playing Next Video'))
+        return
       }
+      const forward = adjacentPlayback(this.playbackTrail, 1)
+      const target = forward || (!this.hideRecommendedVideos && this.nextRecommendedVideo
+        ? `/watch/${this.nextRecommendedVideo.videoId}`
+        : null)
+      if (!target || target === this.playbackRoute.fullPath) return
+      await this.navigatePlayback(target, forward ? 1 : 0)
     },
-
-    // Skip to the previous video in a playlist
-    handleSkipToPrev: function () {
-      this.$refs.watchVideoPlaylist?.playPreviousVideo()
+    handleSkipToPrev: async function () {
+      if (this.skipPending || this.isLoading) return
+      this.abortAutoplayCountdown(true)
+      if (this.watchingPlaylist) {
+        this.$refs.watchVideoPlaylist?.playPreviousVideo()
+        return
+      }
+      const target = adjacentPlayback(this.playbackTrail, -1)
+      if (target) await this.navigatePlayback(target, -1)
+    },
+    navigatePlayback: async function (target, direction) {
+      this.skipPending = true
+      const previousIndex = this.playbackTrail.index
+      if (direction) this.playbackTrail.index += direction
+      try {
+        const failure = await this.playbackRouter.push(target)
+        if (failure) this.playbackTrail.index = previousIndex
+      } catch (error) {
+        this.playbackTrail.index = previousIndex
+        console.error(error)
+      } finally {
+        this.skipPending = false
+      }
     },
 
     abortAutoplayCountdown: function (hideToast = false) {
