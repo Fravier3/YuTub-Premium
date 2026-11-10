@@ -57,6 +57,10 @@ Global:
 # Search Bar
 Search / Go to URL: Search / Go to URL
 Search Bar:
+  Mobile Placeholder: Search Yutu
+  Voice Search: Voice search
+  Use Suggestion: Use this search
+  Keyboard Dictation: Use the microphone on your keyboard to dictate your search.
   Clear Input: Clear Input
   Remove: Remove
   Open Search Container: Open Search Container

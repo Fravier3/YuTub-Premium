@@ -54,6 +54,7 @@ function makeNode(tag) {
   return {
     tag, children: [], props: {}, parent: null, paused: false, ended: false, readyState: 4,
     pause() { this.paused = true }, play() { this.paused = false; return Promise.resolve() },
+    getBoundingClientRect() { return { left: 100, top: 300, width: 300, height: 220 } },
     querySelector(selector) { return find(this, node => node.tag === selector) }
   }
 }
@@ -92,7 +93,9 @@ test('minimizing, browsing, expanding and controls retain exactly one video elem
   let stopped = 0
   let playbackRouter
   globalThis.document = { pictureInPictureEnabled: false }
-  globalThis.window = { scrollY: 321, scrollTo() {} }
+  globalThis.window = { scrollY: 321, scrollTo() {}, innerWidth: 430, innerHeight: 900 }
+  globalThis.document = { documentElement: {} }
+  globalThis.getComputedStyle = () => ({ getPropertyValue: () => '47px' })
   globalThis.__dockTestWatch = defineComponent({
     props: ['routeOverride', 'navigationRouter', 'minimized'],
     setup(props, { expose, slots }) {
@@ -116,8 +119,13 @@ test('minimizing, browsing, expanding and controls retain exactly one video elem
   await nextTick(); await nextTick()
   const video = find(root, node => node.tag === 'video')
   video.currentTime = 123
-  const minimize = find(root, node => node.props['aria-label'] === 'Playback Dock.Explore')
-  minimize.props.onClick({ stopPropagation() {} })
+  const section = find(root, node => node.tag === 'section')
+  const swipeTarget = { closest: selector => selector === '.videoAreaMargin' ? {} : null }
+  section.props.onTouchstartCapturePassive({ target: swipeTarget, touches: [{ clientX: 200, clientY: 180 }] })
+  let prevented = false
+  section.props.onTouchmoveCapture({ touches: [{ clientX: 204, clientY: 280 }], cancelable: true, preventDefault() { prevented = true } })
+  section.props.onTouchendCapture({ changedTouches: [{ clientY: 280 }] })
+  assert.equal(prevented, true, 'vertical swipe is handled without scrolling the page')
   await nextTick()
   assert.equal(find(root, node => node.tag === 'video'), video)
   assert.equal(mounts, 1)
@@ -126,7 +134,18 @@ test('minimizing, browsing, expanding and controls retain exactly one video elem
   assert.equal(video.paused, true)
   const expand = find(root, node => node.props.class === 'miniVideoHitTarget')
   assert.ok(expand, 'the mini video itself is an expand target')
+  expand.props.onPointerdown({ pointerId: 1, clientX: 150, clientY: 350, currentTarget: {} })
+  expand.props.onPointermove({ pointerId: 1, clientX: 900, clientY: -200, preventDefault() {} })
+  expand.props.onPointerup({ pointerId: 1 })
+  await nextTick()
+  assert.equal(section.props.style.left, '122px', 'drag clamps the card to the right screen edge')
+  assert.equal(section.props.style.top, '55px', 'drag respects the top safe area')
   await expand.props.onClick({ stopPropagation() {} })
+  assert.deepEqual(navigations, [], 'a drag must not expand the player on release')
+  const realNow = Date.now
+  Date.now = () => realNow() + 600
+  await expand.props.onClick({ stopPropagation() {} })
+  Date.now = realNow
   assert.deepEqual(navigations, ['/watch/song'])
   minimized.value = false
   await nextTick()

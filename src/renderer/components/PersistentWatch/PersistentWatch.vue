@@ -1,8 +1,14 @@
 <template>
   <section
+    ref="dockElement"
     class="persistentWatch"
+    :style="minimized && position ? { left: position.x + 'px', top: position.y + 'px', right: 'auto', bottom: 'auto' } : undefined"
     :class="{ minimized }"
     :aria-label="t('Playback Dock.Now Playing')"
+    @touchstart.capture.passive="swipeStart"
+    @touchmove.capture="swipeMove"
+    @touchend.capture="swipeEnd"
+    @touchcancel.capture="swipeCancel"
     @play.capture="syncState"
     @pause.capture="syncState"
     @ended.capture="syncState"
@@ -20,7 +26,11 @@
           class="miniVideoHitTarget"
           type="button"
           :aria-label="t('Playback Dock.Expand')"
-          @click.stop="expand"
+          @pointerdown="dragStart"
+          @pointermove="dragMove"
+          @pointerup="dragEnd"
+          @pointercancel="dragCancel"
+          @click.stop="expandUnlessDragged"
         />
         <div
           v-else
@@ -61,7 +71,11 @@
         class="miniTitle"
         type="button"
         :title="t('Playback Dock.Expand')"
-        @click="expand"
+        @pointerdown="dragStart"
+        @pointermove="dragMove"
+        @pointerup="dragEnd"
+        @pointercancel="dragCancel"
+        @click="expandUnlessDragged"
       >
         {{ title }}
       </button>
@@ -150,6 +164,85 @@ function togglePlayback() {
   if (video.paused) video.play().catch(() => {})
   else video.pause()
 }
+const dockElement = useTemplateRef('dockElement')
+const position = ref(null)
+let drag = null
+let suppressClickUntil = 0
+let swipe = null
+function clampPosition(x, y) {
+  const rect = dockElement.value.getBoundingClientRect()
+  const viewport = window.visualViewport
+  const left = viewport?.offsetLeft || 0
+  const top = viewport?.offsetTop || 0
+  const width = viewport?.width || window.innerWidth
+  const height = viewport?.height || window.innerHeight
+  // Keep the card within the visible viewport, including when the keyboard opens.
+  const safeTop = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--yt-safe-top')) || 0
+  return {
+    x: Math.max(left + 8, Math.min(x, left + width - rect.width - 8)),
+    y: Math.max(top + safeTop + 8, Math.min(y, top + height - rect.height - 8))
+  }
+}
+function dragStart(event) {
+  if (!props.minimized || (event.button != null && event.button !== 0)) return
+  const rect = dockElement.value.getBoundingClientRect()
+  drag = { id: event.pointerId, x: event.clientX, y: event.clientY, left: rect.left, top: rect.top, moved: false }
+  event.currentTarget.setPointerCapture?.(event.pointerId)
+}
+function dragMove(event) {
+  if (!drag || event.pointerId !== drag.id) return
+  const dx = event.clientX - drag.x
+  const dy = event.clientY - drag.y
+  if (!drag.moved && Math.hypot(dx, dy) < 8) return
+  drag.moved = true
+  event.preventDefault()
+  position.value = clampPosition(drag.left + dx, drag.top + dy)
+}
+function dragEnd(event) {
+  if (!drag || event.pointerId !== drag.id) return
+  if (drag.moved) suppressClickUntil = Date.now() + 500
+  drag = null
+}
+function dragCancel() {
+  if (drag?.moved) suppressClickUntil = Date.now() + 500
+  drag = null
+}
+function expandUnlessDragged() {
+  if (Date.now() >= suppressClickUntil) expand()
+}
+function swipeStart(event) {
+  if (props.minimized || event.touches.length !== 1 ||
+      !event.target.closest('.videoAreaMargin') ||
+      event.target.closest('button, input, [role="slider"], .shaka-bottom-controls')) return
+  const touch = event.touches[0]
+  swipe = { x: touch.clientX, y: touch.clientY, down: false }
+}
+function swipeMove(event) {
+  if (!swipe || event.touches.length !== 1) return
+  const touch = event.touches[0]
+  const dy = touch.clientY - swipe.y
+  if (dy > 16 && dy > Math.abs(touch.clientX - swipe.x) * 1.5) {
+    swipe.down = true
+    if (event.cancelable) event.preventDefault()
+  }
+}
+function swipeEnd(event) {
+  if (swipe?.down && event.changedTouches[0].clientY - swipe.y > 70) browse()
+  swipe = null
+}
+function swipeCancel() { swipe = null }
+function keepInViewport() {
+  if (props.minimized && position.value) position.value = clampPosition(position.value.x, position.value.y)
+}
+onMounted(() => {
+  window.addEventListener?.('resize', keepInViewport)
+  window.visualViewport?.addEventListener('resize', keepInViewport)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener?.('resize', keepInViewport)
+  window.visualViewport?.removeEventListener('resize', keepInViewport)
+})
+
 let savedScroll = 0
 let restoreTimer
 function browse() {

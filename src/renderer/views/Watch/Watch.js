@@ -1,3 +1,4 @@
+import { startWebManifest } from '../../helpers/webManifest'
 import { defineComponent, shallowRef } from 'vue'
 import { isNavigationFailure, NavigationFailureType } from 'vue-router'
 import { mapActions, mapMutations } from 'vuex'
@@ -37,6 +38,7 @@ import {
   convertInvidiousToLocalFormat,
   generateInvidiousDashManifestLocally,
   getProxyUrl,
+  invidiousFetch,
   invidiousGetVideoInformation,
   mapInvidiousLegacyFormat,
   youtubeImageUrlToInvidious
@@ -389,6 +391,7 @@ export default defineComponent({
     this.onMountedDependOnLocalStateLoading()
   },
   beforeUnmount() {
+    this.webManifestRequest?.cancel()
     if (process.env.YUTU_TV) window.yutuTvRelatedVideos = []
     window.removeEventListener('beforeunload', this.handleWatchProgressAutoSave)
     document.removeEventListener('keydown', this.resetAutoplayInterruptionTimeout)
@@ -1008,6 +1011,11 @@ export default defineComponent({
         this.isLoading = true
       }
 
+      this.webManifestRequest?.cancel()
+      this.webManifestRequest = !process.env.IS_ELECTRON && !process.env.YUTU_TV
+        ? startWebManifest(`${this.currentInvidiousInstanceUrl}/api/manifest/dash/id/${this.videoId}${this.proxyVideos ? '?local=true' : ''}`, invidiousFetch)
+        : null
+
       // En TV la información y el manifiesto se piden a la vez (y pueden venir ya precargados)
       const videoInformation = process.env.YUTU_TV ? getTvVideoInfo(this.videoId) : invidiousGetVideoInformation(this.videoId)
 
@@ -1115,6 +1123,7 @@ export default defineComponent({
           this.hlsAudioMetadata = []
 
           if (this.isLive || this.isPostLiveDvr) {
+            this.webManifestRequest?.cancel()
             // The live DASH manifest is currently unusable as it returns 403s after 1 minute of playback
             // so we have to use the HLS one for now.
             // Leaving the code here commented out in case we can use it again in the future
@@ -1647,6 +1656,7 @@ export default defineComponent({
       })
     },
     handleRouteChange: function () {
+      this.webManifestRequest?.cancel()
       this.descriptionOpen = false
       this.abortAutoplayCountdown(true)
       this.handleWatchProgressAutoSave()
@@ -1858,6 +1868,9 @@ export default defineComponent({
         }
       }
 
+      if (!process.env.IS_ELECTRON && !process.env.YUTU_TV && this.webManifestRequest) {
+        url = (await this.webManifestRequest.ready) ?? url
+      }
       return url
     },
 

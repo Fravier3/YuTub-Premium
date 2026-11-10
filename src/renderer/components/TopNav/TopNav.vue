@@ -137,6 +137,82 @@
       </button>
       <FtProfileSelector class="profiles" />
     </div>
+    <Teleport to="body">
+      <section
+        v-if="mobileSearchOpen"
+        class="mobileSearchScreen"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="t('Search Bar.Search')"
+        @keydown.esc="closeMobileSearch"
+      >
+        <form
+          class="mobileSearchHeader"
+          @submit.prevent="submitMobileSearch"
+        >
+          <button
+            type="button"
+            :aria-label="t('Back')"
+            @click="closeMobileSearch"
+          >
+            <svg viewBox="0 0 24 24"><path d="m14 4-8 8 8 8" /></svg>
+          </button>
+          <input
+            ref="mobileSearchInput"
+            v-model="mobileQuery"
+            type="search"
+            enterkeyhint="search"
+            autocomplete="off"
+            :placeholder="t('Search Bar.Mobile Placeholder')"
+            :aria-label="t('Search Bar.Search')"
+            @input="getSearchSuggestionsDebounce(mobileQuery)"
+          >
+          <button
+            type="button"
+            :aria-label="t('Search Bar.Voice Search')"
+            @click="voiceSearch"
+          >
+            <svg viewBox="0 0 24 24"><rect
+              x="9"
+              y="2"
+              width="6"
+              height="13"
+              rx="3"
+            /><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8" /></svg>
+          </button>
+        </form>
+        <div class="mobileSearchSuggestions">
+          <div
+            v-for="(suggestion, index) in activeDataList"
+            :key="suggestion"
+            class="mobileSearchRow"
+          >
+            <button
+              class="searchSuggestion"
+              type="button"
+              @click="submitMobileSearch(suggestion)"
+            >
+              <svg
+                v-if="activeDataListProperties[index]?.isRemoveable"
+                viewBox="0 0 24 24"
+              ><path d="M3 3v6h6M3 9a9 9 0 1 1 0 7M12 7v5l4 2" /></svg>
+              <YutuIcon
+                v-else
+                name="search"
+              />
+              <span>{{ suggestion }}</span>
+            </button>
+            <button
+              type="button"
+              :aria-label="t('Search Bar.Use Suggestion')"
+              @click="fillSuggestion(suggestion)"
+            >
+              <svg viewBox="0 0 24 24"><path d="M18 18 6 6M6 17V6h11" /></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+    </Teleport>
   </nav>
 </template>
 
@@ -154,7 +230,7 @@ import FtIconButton from '../FtIconButton/FtIconButton.vue'
 import store from '../../store/index'
 
 import { KeyboardShortcuts, MOBILE_WIDTH_THRESHOLD, SEARCH_RESULTS_DISPLAY_LIMIT } from '../../../constants'
-import { debounce, localizeAndAddKeyboardShortcutToActionTitle, openInternalPath } from '../../helpers/utils'
+import { showToast, debounce, localizeAndAddKeyboardShortcutToActionTitle, openInternalPath } from '../../helpers/utils'
 import { translateWindowTitle } from '../../helpers/strings'
 import { clearLocalSearchSuggestionsSession, getLocalClip, getLocalSearchSuggestions } from '../../helpers/api/local'
 import { getClipInvidious, getInvidiousSearchSuggestions } from '../../helpers/api/invidious'
@@ -164,6 +240,43 @@ const router = useRouter()
 const route = useRoute()
 
 const showSearchContainer = ref(true)
+const mobileSearchOpen = ref(false)
+const mobileQuery = ref('')
+const mobileSearchInput = useTemplateRef('mobileSearchInput')
+let recognition
+function closeMobileSearch() {
+  mobileSearchOpen.value = false
+  recognition?.abort()
+}
+function submitMobileSearch(value) {
+  const query = typeof value === 'string' ? value : mobileQuery.value.trim()
+  if (query) goToSearch(query, {})
+}
+function fillSuggestion(query) {
+  mobileQuery.value = query
+  getSearchSuggestionsDebounce(query)
+  mobileSearchInput.value?.focus()
+}
+function voiceSearch() {
+  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition
+  if (!Recognition) {
+    mobileSearchInput.value?.focus()
+    showToast(t('Search Bar.Keyboard Dictation'))
+    return
+  }
+  recognition?.abort()
+  recognition = new Recognition()
+  recognition.lang = document.documentElement.lang || 'es'
+  recognition.onresult = event => {
+    const text = event.results[0][0].transcript
+    fillSuggestion(text)
+    submitMobileSearch(text)
+  }
+  recognition.onerror = () => mobileSearchInput.value?.focus()
+  recognition.start()
+}
+watch(mobileSearchOpen, value => document.body.classList.toggle('mobileSearchActive', value))
+watch(() => route.fullPath, closeMobileSearch)
 /** @type {import('vue').ShallowRef<string[]>} */
 const navigationHistoryDropdownOptions = shallowRef([])
 /** @type {import('vue').ShallowRef<string[]>} */
@@ -404,7 +517,9 @@ function goToSearch(queryText, { event }) {
   const doCreateNewWindow = event && event.shiftKey
 
   if (window.innerWidth <= MOBILE_WIDTH_THRESHOLD) {
-    searchContainer.value.blur()
+    closeMobileSearch()
+    mobileSearchInput.value?.blur()
+    searchInput.value?.blur()
     showSearchContainer.value = false
   } else {
     searchInput.value.blur()
@@ -619,6 +734,14 @@ function removeSearchHistoryEntryInDbAndCache(query) {
 }
 
 async function toggleSearchContainer() {
+  if (window.innerWidth <= MOBILE_WIDTH_THRESHOLD && !process.env.YUTU_TV) {
+    mobileSearchOpen.value = true
+    mobileQuery.value = ''
+    clearLastSuggestionQuery()
+    await nextTick()
+    mobileSearchInput.value?.focus()
+    return
+  }
   showSearchContainer.value = !showSearchContainer.value
   if (showSearchContainer.value) {
     await nextTick()
@@ -721,6 +844,8 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  recognition?.abort()
+  document.body.classList.remove('mobileSearchActive')
   window.removeEventListener('resize', handleWindowResize)
 
   if (process.env.IS_ELECTRON) {
