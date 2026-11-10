@@ -98,3 +98,16 @@ Height adjust for profile list so it won't cover navbar.  */
   border-radius: 50%;
   object-fit: cover;
 }
+
+.editYutuProfile {
+  margin-block: 8px;
+  margin-inline: 12px;
+  padding-block: 10px;
+  padding-inline: 16px;
+  border: 0;
+  border-radius: 20px;
+  background: var(--secondary-card-bg-color);
+  color: var(--primary-text-color);
+  font: inherit;
+  cursor: pointer;
+}

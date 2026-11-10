@@ -4,7 +4,7 @@
  * La calidad por defecto de FreeTube es 320x180 (mqdefault), que en una TV se ve borrosa. Se pide primero
  * hq720 (1280x720) y, si el video no la tiene, se baja a maxresdefault y por último a mqdefault.
  */
-const THUMBNAIL_CHAIN = ['hq720.jpg', 'maxresdefault.jpg', 'mqdefault.jpg']
+const THUMBNAIL_CHAIN = ['hq720.jpg', 'maxresdefault.jpg', 'sddefault.jpg', 'hqdefault.jpg', 'mqdefault.jpg']
 
 export const hdThumbnailUrl = (baseUrl, id) => `${baseUrl}/vi/${id}/${THUMBNAIL_CHAIN[0]}`
 

@@ -1,0 +1,117 @@
+.accountBackdrop { position: fixed;
+  inset: 0;
+  z-index: 220;
+  background: rgb(0 0 0 / 65%);
+  display: grid;
+  place-items: center;
+  padding-block: max(12px, var(--yt-safe-top)) max(12px, var(--yt-safe-bottom));
+  padding-inline: 12px;
+  box-sizing: border-box; }
+
+.yutuAccount { inline-size: min(440px, 100%);
+  max-block-size: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 20px;
+  border: 1px solid rgb(160 160 160 / 20%);
+  border-radius: 24px;
+  background: var(--card-bg-color, #171717);
+  color: var(--primary-text-color, #fff);
+  box-shadow: 0 12px 60px rgb(0 0 0 / 35%); }
+
+header { display: flex;
+  align-items: center;
+  justify-content: space-between; }
+
+h2 { margin: 0;
+  font-size: 22px; }
+
+button,
+summary,
+.uploadAvatar { cursor: pointer; }
+
+button { border: 0;
+  border-radius: 20px;
+  padding-block: 10px;
+  padding-inline: 16px;
+  min-block-size: 42px;
+  background: rgb(128 128 128 / 20%);
+  color: inherit;
+  font: inherit; }
+header button { font-size: 26px; }
+
+.accountPortrait { display: block;
+  inline-size: 88px;
+  block-size: 88px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-block: 16px;
+  margin-inline: auto; }
+
+label { display: grid;
+  gap: 8px;
+  margin-block: 14px;
+  font-size: 14px; }
+
+input:not([type='checkbox']) { inline-size: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgb(128 128 128 / 40%);
+  border-radius: 12px;
+  padding: 12px;
+  background: rgb(128 128 128 / 12%);
+  color: inherit;
+  font: inherit;
+  font-size: 16px; }
+
+.avatarChoices { display: flex;
+  justify-content: center;
+  gap: 10px; }
+
+.avatarChoices button { padding: 3px;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 50%; }
+.avatarChoices button[aria-pressed='true'] { border-color: #7ac7ff; }
+
+.avatarChoices img { display: block;
+  inline-size: 54px;
+  block-size: 54px;
+  object-fit: cover;
+  border-radius: 50%; }
+
+.uploadAvatar { display: block;
+  text-align: center;
+  padding: 10px;
+  border-radius: 14px;
+  background: rgb(128 128 128 / 15%); }
+
+.uploadAvatar input { display: block;
+  margin-block-start: 8px; }
+
+.accountPrimary { inline-size: 100%;
+  background: #f1f1f1;
+  color: #111;
+  font-weight: 600; }
+
+.accountStatus,
+.cloudAccount p { font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.75; }
+
+.cloudAccount { margin-block-start: 20px;
+  border-block-start: 1px solid rgb(128 128 128 / 20%);
+  padding-block-start: 16px; }
+
+.cloudAccount button { margin-block: 4px;
+  margin-inline-end: 6px; }
+
+.createAccountChoice { display: flex;
+  align-items: center; }
+
+[role='alert'] { font-size: 13px;
+  color: #ffb4ab; }
+
+@media (width <= 380px) { .avatarChoices { gap: 3px; }
+
+  .avatarChoices img { inline-size: 46px;
+    block-size: 46px; } }

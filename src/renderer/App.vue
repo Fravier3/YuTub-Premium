@@ -17,6 +17,7 @@
     <SideNav
       :inert="isAnyPromptOpen"
     />
+    <YutuAccount v-if="persistentPlaybackEnabled" />
     <MobileDock
       v-if="persistentPlaybackEnabled"
       :inert="isAnyPromptOpen"
@@ -122,6 +123,8 @@
 
 <script setup>
 import { marked } from 'marked'
+import YutuAccount from './components/YutuAccount/YutuAccount.vue'
+import { restoreAccount } from './helpers/yutuIdentity'
 import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -203,6 +206,7 @@ const defaultInvidiousInstance = computed(() => store.getters.getDefaultInvidiou
 const dataReady = ref(false)
 
 onMounted(async () => {
+  if (persistentPlaybackEnabled) restoreAccount()
   await store.dispatch('grabUserSettings')
 
   updateTheme()

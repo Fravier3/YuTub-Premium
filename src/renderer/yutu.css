@@ -1236,4 +1236,30 @@ a {
   }
 }
 
-body.mobileSearchActive { overflow: hidden; }
+.mobileSearchActive { overflow: hidden; }
+
+/* Existing watch rules require this specificity. */
+/* stylelint-disable selector-max-compound-selectors */
+@media only screen and (width <= 680px) {
+  :root .watchPage .videoLayout > .videoArea {
+    position: sticky;
+    inset-block-start: calc(var(--yt-safe-top) + var(--yt-status-gap, 0px));
+    z-index: 10;
+    align-self: start;
+    background: #000;
+  }
+
+  :root .watchPage .videoArea .videoAreaMargin {
+    touch-action: pan-x;
+  }
+
+  :root .watchPage .videoArea .shaka-seek-bar-container {
+    touch-action: none;
+  }
+
+  :root .persistentWatch.minimized .videoArea {
+    position: static;
+  }
+}
+
+/* stylelint-enable selector-max-compound-selectors */

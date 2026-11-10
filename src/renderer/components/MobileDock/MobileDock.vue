@@ -1,3 +1,4 @@
+<!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
 <template>
   <nav
     class="mobileDock"
@@ -45,7 +46,7 @@
     >
       <img
         class="avatar"
-        :src="puppyAvatar"
+        :src="currentAvatar"
         alt=""
         width="26"
         height="26"
@@ -57,6 +58,13 @@
       class="accountMenu"
       @keydown.esc="accountOpen = false"
     >
+      <button
+        class="accountProfileLink"
+        type="button"
+        @click="identity.open = true; accountOpen = false"
+      >
+        {{ identity.profile.name }} — {{ t('Profile.Profile Select') }}
+      </button>
       <FtProfileSelector />
       <RouterLink to="/history">{{ t('History.History') }}</RouterLink>
       <RouterLink to="/userplaylists">{{ t('Playlists') }}</RouterLink>
@@ -70,7 +78,7 @@ import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import store from '../../store/index'
-import puppyAvatar from '../../assets/img/puppy-avatar.webp'
+import { currentAvatar, identity } from '../../helpers/yutuIdentity'
 import YutuIcon from '../YutuIcon/YutuIcon.vue'
 import FtProfileSelector from '../FtProfileSelector/FtProfileSelector.vue'
 const { t } = useI18n()

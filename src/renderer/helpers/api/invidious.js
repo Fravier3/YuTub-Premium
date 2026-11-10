@@ -1314,3 +1314,16 @@ function setPublishedTimestamp(video) {
     video.published *= 1000
   }
 }
+
+/** Home-specific requests are bounded and do not replace the TV feed. */
+export async function searchHomeVideos(query) {
+  const items = await invidiousAPICall({ resource: 'search', params: { q: query, region: 'PR', type: 'video', hl: 'es', page: 1 }, timeoutMs: 10000, doLogError: false })
+  for (const item of items) { normalizeOneInvidiousVideoAttributes(item); setPublishedTimestamp(item) }
+  return items
+}
+export async function relatedHomeVideos(id) {
+  const video = await invidiousAPICall({ resource: 'videos', id, timeoutMs: 10000, doLogError: false })
+  const items = video.recommendedVideos || []
+  for (const item of items) { normalizeOneInvidiousVideoAttributes(item); setPublishedTimestamp(item) }
+  return items
+}

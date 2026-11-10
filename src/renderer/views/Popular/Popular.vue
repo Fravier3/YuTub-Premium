@@ -1,3 +1,4 @@
+<!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
 <template>
   <div>
     <nav
@@ -34,9 +35,18 @@
         role="status"
         class="feedDescription"
       >
-        {{ $t('Latin Music Error') }}
+        {{ personalizedHome ? 'No pudimos actualizar todas las recomendaciones. Intenta refrescar en un momento.' : $t('Latin Music Error') }}
       </p>
+      <section
+        v-for="section in homeSections"
+        :key="section.key"
+        class="homeSection"
+      >
+        <h2>{{ section.title }}</h2>
+        <ft-element-list :data="section.items" />
+      </section>
       <ft-element-list
+        v-if="!personalizedHome"
         :data="shownResults"
       />
     </ft-card>
@@ -51,7 +61,7 @@
 
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
+import { onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 
 import FtLoader from '../../components/FtLoader/FtLoader.vue'
 import FtCard from '../../components/ft-card/ft-card.vue'
@@ -59,7 +69,9 @@ import FtElementList from '../../components/FtElementList/FtElementList.vue'
 import FtRefreshWidget from '../../components/FtRefreshWidget/FtRefreshWidget.vue'
 import store from '../../store/index'
 
-import { getInvidiousPopularFeed } from '../../helpers/api/invidious'
+import { loadHomeRecommendations } from '../../helpers/homeRecommendations'
+import { identity, seedListening } from '../../helpers/yutuIdentity'
+import { getInvidiousPopularFeed, searchHomeVideos, relatedHomeVideos } from '../../helpers/api/invidious'
 import { copyToClipboard, showToast } from '../../helpers/utils'
 import { useI18n } from 'vue-i18n'
 import { LATIN_FEED_TTL } from '../../helpers/latinMusicFeed'
@@ -67,6 +79,25 @@ import { KeyboardShortcuts } from '../../../constants'
 
 const { t } = useI18n()
 
+const personalizedHome = !process.env.IS_ELECTRON && !process.env.YUTU_TV
+const homeSections = shallowRef([])
+const cacheKey = () => `yutu-home-v2:${identity.bucket}`
+function restoreHomeCache() {
+  if (!personalizedHome) return
+  try {
+    const cached = JSON.parse(localStorage.getItem(cacheKey()) || '{}')
+    if (Date.now() - cached.at < 24 * 60 * 60 * 1000 && Array.isArray(cached.sections)) {
+      homeSections.value = cached.sections
+      shownResults.value = cached.sections.flatMap(section => section.items)
+    }
+  } catch { /* A damaged cache should not block fresh recommendations. */ }
+}
+watch(() => identity.bucket, () => {
+  homeSections.value = []
+  shownResults.value = []
+  restoreHomeCache()
+  fetchPopularInfo()
+})
 const isLoading = ref(false)
 const feedError = ref(false)
 
@@ -74,6 +105,12 @@ const feedError = ref(false)
 const shownResults = shallowRef([])
 let refreshTimer
 let fetchedAt = 0
+let refreshPending = false
+watch(() => identity.history.slice(0, 2).map(video => video.videoId).join(','), () => {
+  if (!personalizedHome) return
+  if (isLoading.value) refreshPending = true
+  else fetchPopularInfo()
+})
 
 function refreshIfStale() {
   if (document.visibilityState === 'visible' && Date.now() - fetchedAt >= LATIN_FEED_TTL) {
@@ -86,7 +123,11 @@ onMounted(() => {
   document.addEventListener('visibilitychange', refreshIfStale)
   refreshTimer = window.setInterval(refreshIfStale, 60_000)
 
-  if (shownResults.value.length === 0) {
+  if (personalizedHome) {
+    seedListening(store.getters.getHistoryCacheSorted)
+    restoreHomeCache()
+  }
+  if (shownResults.value.length === 0 || personalizedHome) {
     fetchPopularInfo()
   }
 })
@@ -102,7 +143,18 @@ async function fetchPopularInfo() {
   isLoading.value = true
   feedError.value = false
 
+  const bucket = identity.bucket
   try {
+    if (personalizedHome) {
+      const result = await loadHomeRecommendations({ history: identity.history, search: searchHomeVideos, related: relatedHomeVideos })
+      if (bucket !== identity.bucket) return
+      homeSections.value = result.sections
+      shownResults.value = result.sections.flatMap(section => section.items)
+      feedError.value = result.partial
+      fetchedAt = Date.now()
+      try { localStorage.setItem(cacheKey(), JSON.stringify({ at: fetchedAt, sections: result.sections })) } catch { /* Storage may be full. */ }
+      return
+    }
     const items = await getInvidiousPopularFeed(shownResults.value.slice(0, 12).map(item => item.videoId))
     fetchedAt = Date.now()
 
@@ -111,6 +163,7 @@ async function fetchPopularInfo() {
     isLoading.value = false
     store.commit('setPopularCache', items)
   } catch (err) {
+    if (bucket !== identity.bucket) return
     feedError.value = true
     // Back off on failures while preserving the last successful list.
     fetchedAt = Date.now() - LATIN_FEED_TTL + 5 * 60_000
@@ -119,6 +172,12 @@ async function fetchPopularInfo() {
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
+  } finally {
+    isLoading.value = false
+    if (bucket !== identity.bucket || refreshPending) {
+      refreshPending = false
+      fetchPopularInfo()
+    }
   }
 }
 

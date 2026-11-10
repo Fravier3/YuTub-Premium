@@ -32,11 +32,12 @@ button:focus-visible {
 }
 
 .minimized {
+  transform-origin: top left;
   position: fixed;
   z-index: 12;
   inset-inline-end: 12px;
   inset-block-end: 16px;
-  inline-size: min(340px, calc(100vw - 24px));
+  inline-size: min(220px, calc(100vw - 24px));
   max-block-size: calc(100dvh - 150px);
   overflow: hidden;
   background-color: var(--card-bg-color);
@@ -151,4 +152,17 @@ button:focus-visible {
   touch-action: none;
   user-select: none;
   cursor: grab;
+}
+
+.persistentWatch :deep(.videoAreaMargin) {
+  transform-origin: center top;
+  will-change: transform;
+}
+
+
+.settling {
+  overflow: visible;
+  pointer-events: none;
+
+  .miniControls { opacity: 0; }
 }

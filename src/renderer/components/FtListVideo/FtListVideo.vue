@@ -35,6 +35,9 @@
           class="thumbnailImage"
           :class="{ blur: blurThumbnails }"
           alt=""
+          loading="lazy"
+          decoding="async"
+          @load="handleThumbnailLoad"
           @error="handleThumbnailError"
         >
       </RouterLink>
@@ -801,17 +804,20 @@ const thumbnail = computed(() => {
       return `${baseUrl}/vi/${id.value}/mq3.jpg`
     default:
       // En la versión de TV se piden miniaturas HD (con respaldo automático a menor calidad)
-      return process.env.YUTU_TV
-        ? hdThumbnailUrl(baseUrl, id.value)
-        : `${baseUrl}/vi/${id.value}/mqdefault.jpg`
+      return hdThumbnailUrl(baseUrl, id.value)
   }
 })
 
 /** Versión TV: si la miniatura HD no existe, baja de calidad. */
 function handleThumbnailError(event) {
-  if (!process.env.YUTU_TV || ['start', 'middle', 'end', 'hidden'].includes(thumbnailPreference.value)) return
+  if (['start', 'middle', 'end', 'hidden'].includes(thumbnailPreference.value)) return
   const baseUrl = backendPreference.value === 'invidious' ? currentInvidiousInstanceUrl.value : 'https://i.ytimg.com'
   nextThumbnail(event, baseUrl, id.value)
+}
+
+// YouTube can return a 120px placeholder with HTTP 200 for a missing HD image.
+function handleThumbnailLoad(event) {
+  if (event.target.naturalWidth < 320) handleThumbnailError(event)
 }
 
 /** @type {import('vue').ComputedRef<boolean>} */
