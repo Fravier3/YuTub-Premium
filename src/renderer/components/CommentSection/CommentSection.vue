@@ -25,7 +25,7 @@
       @click="getCommentData"
       @keydown.enter.space.prevent="getCommentData"
     >
-      {{ $t("Comments.Click to View Comments") }}
+      <span class="desktopCommentLabel">{{ $t("Comments.Click to View Comments") }}</span><span class="mobileCommentLabel">{{ $t("Comments.Comments") }}</span>
     </h4>
     <h4
       v-if="commentData.length > 0 && !isLoading && !showComments"
@@ -35,7 +35,7 @@
       @click="showComments = true"
       @keydown.enter.space.prevent="showComments = true"
     >
-      {{ $t("Comments.Click to View Comments") }}
+      <span class="desktopCommentLabel">{{ $t("Comments.Click to View Comments") }}</span><span class="mobileCommentLabel">{{ $t("Comments.Comments") }}</span>
     </h4>
     <FtSelect
       v-if="commentData.length > 0 && !isLoading && showComments && showSortBy"

@@ -677,3 +677,261 @@ a {
 .yutu-tv .fade-leave-active {
   transition: none !important;
 }
+
+/* stylelint-disable selector-max-compound-selectors */
+
+/* Focused mobile watch page: the video itself owns the navigation affordance. */
+@media only screen and (width <= 680px) {
+  :root .watchPage .topNav,
+  :root .watchPage .sideNav,
+  :root .watchPage .mobileDock {
+    display: none;
+  }
+
+  :root:not(.yutu-tv) .watchPage .flexBox.routerView {
+    margin-block: var(--yt-safe-top) 0 !important;
+    padding-block-end: var(--yt-safe-bottom);
+  }
+
+  :root .watchPage .videoLayout,
+  :root .watchPage .videoArea,
+  :root .watchPage .videoAreaMargin,
+  :root .watchPage .infoArea,
+  :root .watchPage .sidebarArea {
+    min-inline-size: 0;
+    inline-size: 100%;
+    margin: 0;
+  }
+
+  :root .watchPage .watchVideoInfo {
+    padding: 12px;
+    gap: 8px;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  :root .watchPage .videoTitle {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  :root .watchPage .videoMetrics {
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  :root .watchPage .datePublishedAndViewCount {
+    display: block;
+    min-inline-size: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  :root .watchPage .mobileChannelName {
+    display: inline;
+    margin-inline-end: 6px;
+    color: var(--primary-text-color);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  :root .watchPage .videoButtons {
+    flex-flow: row wrap;
+    align-items: center;
+    margin: 0;
+    gap: 6px;
+  }
+
+  :root .watchPage .profileRow {
+    min-inline-size: 0;
+  }
+
+  :root .watchPage .profileRow .channelName {
+    display: none;
+  }
+
+  :root .watchPage .channelThumbnail {
+    inline-size: 30px;
+    block-size: 30px;
+    object-fit: cover;
+    margin-inline-end: 8px;
+  }
+
+  :root .watchPage .subscribeButton {
+    padding-block: 9px;
+    padding-inline: 14px;
+    min-block-size: 36px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 24px;
+    background-color: var(--primary-text-color) !important;
+    color: var(--bg-color) !important;
+    box-shadow: none;
+  }
+
+  :root .watchPage .videoOptions,
+  :root .watchPage .videoOptionsMobileRow {
+    flex-direction: row;
+    gap: 0;
+    margin: 0;
+  }
+
+  :root .watchPage .videoOptions .iconButton {
+    padding: 10px;
+    min-inline-size: 40px;
+    min-block-size: 40px;
+    box-sizing: border-box;
+    font-size: 19px;
+    color: var(--primary-text-color);
+    background: transparent;
+    box-shadow: none;
+  }
+
+  :root .watchPage .videoOptions {
+    position: relative;
+  }
+
+  :root .watchPage .extraVideoActions {
+    display: none;
+    position: absolute;
+    z-index: 6;
+    inset-inline-end: 0;
+    inset-block-start: 100%;
+    padding: 8px;
+    border-radius: 16px;
+    background: var(--card-bg-color);
+    box-shadow: 0 4px 20px rgb(0 0 0 / 25%);
+  }
+
+  :root .watchPage .extraVideoActions.open {
+    display: flex;
+  }
+
+  :root .watchPage .moreVideoActions {
+    display: grid;
+    place-items: center;
+    inline-size: 40px;
+    block-size: 40px;
+    padding: 9px;
+    border: 0;
+    border-radius: 50%;
+    color: var(--primary-text-color);
+    background: transparent;
+  }
+
+  :root .watchPage .videoDescription {
+    box-sizing: border-box;
+    padding: 12px;
+    margin-block: 0 10px;
+    margin-inline: 12px;
+    inline-size: calc(100% - 24px) !important;
+    border-radius: 14px;
+    box-shadow: none;
+    background: var(--secondary-card-bg-color);
+  }
+
+  :root .watchPage .videoDescription .description {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  :root .watchPage .videoDescription.short .description {
+    max-block-size: 2.8em;
+  }
+
+  :root .watchPage .videoDescription.short .descriptionStatus {
+    inset-block-end: 10px;
+    font-size: 13px;
+  }
+
+  :root .watchPage .infoArea > .card:not(.watchVideoInfo, .videoDescription) {
+    box-sizing: border-box;
+    inline-size: calc(100% - 24px) !important;
+    margin-block: 0 12px;
+    margin-inline: 12px;
+    padding: 12px;
+    border-radius: 14px;
+    background: var(--secondary-card-bg-color);
+    box-shadow: none;
+  }
+
+  :root .watchPage .getCommentsTitle {
+    text-align: start;
+    text-decoration: none;
+    font-size: 15px;
+    min-block-size: 24px;
+    padding: 0;
+  }
+
+  :root .watchPage .desktopCommentLabel {
+    display: none;
+  }
+
+  :root .watchPage .mobileCommentLabel {
+    display: inline;
+  }
+
+  :root .watchPage .VideoRecommendationsTopBar {
+    display: none;
+  }
+
+  :root .watchPage .watchVideoRecommendations {
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    gap: 20px;
+  }
+
+  :root .watchPage .watchVideoRecommendations .ft-list-video {
+    display: flex;
+    flex-direction: column;
+    inline-size: 100%;
+    padding: 0;
+  }
+
+  :root .watchPage .watchVideoRecommendations .videoThumbnail,
+  :root .watchPage .watchVideoRecommendations .thumbnailImage {
+    inline-size: 100%;
+    max-inline-size: none;
+    border-radius: 0;
+  }
+
+  :root .watchPage .watchVideoRecommendations .info {
+    padding-inline: 12px;
+  }
+
+  :root .watchPage .shaka-controls-button-panel {
+    position: static;
+  }
+
+  :root .watchPage .shaka-big-buttons-container {
+    gap: 28px;
+  }
+
+  :root .watchPage .shaka-controls-button-panel > .shaka-overflow-menu-button {
+    position: absolute;
+    inset-block-start: 8px;
+    inset-inline-end: 8px;
+  }
+
+}
+
+@media only screen and (width <= 680px) {
+  :root .watchPage .videoLayout .videoArea .videoAreaMargin {
+    margin: 0;
+  }
+
+  :root .watchPage .shaka-seek-bar-container {
+    --shaka-seek-bar-played-color: #f03;
+  }
+}
+
+/* stylelint-enable selector-max-compound-selectors */

@@ -4,6 +4,7 @@
     class="app"
     :class="{
       hideOutlines: outlinesHidden,
+      watchPage: persistentPlaybackEnabled && watchPageVisible,
       hasMiniPlayer: persistentPlaybackEnabled && playbackRoute && !watchPageVisible,
       isLocaleRightToLeft: isLocaleRightToLeft,
       isSideNavOpen: isSideNavOpen,

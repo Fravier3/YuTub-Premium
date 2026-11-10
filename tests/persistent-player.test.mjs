@@ -92,14 +92,15 @@ test('minimizing, browsing, expanding and controls retain exactly one video elem
   let stopped = 0
   let playbackRouter
   globalThis.document = { pictureInPictureEnabled: false }
+  globalThis.window = { scrollY: 321, scrollTo() {} }
   globalThis.__dockTestWatch = defineComponent({
     props: ['routeOverride', 'navigationRouter', 'minimized'],
-    setup(props, { expose }) {
+    setup(props, { expose, slots }) {
       mounts++
       playbackRouter = props.navigationRouter
       onBeforeUnmount(() => { unmounts++ })
       expose({ videoTitle: 'Current song', stopPersistentPlayback: async () => { stopped++ } })
-      return () => h('div', { class: 'videoLayout' }, [h('video', { id: props.routeOverride.params.id })])
+      return () => h('div', { class: 'videoLayout' }, [h('video', { id: props.routeOverride.params.id }), slots['player-overlay']?.()])
     }
   })
   const Dock = (await import(dataModule(compiled))).default
@@ -109,21 +110,23 @@ test('minimizing, browsing, expanding and controls retain exactly one video elem
   const navigations = []
   const router = { resolve: target => typeof target === 'string' ? { ...route(target.split('/').pop()), fullPath: target } : { ...route(target.path.split('/').pop()), ...target }, push: async target => { navigations.push(target) }, replace: async () => {} }
   const root = makeNode('root')
-  const app = renderer.createApp({ render: () => open.value ? h(Dock, { playbackRoute: playbackRoute.value, minimized: minimized.value, onClose: () => { open.value = false }, onNavigate: value => { playbackRoute.value = value } }) : null })
+  const app = renderer.createApp({ render: () => open.value ? h(Dock, { playbackRoute: playbackRoute.value, minimized: minimized.value, onClose: () => { open.value = false }, onBrowse: () => { minimized.value = true }, onNavigate: value => { playbackRoute.value = value } }) : null })
   app.provide(routerKey, router)
   app.mount(root)
   await nextTick(); await nextTick()
   const video = find(root, node => node.tag === 'video')
   video.currentTime = 123
-  minimized.value = true
+  const minimize = find(root, node => node.props['aria-label'] === 'Playback Dock.Explore')
+  minimize.props.onClick({ stopPropagation() {} })
   await nextTick()
   assert.equal(find(root, node => node.tag === 'video'), video)
   assert.equal(mounts, 1)
   const pause = find(root, node => node.props['aria-label'] === 'Playback Dock.Pause')
   pause.props.onClick()
   assert.equal(video.paused, true)
-  const expand = find(root, node => node.props.title === 'Playback Dock.Expand')
-  expand.props.onClick()
+  const expand = find(root, node => node.props.class === 'miniVideoHitTarget')
+  assert.ok(expand, 'the mini video itself is an expand target')
+  await expand.props.onClick({ stopPropagation() {} })
   assert.deepEqual(navigations, ['/watch/song'])
   minimized.value = false
   await nextTick()
