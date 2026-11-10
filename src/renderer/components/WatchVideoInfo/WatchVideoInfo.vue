@@ -5,7 +5,13 @@
         class="videoTitle"
         dir="auto"
       >
-        {{ title }}
+        <button
+          class="videoTitleButton"
+          :aria-label="title || t('Watch UI.Description')"
+          @click="emit('open-description', $event)"
+        >
+          {{ title }}
+        </button>
       </h1>
       <div
         v-if="isUnlisted || showAiBadge"
@@ -88,6 +94,7 @@
           </div>
           <FtSubscribeButton
             v-if="!hideUnsubscribeButton"
+            compact
             :channel-id="channelId"
             :channel-name="channelName"
             :channel-thumbnail="channelThumbnail"
@@ -96,32 +103,28 @@
         </div>
       </div>
       <div class="videoOptions">
-        <span class="videoOptionsMobileRow">
-          <FtIconButton
-            v-if="showPlaylists && !isUpcoming"
-            :title="t('User Playlists.Add to Playlist')"
-            :icon="['fas', 'plus']"
-            theme="base"
-            @click="togglePlaylistPrompt"
-          />
-          <FtIconButton
-            v-if="isQuickBookmarkEnabled"
-            :title="quickBookmarkIconText"
-            :icon="isInQuickBookmarkPlaylist ? ['fas', 'check'] : ['fas', 'bookmark']"
-            class="quickBookmarkVideoIcon"
-            :class="{
-              bookmarked: isInQuickBookmarkPlaylist,
-            }"
-            :theme="quickBookmarkIconTheme"
-            @click="toggleQuickBookmarked"
-          />
-          <FtIconButton
-            v-if="canSaveWatchedProgress && watchedProgressSavingInSemiAutoMode"
-            :title="t('Video.Save Watched Progress')"
-            :icon="['fas', 'bars-progress']"
-            @click="saveWatchedProgressManually"
-          />
-        </span>
+        <div
+          v-if="!hideVideoLikesAndDislikes"
+          class="mobileRatings"
+        >
+          <button
+            :aria-label="t('Watch UI.Like')"
+            :title="t('Watch UI.Local Rating')"
+            :aria-pressed="rating === 'like'"
+            @click="rateVideo('like')"
+          >
+            <YutuIcon name="like" />
+          </button>
+          <button
+            :aria-label="t('Watch UI.Dislike')"
+            :title="t('Watch UI.Local Rating')"
+            :aria-pressed="rating === 'dislike'"
+            @click="rateVideo('dislike')"
+          >
+            <YutuIcon name="dislike" />
+          </button>
+        </div>
+
         <span class="videoOptionsMobileRow">
           <FtIconButton
             v-if="USING_ELECTRON && externalPlayer !== ''"
@@ -134,6 +137,31 @@
             class="extraVideoActions"
             :class="{ open: extraActionsOpen }"
           >
+            <FtIconButton
+              v-if="showPlaylists && !isUpcoming"
+              :title="t('User Playlists.Add to Playlist')"
+              :icon="['fas', 'plus']"
+              theme="base"
+              @click="togglePlaylistPrompt"
+            />
+            <FtIconButton
+              v-if="isQuickBookmarkEnabled"
+              :title="quickBookmarkIconText"
+              :icon="isInQuickBookmarkPlaylist ? ['fas', 'check'] : ['fas', 'bookmark']"
+              class="quickBookmarkVideoIcon"
+              :class="{
+                bookmarked: isInQuickBookmarkPlaylist,
+              }"
+              :theme="quickBookmarkIconTheme"
+              @click="toggleQuickBookmarked"
+            />
+            <FtIconButton
+              v-if="canSaveWatchedProgress && watchedProgressSavingInSemiAutoMode"
+              :title="t('Video.Save Watched Progress')"
+              :icon="['fas', 'bars-progress']"
+              @click="saveWatchedProgressManually"
+            />
+
             <FtIconButton
               v-if="!isUpcoming"
               :title="t('Change Format.Change Media Formats')"
@@ -189,9 +217,10 @@
 
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import YutuIcon from '../YutuIcon/YutuIcon.vue'
 import FtCard from '../ft-card/ft-card.vue'
 import FtIconButton from '../FtIconButton/FtIconButton.vue'
 import FtShareButton from '../FtShareButton/FtShareButton.vue'
@@ -297,9 +326,20 @@ const props = defineProps({
   },
 })
 
+const rating = ref('')
+function loadRating() {
+  try { rating.value = localStorage.getItem(`yutu-rating:${props.id}`) || '' } catch { rating.value = '' }
+}
+function rateVideo(value) {
+  rating.value = rating.value === value ? '' : value
+  try { localStorage.setItem(`yutu-rating:${props.id}`, rating.value) } catch { /* session-only when storage is unavailable */ }
+}
+onMounted(loadRating)
+watch(() => props.id, loadRating)
 const extraActionsOpen = ref(false)
 
 const emit = defineEmits([
+  'open-description',
   'change-format',
   'pause-player',
   'save-watched-progress',

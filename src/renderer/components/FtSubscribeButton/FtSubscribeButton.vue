@@ -12,6 +12,7 @@
         :no-border="true"
         class="subscribeButton"
         :class="{
+          compactSubscription: compact,
           hasProfileDropdownToggle: isProfileDropdownEnabled,
           dropdownOpened: isProfileDropdownOpen
         }"
@@ -127,6 +128,7 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  compact: { type: Boolean, default: false },
   subscriptionCountText: {
     type: String,
     default: ''
@@ -185,7 +187,7 @@ const hideChannelSubscriptions = computed(() => {
 
 const subscribedText = computed(() => {
   let subscribedValue = (isProfileSubscribed(activeProfile.value) ? t('Channel.Unsubscribe') : t('Channel.Subscribe'))
-  if (props.subscriptionCountText !== '' && !hideChannelSubscriptions.value) {
+  if (!props.compact && props.subscriptionCountText !== '' && !hideChannelSubscriptions.value) {
     subscribedValue += ' ' + props.subscriptionCountText
   }
   return subscribedValue
