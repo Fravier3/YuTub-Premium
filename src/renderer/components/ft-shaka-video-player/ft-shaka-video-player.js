@@ -1498,101 +1498,7 @@ export default defineComponent({
      * @param {number | undefined} audioBandwidth
      * @param {string | undefined} label
      */
-    // #region subida progresiva de calidad (versión de TV)
-
-    /** Calidad con la que empieza el video en la versión de TV: arranque rápido. */
-    const TV_START_QUALITY = 1080
-    /** Escalones por los que sube hasta la calidad elegida. */
-    const TV_QUALITY_STEPS = [1440, 2160]
-    /** Al cambiar de escalón se reemplaza el buffer (si no, el cambio tarda en verse) dejando 4 s para no cortar. */
-    const QUALITY_SWITCH_OPTIONS = { clearBuffer: true, safeMargin: 4 }
-    /** @type {(() => void) | null} */
-    let cancelQualityRamp = null
-
-    /**
-     * Pedir 4K desde el primer segundo obliga a bajar segmentos enormes por la instancia antes de empezar,
-     * y el video se queda "pensando". Aquí se empieza en 1080p y se sube escalón por escalón (1440, 4K)
-     * solo cuando ya hay varios segundos de buffer; si se traba justo después de subir, se vuelve a la calidad
-     * anterior y se deja de subir. Si el usuario cambia la calidad a mano, se deja de subir.
-     * @param {number} target calidad máxima que se quiere alcanzar
-     */
-    function startQualityRamp(target) {
-      cancelQualityRamp?.()
-
-      const steps = TV_QUALITY_STEPS.filter((quality) => quality <= target)
-      if (target > TV_QUALITY_STEPS[TV_QUALITY_STEPS.length - 1]) steps.push(target)
-      if (steps.length === 0) return
-
-      const video_ = video.value
-      let cancelled = false
-      let timer = 0
-      let index = 0
-      let lastHeight = 0
-      let previousHeight = 0
-      let upgradedAt = 0
-
-      const activeHeight = () => player.getVariantTracks().find((track) => track.active)?.height ?? 0
-      const bufferedAhead = () => {
-        const time = video_.currentTime
-        for (let i = 0; i < video_.buffered.length; i++) {
-          if (video_.buffered.start(i) <= time + 0.1 && video_.buffered.end(i) >= time) return video_.buffered.end(i) - time
-        }
-        return 0
-      }
-
-      const stop = () => {
-        cancelled = true
-        clearTimeout(timer)
-        player?.removeEventListener('buffering', onBuffering)
-        if (cancelQualityRamp === stop) cancelQualityRamp = null
-      }
-
-      /** @param {{ buffering: boolean }} event el reproductor avisa así cuando se queda sin datos */
-      function onBuffering(event) {
-        // Se trabó poco después de subir: volver a la calidad que sí aguantaba y no subir más
-        // (el aviso breve que sale al reemplazar el buffer no cuenta: solo si de verdad casi no queda video guardado)
-        if (event.buffering && !video_.seeking && bufferedAhead() < 1 && upgradedAt > 0 && Date.now() - upgradedAt < 10_000 && previousHeight > 0) {
-          setDashQuality(previousHeight, undefined, undefined, QUALITY_SWITCH_OPTIONS)
-          stop()
-        }
-      }
-
-      const tick = () => {
-        if (cancelled) return
-        if (!player || video_ !== video.value) { stop(); return }
-
-        const current = activeHeight()
-        if (lastHeight > 0 && current > 0 && current !== lastHeight) { stop(); return }
-
-        const settled = Date.now() - upgradedAt >= 6000
-        if (settled && !video_.paused && !video_.seeking && bufferedAhead() >= 12) {
-          previousHeight = current
-          try {
-            lastHeight = setDashQuality(steps[index], undefined, undefined, QUALITY_SWITCH_OPTIONS)?.height ?? current
-          } catch {
-            stop()
-            return
-          }
-          upgradedAt = Date.now()
-          index++
-          if (index >= steps.length) {
-            // Último escalón: se sigue vigilando 10 s por si se traba (entonces vuelve a la calidad anterior)
-            timer = window.setTimeout(stop, 10_000)
-            return
-          }
-        }
-        timer = window.setTimeout(tick, 1500)
-      }
-
-      lastHeight = activeHeight()
-      player.addEventListener('buffering', onBuffering)
-      cancelQualityRamp = stop
-      timer = window.setTimeout(tick, 2500)
-    }
-
-    // #endregion subida progresiva de calidad
-
-    function setDashQuality(quality, audioBandwidth, label, { clearBuffer = false, safeMargin = 0 } = {}) {
+    function setDashQuality(quality, audioBandwidth, label) {
       let variants = player.getVariantTracks()
 
       if (label) {
@@ -1637,8 +1543,7 @@ export default defineComponent({
         chosenVariant = matches[0]
       }
 
-      player.selectVariantTrack(chosenVariant, clearBuffer, safeMargin)
-      return chosenVariant
+      player.selectVariantTrack(chosenVariant)
     }
 
     /**
@@ -3064,13 +2969,7 @@ export default defineComponent({
 
           if (defaultQuality.value !== 'auto') {
             if (props.format === 'dash') {
-              if (process.env.YUTU_TV && defaultQuality.value > TV_START_QUALITY) {
-                // TV: arrancar rápido en 1080p y subir poco a poco hasta la calidad elegida (4K si existe)
-                setDashQuality(TV_START_QUALITY)
-                startQualityRamp(defaultQuality.value)
-              } else {
-                setDashQuality(defaultQuality.value)
-              }
+              setDashQuality(defaultQuality.value)
             } else {
               let variants = player.getVariantTracks()
 
@@ -3387,7 +3286,6 @@ export default defineComponent({
     // #region tear down
 
     onBeforeUnmount(() => {
-      cancelQualityRamp?.()
       hasLoaded.value = false
       document.body.classList.remove('playerFullWindow')
 
@@ -3449,7 +3347,6 @@ export default defineComponent({
      * @returns {Promise<{ startNextVideoInFullscreen: boolean, startNextVideoInFullwindow: boolean, startNextVideoInPip: boolean }>}
      */
     async function destroyPlayer() {
-      cancelQualityRamp?.()
       ignoreErrors = true
 
       let uiState = { startNextVideoInFullscreen: false, startNextVideoInFullwindow: false, startNextVideoInPip: false }

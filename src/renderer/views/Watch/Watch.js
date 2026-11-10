@@ -42,6 +42,7 @@ import {
   youtubeImageUrlToInvidious
 } from '../../helpers/api/invidious'
 import { sortCaptions } from '../../helpers/player/utils'
+import { getPrefetchedManifestUrl, getVideoInfo as getTvVideoInfo } from '../../helpers/tvPrefetch'
 import { MANIFEST_TYPE_SABR } from '../../helpers/player/SabrManifestParser'
 import { useI18n } from 'vue-i18n'
 
@@ -993,7 +994,10 @@ export default defineComponent({
         this.isLoading = true
       }
 
-      invidiousGetVideoInformation(this.videoId)
+      // En TV la información y el manifiesto se piden a la vez (y pueden venir ya precargados)
+      const videoInformation = process.env.YUTU_TV ? getTvVideoInfo(this.videoId) : invidiousGetVideoInformation(this.videoId)
+
+      videoInformation
         .then(async result => {
           if (result.error) {
             throw new Error(result.error)
@@ -1788,6 +1792,11 @@ export default defineComponent({
         url = `data:application/dash+xml;charset=UTF-8,${encodeURIComponent(manifest)}`
       } else if (this.proxyVideos) {
         url += '?local=true'
+
+        // TV: si el manifiesto ya se descargó, se entrega directo al reproductor
+        if (process.env.YUTU_TV) {
+          url = (await getPrefetchedManifestUrl(this.videoId)) ?? url
+        }
       }
 
       return url
