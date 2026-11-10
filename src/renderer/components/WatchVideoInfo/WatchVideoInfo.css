@@ -161,3 +161,20 @@
 .moreVideoActions {
   display: none;
 }
+
+.videoTitleButton {
+  min-block-size: 22px;
+  display: block;
+  inline-size: 100%;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.mobileRatings {
+  display: none;
+}

@@ -108,6 +108,7 @@ export default defineComponent({
   },
   data: function () {
     return {
+      descriptionOpen: false,
       startNextVideoInFullscreen: false,
       startNextVideoInFullwindow: false,
       startNextVideoInPip: false,
@@ -1588,7 +1589,17 @@ export default defineComponent({
       }
     },
 
+    openDescription: function (event) {
+      this.descriptionTrigger = event?.currentTarget
+      this.descriptionOpen = true
+      this.$nextTick(() => this.$refs.descriptionClose?.focus({ preventScroll: true }))
+    },
+    closeDescription: function () {
+      this.descriptionOpen = false
+      this.$nextTick(() => this.descriptionTrigger?.focus({ preventScroll: true }))
+    },
     handleRouteChange: function () {
+      this.descriptionOpen = false
       this.abortAutoplayCountdown(true)
       this.handleWatchProgressAutoSave()
     },

@@ -3,6 +3,7 @@
     class="videoLayout"
     :class="{
       isLoading,
+      detailsOpen: descriptionOpen,
       useTheatreMode: useTheatreMode && !isLoading,
       noSidebar: !theatrePossible
     }"
@@ -131,8 +132,58 @@
       v-if="(isFamilyFriendly || !showFamilyFriendlyOnly)"
       class="infoArea"
     >
+      <section
+        v-if="descriptionOpen"
+        class="watchDetailsPanel"
+        :aria-label="$t('Watch UI.Description')"
+        @keydown.esc="closeDescription"
+      >
+        <div
+          class="sheetHandle"
+          aria-hidden="true"
+        />
+        <header class="detailsHeader">
+          <h2>{{ videoTitle }}</h2>
+          <button
+            ref="descriptionClose"
+            class="detailsClose"
+            :aria-label="$t('Close')"
+            @click="closeDescription"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            ><path d="m6 6 12 12M18 6 6 18" /></svg>
+          </button>
+        </header>
+        <div class="detailsScroll">
+          <div class="detailsChannel">
+            <img
+              :src="channelThumbnail"
+              alt=""
+              width="28"
+              height="28"
+            >{{ channelName }}
+          </div>
+          <div class="detailsMetrics">
+            <div><strong>{{ Number(videoLikeCount || 0).toLocaleString() }}</strong><span>{{ $t('Watch UI.Likes') }}</span></div><div><strong>{{ Number(videoViewCount || 0).toLocaleString() }}</strong><span>{{ $t('Watch UI.Views') }}</span></div>
+          </div>
+          <watch-video-description
+            :description="videoDescription"
+            :description-html="videoDescriptionHtml"
+            :license="license"
+            :content-disclosures="contentDisclosures"
+            class="sheetDescription"
+            @timestamp-event="changeTimestamp"
+          />
+        </div>
+      </section>
       <watch-video-info
         v-if="!isLoading"
+        v-show="!descriptionOpen"
         :id="videoId"
         :title="videoTitle"
         :channel-id="channelId"
@@ -158,12 +209,14 @@
         :can-save-watched-progress="canSaveWatchProgress"
         class="watchVideo"
         :class="{ theatreWatchVideo: useTheatreMode }"
+        @open-description="openDescription"
         @change-format="handleFormatChange"
         @pause-player="pausePlayer"
         @save-watched-progress="handleWatchProgressManualSave"
         @reload-player="onManualReloadRequested"
       />
       <watch-video-chapters
+        v-show="!descriptionOpen"
         v-if="!hideChapters && !isLoading && videoChapters.length > 0"
         :chapters="videoChapters"
         :current-chapter-index="videoCurrentChapterIndex"
@@ -173,6 +226,7 @@
         @timestamp-event="changeTimestamp"
       />
       <watch-video-description
+        v-show="!descriptionOpen"
         v-if="!isLoading && !hideVideoDescription"
         :description="videoDescription"
         :description-html="videoDescriptionHtml"
@@ -183,6 +237,7 @@
         @timestamp-event="changeTimestamp"
       />
       <CommentSection
+        v-show="!descriptionOpen"
         v-if="!isLoading && !isLive && !hideComments"
         :id="videoId"
         class="watchVideo"

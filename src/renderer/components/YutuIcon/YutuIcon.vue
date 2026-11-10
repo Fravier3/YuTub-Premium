@@ -14,6 +14,8 @@
 <script setup>
 defineProps({ name: { type: String, required: true } })
 const paths = {
+  like: 'M8 10H3v11h5ZM8 19l3 2h7a2 2 0 0 0 2-1.6l1.5-8A2 2 0 0 0 19.5 9H14l1-4c.5-2-1-3-2-3L8 10Z',
+  dislike: 'M8 14H3V3h5ZM8 5l3-2h7a2 2 0 0 1 2 1.6l1.5 8a2 2 0 0 1-2 2.4H14l1 4c.5 2-1 3-2 3l-5-8Z',
   home: 'M3 10.5 12 3l9 7.5M5 9v12h5v-7h4v7h5V9',
   shorts: 'm16.4 2.5-10 5.8a3.2 3.2 0 0 0 0 5.5l2 1.2-2.8 1.6a3.2 3.2 0 0 0 3.2 5.5l10-5.8a3.2 3.2 0 0 0 0-5.5l-2-1.2 2.8-1.6a3.2 3.2 0 0 0-3.2-5.5ZM10 9l5 3-5 3Z',
   plus: 'M12 5v14M5 12h14',

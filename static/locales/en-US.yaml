@@ -1296,3 +1296,13 @@ Playback Dock:
 Mobile Browse:
   All: All
   Podcasts: Podcasts
+
+Watch UI:
+  Like: Like
+  Dislike: Dislike
+  Local Rating: Rating saved on this device
+  Description: Description
+  Likes: Likes
+  Views: Views
+  Comment Number: 'Comment {number}'
+  Loading Comments: Loading comments…
