@@ -113,6 +113,9 @@ function showSelection(pools) {
   const sections = pickHomeSections(pools, new Set(previous))
   homeSections.value = sections
   shownResults.value = sections.flatMap(section => section.items)
+  // Las primeras miniaturas se piden ya, sin esperar a que la lista termine de dibujarse
+  const instance = store.getters.getCurrentInvidiousInstanceUrl
+  for (const video of shownResults.value.slice(0, 6)) new Image().src = `${instance}/vi/${video.videoId}/mqdefault.jpg`
   const ids = shownResults.value.map(video => video.videoId)
   try {
     localStorage.setItem(shownKey(), JSON.stringify([...new Set([...ids, ...previous])].slice(0, 300)))

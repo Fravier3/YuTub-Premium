@@ -208,6 +208,18 @@ const defaultInvidiousInstance = computed(() => store.getters.getDefaultInvidiou
 
 const dataReady = ref(false)
 
+// Abrir la conexión con el servidor de video cuanto antes: las miniaturas y los datos salen de ahí
+if (persistentPlaybackEnabled) {
+  watch(() => store.getters.getCurrentInvidiousInstanceUrl, (url) => {
+    if (!url || document.head.querySelector(`link[rel="preconnect"][href="${url}"]`)) return
+    const link = document.createElement('link')
+    link.rel = 'preconnect'
+    link.href = url
+    link.crossOrigin = 'anonymous'
+    document.head.append(link)
+  }, { immediate: true })
+}
+
 onMounted(async () => {
   if (persistentPlaybackEnabled) restoreAccount()
   await store.dispatch('grabUserSettings')
