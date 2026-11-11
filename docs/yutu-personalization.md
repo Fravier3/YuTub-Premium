@@ -1,3 +1,7 @@
+# Yutu 1.0.29
+
+Miniaturas más rápidas en la app web: cada tarjeta muestra primero `mqdefault` (ligera y siempre disponible) y, cuando ya está en pantalla, descarga la HD (`hq720`, luego `maxresdefault`) y la sustituye. Antes se pedía la HD directamente y, si no existía, se probaban calidades una tras otra antes de mostrar nada. Además se abre la conexión con el servidor al arrancar y las seis primeras miniaturas de la portada se piden antes de dibujar la lista. Las miniaturas siguen pasando por el servidor de Yutu, no por YouTube.
+
 # Yutu 1.0.28
 
 - Corrige "TypeError: i is not a function" en la portada: al reescribir la reproducción de Shorts (1.0.27) se había eliminado `relatedHomeVideos`. `tests/web-api-exports.test.mjs` comprueba ahora que la portada y Shorts solo importen funciones que existen, porque la compilación solo avisa.

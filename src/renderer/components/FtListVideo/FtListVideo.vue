@@ -305,7 +305,7 @@
 
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
@@ -803,20 +803,71 @@ const thumbnail = computed(() => {
     case 'end':
       return `${baseUrl}/vi/${id.value}/mq3.jpg`
     default:
+      // Yutu web: primero la miniatura ligera, que siempre existe y llega enseguida; la HD la sustituye
+      // en cuanto termina de descargarse (ver upgradeThumbnail)
+      if (progressiveThumbnails) return hdThumbnail.value || `${baseUrl}/vi/${id.value}/mqdefault.jpg`
       // En la versión de TV se piden miniaturas HD (con respaldo automático a menor calidad)
       return hdThumbnailUrl(baseUrl, id.value)
   }
 })
 
+/*
+ * Miniaturas progresivas (solo app web). Antes se pedía directamente la HD y, cuando el video no la tenía,
+ * se iban probando calidades una tras otra: la imagen tardaba varios viajes al servidor en aparecer.
+ */
+const progressiveThumbnails = !process.env.IS_ELECTRON && !process.env.YUTU_TV
+const HD_THUMBNAILS = ['hq720.jpg', 'maxresdefault.jpg']
+const hdThumbnail = ref('')
+let hdLoader = null
+function cancelThumbnailUpgrade() {
+  if (hdLoader) {
+    hdLoader.onload = hdLoader.onerror = null
+    hdLoader = null
+  }
+}
+function upgradeThumbnail(level = 0) {
+  cancelThumbnailUpgrade()
+  const name = HD_THUMBNAILS[level]
+  if (!name) return
+  const baseUrl = backendPreference.value === 'invidious' ? currentInvidiousInstanceUrl.value : 'https://i.ytimg.com'
+  const url = `${baseUrl}/vi/${id.value}/${name}`
+  const loader = new Image()
+  hdLoader = loader
+  loader.decoding = 'async'
+  loader.onload = () => {
+    if (hdLoader !== loader) return
+    // Si la calidad no existe llega un marcador gris de 120 px con respuesta correcta
+    if (loader.naturalWidth >= 640) {
+      hdLoader = null
+      hdThumbnail.value = url
+    } else upgradeThumbnail(level + 1)
+  }
+  loader.onerror = () => { if (hdLoader === loader) upgradeThumbnail(level + 1) }
+  loader.src = url
+}
+if (progressiveThumbnails) {
+  watch(() => id.value, () => {
+    cancelThumbnailUpgrade()
+    hdThumbnail.value = ''
+  })
+  onBeforeUnmount(cancelThumbnailUpgrade)
+}
+
 /** Versión TV: si la miniatura HD no existe, baja de calidad. */
 function handleThumbnailError(event) {
   if (['start', 'middle', 'end', 'hidden'].includes(thumbnailPreference.value)) return
+  if (progressiveThumbnails) return
   const baseUrl = backendPreference.value === 'invidious' ? currentInvidiousInstanceUrl.value : 'https://i.ytimg.com'
   nextThumbnail(event, baseUrl, id.value)
 }
 
 // YouTube can return a 120px placeholder with HTTP 200 for a missing HD image.
 function handleThumbnailLoad(event) {
+  if (progressiveThumbnails && !['start', 'middle', 'end', 'hidden'].includes(thumbnailPreference.value)) {
+    // La ligera ya está en pantalla: ahora sí se pide la HD, sin que compita con ella
+    if (!hdThumbnail.value && !hdLoader && event.target.src.endsWith('/mqdefault.jpg')) upgradeThumbnail()
+    return
+  }
   if (event.target.naturalWidth < 320) handleThumbnailError(event)
 }
 
