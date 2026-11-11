@@ -1,0 +1,370 @@
+/* Shorts de Yutu: una tarjeta por pantalla, se pasa deslizando en vertical.
+   --short-height es el alto útil en PC: la ventana menos la barra superior y los márgenes de la página. */
+.shortsPage {
+  position: relative;
+
+  --short-height: calc(100vh - 132px);
+
+  inline-size: 100%;
+  block-size: var(--short-height);
+  color: #fff;
+}
+
+.shortsFeed {
+  block-size: 100%;
+  overflow-y: scroll;
+  overscroll-behavior: contain;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+}
+
+.shortsFeed::-webkit-scrollbar {
+  display: none;
+}
+
+.short {
+  position: relative;
+  block-size: 100%;
+  max-inline-size: calc(var(--short-height) * 9 / 16);
+  margin-inline: auto;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #000;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* Fondo: la propia miniatura muy desenfocada, como en YouTube */
+.shortBackdrop {
+  position: absolute;
+  inset: -40px;
+  inline-size: calc(100% + 80px);
+  block-size: calc(100% + 80px);
+  object-fit: cover;
+  filter: blur(36px) saturate(140%) brightness(70%);
+}
+
+.shortMedia {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.shortPoster,
+.shortVideo {
+  grid-area: 1 / 1;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+.shortVideo {
+  opacity: 0;
+}
+
+.shortVideo.ready {
+  opacity: 1;
+}
+
+.shortShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgb(0 0 0 / 35%), transparent 18%, transparent 60%, rgb(0 0 0 / 60%));
+  pointer-events: none;
+}
+
+.shortStatus,
+.shortUnmute,
+.shortPausedIcon {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.shortStatus {
+  max-inline-size: 80%;
+  padding-block: 10px;
+  padding-inline: 14px;
+  border-radius: 12px;
+  background: rgb(0 0 0 / 65%);
+  font-size: 14px;
+  text-align: center;
+}
+
+.shortUnmute {
+  inset-block-start: calc(var(--yt-safe-top, 0px) + 64px);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-block: 10px;
+  padding-inline: 16px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 65%);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+.shortPausedIcon {
+  display: grid;
+  place-items: center;
+  inline-size: 68px;
+  block-size: 68px;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 50%);
+  font-size: 26px;
+  pointer-events: none;
+}
+
+/* Columna de acciones a la derecha */
+.shortActions {
+  position: absolute;
+  inset-block-end: 96px;
+  inset-inline-end: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.shortAction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-inline-size: 56px;
+  padding: 2px;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 70%);
+  cursor: pointer;
+}
+
+.shortAction svg {
+  inline-size: 30px;
+  block-size: 30px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 60%));
+}
+
+.shortAction.liked svg {
+  fill: #ff3040;
+  stroke: #ff3040;
+}
+
+/* Canal, botón de suscripción y título abajo a la izquierda */
+.shortInfo {
+  position: absolute;
+  inset-block-end: 22px;
+  inset-inline: 14px 78px;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 70%);
+}
+
+.shortChannelRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-block-end: 10px;
+}
+
+.shortChannel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-inline-size: 0;
+  color: #fff;
+  text-decoration: none;
+}
+
+.shortAvatar {
+  flex: 0 0 auto;
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: rgb(255 255 255 / 20%);
+}
+
+.shortAvatarEmpty {
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  text-shadow: none;
+}
+
+.shortAuthor {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shortSubscribe {
+  flex: 0 0 auto;
+  min-block-size: 34px;
+  padding-inline: 14px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #0f0f0f;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.shortSubscribe.subscribed {
+  background: rgb(255 255 255 / 22%);
+  color: #fff;
+}
+
+.shortTitle {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  font-size: 15px;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.shortsMore {
+  padding: 16px;
+  color: var(--secondary-text-color);
+  text-align: center;
+  scroll-snap-align: end;
+}
+
+/* Barra superior: en YouTube aquí van buscar y menú; en Yutu, pedir otra tanda */
+.shortsTop {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 10px;
+  inset-inline-end: max(12px, calc(50% - var(--short-height) * 9 / 32 + 8px));
+  display: flex;
+  gap: 6px;
+}
+
+.shortsTopButton {
+  display: grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  font-size: 19px;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 60%));
+  cursor: pointer;
+}
+
+.shortsTopButton:disabled {
+  opacity: 0.5;
+}
+
+.shortProgress {
+  position: absolute;
+  z-index: 2;
+  inset-block-end: 0;
+  inset-inline: 0;
+  max-inline-size: calc(var(--short-height) * 9 / 16);
+  block-size: 3px;
+  margin-inline: auto;
+  background: rgb(255 255 255 / 25%);
+  pointer-events: none;
+}
+
+.shortProgress span {
+  display: block;
+  block-size: 100%;
+  background: #fff;
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.shortsEmpty {
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  block-size: 100%;
+  color: var(--primary-text-color);
+  text-align: center;
+}
+
+.shortsRetry {
+  justify-self: center;
+  min-block-size: 40px;
+  padding-inline: 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--primary-text-color);
+  color: var(--bg-color);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.shortAction:focus-visible,
+.shortSubscribe:focus-visible,
+.shortsTopButton:focus-visible,
+.shortChannel:focus-visible,
+.shortUnmute:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Teléfono: pantalla completa, por debajo de la barra inferior flotante */
+@media only screen and (width <= 680px) {
+  .shortsPage {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    block-size: 100vh;
+    block-size: 100dvh;
+    background: #000;
+  }
+
+  .short {
+    max-inline-size: none;
+    border-radius: 0;
+  }
+
+  .shortActions {
+    inset-block-end: calc(var(--yt-safe-bottom, 0px) + 150px);
+  }
+
+  .shortInfo {
+    inset-block-end: calc(var(--yt-safe-bottom, 0px) + 84px);
+  }
+
+  .shortProgress {
+    inset-block-end: calc(var(--yt-safe-bottom, 0px) + 70px);
+    max-inline-size: none;
+  }
+
+  .shortsTop {
+    inset-block-start: calc(var(--yt-safe-top, 0px) + 6px);
+    inset-inline-end: 10px;
+  }
+}

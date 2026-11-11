@@ -6,6 +6,7 @@
       hideOutlines: outlinesHidden,
       watchPage: persistentPlaybackEnabled && watchPageVisible,
       hasMiniPlayer: persistentPlaybackEnabled && playbackRoute && !watchPageVisible,
+      shortsRoute: persistentPlaybackEnabled && route.path === '/shorts',
       isLocaleRightToLeft: isLocaleRightToLeft,
       isSideNavOpen: isSideNavOpen,
       hideLabelsSideBar: hideLabelsSideBar && !isSideNavOpen
@@ -166,6 +167,8 @@ watch(() => route.fullPath, () => {
   if (!persistentPlaybackEnabled) return
   if (isWatchLocation(route)) playbackRoute.value = snapshotPlaybackRoute(route)
   else if (route.path !== '/') lastBrowseRoute.value = route.fullPath
+  // Shorts trae su propio reproductor: el video minimizado no puede seguir sonando debajo
+  if (route.path === '/shorts') playbackRoute.value = null
 }, { immediate: true })
 
 /** @type {import('vue').ComputedRef<'local' | 'invidious'>} */

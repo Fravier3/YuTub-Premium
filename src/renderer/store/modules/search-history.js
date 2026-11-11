@@ -1,5 +1,6 @@
 import { MIXED_SEARCH_HISTORY_ENTRIES_DISPLAY_LIMIT, SEARCH_RESULTS_DISPLAY_LIMIT } from '../../../constants'
 import { DBSearchHistoryHandlers } from '../../../datastores/handlers/index'
+import { clearSearches, forgetSearch } from '../../helpers/yutuIdentity'
 
 const state = {
   searchHistoryEntries: []
@@ -78,6 +79,7 @@ const actions = {
     try {
       await DBSearchHistoryHandlers.delete(_id)
       commit('removeSearchHistoryEntryFromList', _id)
+      forgetSearch(_id)
     } catch (errMessage) {
       console.error(errMessage)
     }
@@ -87,6 +89,7 @@ const actions = {
     try {
       await DBSearchHistoryHandlers.deleteAll()
       commit('setSearchHistoryEntries', [])
+      clearSearches()
     } catch (errMessage) {
       console.error(errMessage)
     }

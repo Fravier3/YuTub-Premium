@@ -30,11 +30,21 @@ export function cleanHistory(items) {
   }
   return [...unique.values()].sort((a, b) => b.timeWatched - a.timeWatched).slice(0, 100)
 }
+/** Búsquedas recientes del usuario (la más nueva primero): son la señal principal de "Para ti". */
+export function cleanSearches(items) {
+  const unique = new Map()
+  for (const item of Array.isArray(items) ? items : []) {
+    const query = String(item || '').replaceAll(/\s+/g, ' ').trim().slice(0, 120)
+    const key = query.toLowerCase()
+    if (query && !unique.has(key)) unique.set(key, query)
+  }
+  return [...unique.values()].slice(0, 30)
+}
 function read(bucket) {
   try {
     const value = JSON.parse(localStorage.getItem(KEY + bucket) || '{}')
-    return { profile: cleanProfile(value.profile), history: cleanHistory(value.history), modified: Number(value.modified) || 0 }
-  } catch { return { profile: defaults(), history: [], modified: 0 } }
+    return { profile: cleanProfile(value.profile), history: cleanHistory(value.history), searches: cleanSearches(value.searches), modified: Number(value.modified) || 0 }
+  } catch { return { profile: defaults(), history: [], searches: [], modified: 0 } }
 }
 // Capture and remove credentials before Vue Router can replace the URL fragment.
 const returnedAuth = window.location?.href ? parseAuthReturn(window.location.href) : null
@@ -45,7 +55,7 @@ export const identity = reactive({ ...initial, user: null, bucket: 'guest', open
 export const currentAvatar = computed(() => identity.profile.avatar === 'custom' && identity.profile.custom ? identity.profile.custom : avatarOptions.find(a => a.key === identity.profile.avatar)?.image || puppy)
 function persist() {
   try {
-    localStorage.setItem(KEY + identity.bucket, JSON.stringify({ profile: identity.profile, history: identity.history, modified: identity.modified }))
+    localStorage.setItem(KEY + identity.bucket, JSON.stringify({ profile: identity.profile, history: identity.history, searches: identity.searches, modified: identity.modified }))
   } catch { identity.error = 'No queda espacio local para guardar. Libera espacio o sincroniza con tu cuenta.' }
 }
 let clientPromise
@@ -114,6 +124,7 @@ async function loadAccount(session) {
     } else if (!identity.modified) {
       identity.profile = guest.profile
       identity.history = guest.history
+      if (!identity.searches.length) identity.searches = guest.searches
     }
     persist()
     await syncAccount()
@@ -166,6 +177,25 @@ export function rememberListening(item) {
   identity.history = cleanHistory([{ ...item, timeWatched: Date.now() }, ...identity.history])
   persist()
   scheduleSync()
+}
+/** Lo que el usuario busca a propósito. Se guarda por usuario en este dispositivo; no sale de él. */
+export function rememberSearch(query) {
+  if (process.env.IS_ELECTRON || process.env.YUTU_TV) return
+  const searches = cleanSearches([query, ...identity.searches])
+  if (searches[0] === identity.searches[0] && searches.length === identity.searches.length) return
+  identity.searches = searches
+  persist()
+}
+export function forgetSearch(query) {
+  if (process.env.IS_ELECTRON || process.env.YUTU_TV) return
+  const key = String(query || '').trim().toLowerCase()
+  identity.searches = identity.searches.filter(item => item.toLowerCase() !== key)
+  persist()
+}
+export function clearSearches() {
+  if (process.env.IS_ELECTRON || process.env.YUTU_TV) return
+  identity.searches = []
+  persist()
 }
 export function seedListening(items) {
   if (identity.bucket !== 'guest' || identity.history.length || localStorage.getItem(KEY + 'guest')) return

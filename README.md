@@ -8,7 +8,9 @@ Está construida sobre el código de [FreeTube](https://github.com/FreeTubeApp/F
 - Tema claro/oscuro con los colores de YouTube, buscador en píldora, tarjetas de video con esquinas redondeadas
 - Móvil: miniaturas a todo el ancho, barra inferior de navegación, zonas seguras del iPhone (notch y barra inferior)
 - PWA instalable con auto-actualización (revisa al abrir, al volver a la app y cada 45 min)
-- Página inicial: *Más populares*; idioma automático según el dispositivo (incluye español)
+- Página inicial personalizada: *Para ti* según lo que buscas y ves, solo en español y distinta cada vez que entras
+- Shorts a pantalla completa y Suscripciones con tira de canales y fichas (Todos, Hoy, Videos, Shorts, En tiempo real)
+- Idioma de la interfaz automático según el dispositivo (incluye español)
 
 ## Desarrollo
 

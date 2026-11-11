@@ -5,6 +5,7 @@ import ProfileSettings from '../views/ProfileSettings/ProfileSettings.vue'
 import Trending from '../views/Trending/Trending.vue'
 import Popular from '../views/Popular/Popular.vue'
 import LatinHome from '../views/LatinHome/LatinHome.vue'
+import Shorts from '../views/Shorts/Shorts.vue'
 import UserPlaylists from '../views/UserPlaylists/UserPlaylists.vue'
 import History from '../views/History/History.vue'
 import Settings from '../views/Settings/Settings.vue'
@@ -61,6 +62,17 @@ const router = createRouter({
             title: 'Latin Home'
           },
           component: LatinHome
+        }]
+      : []),
+    // Shorts solo existe en la app web (teléfono y PC)
+    ...(!process.env.YUTU_TV && !process.env.IS_ELECTRON
+      ? [{
+          path: '/shorts',
+          name: 'shorts',
+          meta: {
+            title: 'Shorts'
+          },
+          component: Shorts
         }]
       : []),
     {

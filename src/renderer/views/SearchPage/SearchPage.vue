@@ -61,6 +61,7 @@ import {
 } from '../../helpers/api/local'
 import { getInvidiousSearchResults } from '../../helpers/api/invidious'
 import { SEARCH_CHAR_LIMIT } from '../../../constants'
+import { rememberSearch } from '../../helpers/yutuIdentity'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -186,6 +187,8 @@ function checkSearchCache(payload) {
 
   if (rememberSearchHistory.value) {
     updateSearchHistoryEntry()
+    // Señal de "Para ti": la portada recomienda según lo que se busca
+    rememberSearch(payload.query)
   }
 }
 

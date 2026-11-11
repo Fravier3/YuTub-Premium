@@ -6,6 +6,8 @@
     :last-refresh-timestamp="lastVideoRefreshTimestamp"
     :attempted-fetch="attemptedFetch"
     :title="t('Global.Videos')"
+    :extra-videos="extraVideos"
+    :published-after="publishedAfter"
     @refresh="loadVideosForSubscriptionsFromRemote"
   />
 </template>
@@ -29,6 +31,26 @@ import { getLocalChannelVideos } from '../helpers/api/local'
 import { parseYouTubeRSSFeed, updateVideoListAfterProcessing } from '../helpers/subscriptions'
 
 const { t } = useI18n()
+
+const props = defineProps({
+  // Yutu web: 'all' suma shorts y directos ya cargados; 'today' además deja solo las últimas 24 horas
+  filter: {
+    type: String,
+    default: 'videos'
+  }
+})
+
+const publishedAfter = computed(() => props.filter === 'today' ? Date.now() - 24 * 60 * 60 * 1000 : 0)
+
+const extraVideos = computed(() => {
+  if (props.filter !== 'all' && props.filter !== 'today') return []
+  const shortsCache = store.getters.getShortsCache
+  const liveCache = store.getters.getLiveCache
+  return store.getters.getActiveProfile.subscriptions.flatMap(channel => [
+    ...(shortsCache[channel.id]?.videos ?? []),
+    ...(liveCache[channel.id]?.videos ?? [])
+  ])
+})
 
 const isLoading = ref(true)
 const videoList = shallowRef([])
