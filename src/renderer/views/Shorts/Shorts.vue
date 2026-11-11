@@ -238,6 +238,7 @@ import { identity } from '../../helpers/yutuIdentity'
 import { copyToClipboard, formatNumber, showToast } from '../../helpers/utils'
 
 const SHOWN_KEY = 'yutu-shorts-shown-v1:'
+const QUEUE_KEY = 'yutu-shorts-queue-v1:'
 const LIKED_KEY = 'yutu-shorts-liked-v1:'
 
 const shorts = shallowRef([])
@@ -302,17 +303,53 @@ async function fetchBatch() {
   return batch
 }
 
-async function reload() {
+/*
+ * Arranque rápido: los Shorts que quedaron sin ver de la visita anterior se guardan en el dispositivo. Al
+ * entrar se muestran al instante y la tanda nueva se pide detrás, en vez de esperar a las búsquedas.
+ */
+function readQueue() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(QUEUE_KEY + identity.bucket) || '[]')
+    const shown = new Set(readIds(SHOWN_KEY))
+    return Array.isArray(stored) ? stored.filter(short => short && /^[\w-]{11}$/.test(short.videoId || '') && !shown.has(short.videoId)) : []
+  } catch { return [] }
+}
+function saveQueue() {
+  const pending = shorts.value.slice(activeIndex.value + 1, activeIndex.value + 31).map(short => ({
+    type: 'video',
+    videoId: short.videoId,
+    title: short.title,
+    author: short.author,
+    authorId: short.authorId,
+    lengthSeconds: short.lengthSeconds,
+    viewCount: short.viewCount,
+    published: short.published
+  }))
+  try { localStorage.setItem(QUEUE_KEY + identity.bucket, JSON.stringify(pending)) } catch { /* Sin espacio: la próxima entrada esperará a la red. */ }
+}
+
+async function reload({ useQueue = false } = {}) {
   if (isLoading.value) return
   isLoading.value = true
   stopVideo()
+  discardPreloads()
   page = 1
   exhausted = false
   shorts.value = []
   activeIndex.value = 0
+  const queued = useQueue ? readQueue() : []
+  if (queued.length >= 3) {
+    shorts.value = queued
+    isLoading.value = false
+    await nextTick()
+    playActive()
+    loadMore()
+    return
+  }
   try {
     shorts.value = await fetchBatch()
     if (shorts.value.length === 0) shorts.value = await fetchBatch()
+    saveQueue()
   } catch (error) {
     showToast(`No se pudieron cargar los Shorts: ${error?.message || error}`)
   } finally {
@@ -330,6 +367,7 @@ async function loadMore() {
     const batch = await fetchBatch()
     if (batch.length === 0) exhausted = page > 4
     else shorts.value = [...shorts.value, ...batch]
+    saveQueue()
   } catch { /* Se reintenta al seguir deslizando. */ } finally {
     isLoadingMore.value = false
   }
@@ -371,21 +409,48 @@ function infoFor(short) {
 /** @type {shaka.Player | null} */
 let player = null
 let attachedElement = null
-async function playerFor(element) {
+function ensurePlayer() {
   if (!player) {
     player = new shaka.Player()
     player.configure({
-      streaming: { bufferingGoal: 20, rebufferingGoal: 1, bufferBehind: 10 },
-      abr: { enabled: true, restrictToElementSize: true, defaultBandwidthEstimate: 3_000_000 },
+      // Arrancar cuanto antes: basta medio segundo en memoria y una primera calidad ligera; la calidad
+      // sube sola en cuanto se mide la conexión
+      streaming: { bufferingGoal: 20, rebufferingGoal: 0.5, bufferBehind: 10 },
+      abr: { enabled: true, restrictToElementSize: true, defaultBandwidthEstimate: 1_500_000 },
       // Como el reproductor principal: primero las variantes que el dispositivo decodifica con fluidez
       preferredDecodingAttributes: ['smooth', 'powerEfficient']
     })
   }
+  return player
+}
+async function playerFor(element) {
+  ensurePlayer()
   if (attachedElement !== element) {
     await player.attach(element)
     attachedElement = element
   }
   return player
+}
+
+/*
+ * Precarga: mientras se ve un Short, Shaka ya descarga el manifiesto y el comienzo de los dos siguientes.
+ * Al deslizar, el video empieza con lo que ya está en memoria.
+ */
+const preloads = new Map()
+function preloadShort(short) {
+  const id = short.videoId
+  infoFor(short)
+  if (preloads.has(id)) return
+  preloads.set(id, manifestFor(id)
+    .then(manifest => manifest ? ensurePlayer().preload(manifest, 0, 'application/dash+xml') : null)
+    .catch(() => null))
+}
+function discardPreloads(keep = new Set()) {
+  for (const [id, pending] of preloads) {
+    if (keep.has(id)) continue
+    preloads.delete(id)
+    pending.then(manager => manager?.destroy()).catch(() => {})
+  }
 }
 
 function stopVideo() {
@@ -423,9 +488,17 @@ async function playActive() {
   try {
     const shakaPlayer = await playerFor(element)
     if (token !== playToken) return
-    if (manifest) {
+    const pending = preloads.get(short.videoId)
+    preloads.delete(short.videoId)
+    const preloaded = pending ? await pending : null
+    if (token !== playToken) {
+      preloaded?.destroy().catch(() => {})
+      return
+    }
+    if (preloaded || manifest) {
       try {
-        await shakaPlayer.load(manifest, 0, 'application/dash+xml')
+        if (preloaded) await shakaPlayer.load(preloaded)
+        else await shakaPlayer.load(manifest, 0, 'application/dash+xml')
         loaded = true
       } catch (error) {
         if (token !== playToken) return
@@ -467,12 +540,11 @@ async function playActive() {
     writeIds(SHOWN_KEY, [...new Set([short.videoId, ...readIds(SHOWN_KEY)])], 400)
   }, 1500)
 
-  // Preparar el siguiente para que el cambio sea inmediato
-  const next = shorts.value[index + 1]
-  if (next) {
-    manifestFor(next.videoId)
-    infoFor(next)
-  }
+  // Preparar los dos siguientes para que el cambio sea inmediato
+  const upcoming = shorts.value.slice(index + 1, index + 3)
+  discardPreloads(new Set(upcoming.map(next => next.videoId)))
+  upcoming.forEach(preloadShort)
+  saveQueue()
   if (index >= shorts.value.length - 3) loadMore()
 }
 
@@ -609,7 +681,7 @@ function toggleSubscription(short) {
 onMounted(() => {
   document.addEventListener('keydown', onKeydown)
   document.addEventListener('visibilitychange', onVisibility)
-  reload()
+  reload({ useQueue: true })
 })
 
 onBeforeUnmount(() => {
@@ -619,6 +691,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('keydown', onKeydown)
   document.removeEventListener('visibilitychange', onVisibility)
   video.value?.pause()
+  discardPreloads()
   player?.destroy().catch(() => {})
   player = null
   attachedElement = null

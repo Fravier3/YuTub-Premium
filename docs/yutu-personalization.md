@@ -1,3 +1,9 @@
+# Yutu 1.0.28
+
+- Corrige "TypeError: i is not a function" en la portada: al reescribir la reproducción de Shorts (1.0.27) se había eliminado `relatedHomeVideos`. `tests/web-api-exports.test.mjs` comprueba ahora que la portada y Shorts solo importen funciones que existen, porque la compilación solo avisa.
+- Shorts más rápidos: Shaka precarga el manifiesto y el comienzo de los dos Shorts siguientes; se arranca con medio segundo en memoria y una primera calidad ligera que sube sola; y al entrar se muestran al instante los Shorts que quedaron sin ver en la visita anterior mientras la tanda nueva se pide detrás.
+- La interfaz de la app web sale en español aunque el dispositivo esté en otro idioma (se puede cambiar a mano en Configuración).
+
 # Yutu 1.0.26
 
 ## Solo español, "Para ti" por búsquedas, Shorts y Suscripciones (app web)
