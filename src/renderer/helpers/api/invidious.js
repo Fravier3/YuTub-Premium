@@ -1343,3 +1343,9 @@ export async function getShortPlayback(id) {
 }
 /** Manifiesto DASH del video, por el mismo camino (proxy del servidor) que usa el reproductor principal. */
 export const shortManifestUrl = id => `${getCurrentInstanceUrl()}/api/manifest/dash/id/${id}?local=true`
+export async function relatedHomeVideos(id) {
+  const video = await invidiousAPICall({ resource: 'videos', id, timeoutMs: 10000, doLogError: false })
+  const items = video.recommendedVideos || []
+  for (const item of items) { normalizeOneInvidiousVideoAttributes(item); setPublishedTimestamp(item) }
+  return items
+}

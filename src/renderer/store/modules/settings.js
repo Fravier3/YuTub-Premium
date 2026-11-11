@@ -354,7 +354,11 @@ const sideEffectHandlers = {
         }
       })
 
-      if (targetLocaleOptions.length > 0) {
+      if (!process.env.IS_ELECTRON && !process.env.YUTU_TV && systemLocaleSplit[0] !== 'es') {
+        // Yutu web es una app en español: si el dispositivo está en otro idioma, la interfaz sale
+        // igualmente en español. En Configuración se puede elegir otro idioma a mano.
+        targetLocale = 'es'
+      } else if (targetLocaleOptions.length > 0) {
         targetLocale = targetLocaleOptions[0]
       } else {
         // Go back to default value if locale is unavailable
