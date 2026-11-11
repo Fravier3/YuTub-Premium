@@ -1327,21 +1327,19 @@ export async function searchShortVideos(query, page = 1) {
   for (const item of items) { normalizeOneInvidiousVideoAttributes(item); setPublishedTimestamp(item) }
   return items
 }
-/** Datos de reproducción de un Short: el formato combinado (video + audio) de mayor resolución. */
+/**
+ * Datos de un Short: me gusta, foto del canal y, si el servidor lo ofrece, un formato combinado (video + audio)
+ * que sirve de respaldo cuando el manifiesto DASH no carga.
+ */
 export async function getShortPlayback(id) {
   const video = await invidiousAPICall({ resource: 'videos', id, timeoutMs: 12000, doLogError: false })
   const formats = (video.formatStreams || []).filter(format => format.url)
   const best = formats.sort((a, b) => parseInt(b.resolution || b.qualityLabel || '0') - parseInt(a.resolution || a.qualityLabel || '0'))[0]
-  if (!best) throw new Error('Sin formato reproducible')
   return {
-    url: getProxyUrl(best.url),
+    url: best ? getProxyUrl(best.url) : '',
     likeCount: Number(video.likeCount) || 0,
     authorThumbnail: youtubeImageUrlToInvidious((video.authorThumbnails || []).find(thumbnail => thumbnail.width >= 88)?.url || video.authorThumbnails?.[0]?.url || '')
   }
 }
-export async function relatedHomeVideos(id) {
-  const video = await invidiousAPICall({ resource: 'videos', id, timeoutMs: 10000, doLogError: false })
-  const items = video.recommendedVideos || []
-  for (const item of items) { normalizeOneInvidiousVideoAttributes(item); setPublishedTimestamp(item) }
-  return items
-}
+/** Manifiesto DASH del video, por el mismo camino (proxy del servidor) que usa el reproductor principal. */
+export const shortManifestUrl = id => `${getCurrentInstanceUrl()}/api/manifest/dash/id/${id}?local=true`
