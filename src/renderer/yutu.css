@@ -1263,3 +1263,23 @@ a {
 }
 
 /* stylelint-enable selector-max-compound-selectors */
+
+/* Shorts ocupa toda la pantalla del teléfono: sin barra superior ni márgenes de página */
+@media only screen and (width <= 680px) {
+  :root:not(.yutu-tv) .shortsRoute .topNav {
+    display: none;
+  }
+
+  :root:not(.yutu-tv) .shortsRoute .flexBox.routerView {
+    margin-block-start: 0 !important;
+    padding-block-end: 0;
+  }
+}
+
+/* Las filas deslizables (fichas, tira de canales) no deben ensanchar la página en el teléfono */
+@media only screen and (width <= 680px) {
+  :root:not(.yutu-tv) .flexBox.routerView {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+}

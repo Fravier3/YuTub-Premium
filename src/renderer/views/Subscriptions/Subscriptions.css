@@ -43,3 +43,167 @@
     inline-size: 90%;
   }
 }
+
+/* Yutu web: cabecera estilo YouTube (tira de canales + fichas de filtro) */
+.subsPage {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.yutuSubs {
+  box-sizing: border-box;
+  min-inline-size: 0;
+}
+
+.channelStripRow,
+.subsChips {
+  box-sizing: border-box;
+  max-inline-size: 100%;
+}
+
+.channelStripRow {
+  display: flex;
+  align-items: stretch;
+  margin-block-end: 6px;
+}
+
+.channelStrip {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 4px;
+  min-inline-size: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
+}
+
+.channelStrip::-webkit-scrollbar {
+  display: none;
+}
+
+.stripChannel {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  inline-size: 74px;
+  padding-block: 6px;
+  color: var(--secondary-text-color);
+  text-decoration: none;
+}
+
+.stripAvatar {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: 56px;
+  block-size: 56px;
+  color: var(--tertiary-text-color);
+  font-size: 56px;
+}
+
+.stripAvatar img {
+  inline-size: 56px;
+  block-size: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--secondary-card-bg-color);
+}
+
+.stripDot {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-end: 0;
+  box-sizing: border-box;
+  inline-size: 14px;
+  block-size: 14px;
+  border: 2px solid var(--card-bg-color);
+  border-radius: 50%;
+  background: #3ea6ff;
+}
+
+.stripName {
+  max-inline-size: 100%;
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stripAll {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  padding-block: 0 22px;
+  padding-inline: 12px 4px;
+  color: #3ea6ff;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.subsChips {
+  display: flex;
+  gap: 8px;
+  margin-block-end: 14px;
+  padding-block: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.subsChips::-webkit-scrollbar {
+  display: none;
+}
+
+.subsChip {
+  flex: 0 0 auto;
+  min-block-size: 34px;
+  padding-inline: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--secondary-card-bg-color);
+  color: var(--primary-text-color);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.subsChip.selected {
+  background: var(--primary-text-color);
+  color: var(--bg-color);
+}
+
+.stripChannel:focus-visible,
+.stripAll:focus-visible,
+.subsChip:focus-visible {
+  outline: 2px solid var(--primary-text-color);
+  outline-offset: 2px;
+}
+
+/* En PC ya está el botón flotante de actualizar */
+.subsRefresh {
+  display: none;
+}
+
+@media only screen and (width <= 680px) {
+  .yutuSubs {
+    inline-size: 100%;
+  }
+
+  .subsRefresh {
+    display: inline-grid;
+    place-items: center;
+  }
+
+  /* La franja "actualizado hace…" tapaba la tira de canales */
+  .yutuSubs :deep(.floatingRefreshSection) {
+    display: none;
+  }
+
+  .channelStripRow,
+  .subsChips {
+    padding-inline: 12px;
+  }
+}

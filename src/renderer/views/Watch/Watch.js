@@ -1,4 +1,5 @@
 import { rememberListening } from '../../helpers/yutuIdentity'
+import { languageOf, onlySpanish, spanishChannels } from '../../helpers/spanishFilter'
 import { startWebManifest } from '../../helpers/webManifest'
 import { defineComponent, shallowRef } from 'vue'
 import { isNavigationFailure, NavigationFailureType } from 'vue-router'
@@ -1068,8 +1069,14 @@ export default defineComponent({
             }
           })
 
+          // Yutu web: las sugerencias van en español, salvo que el propio video sea en otro idioma
+          // (ahí el usuario eligió ver ese contenido y se respetan sus relacionados)
+          const suggestions = process.env.IS_ELECTRON || process.env.YUTU_TV || ['en', 'other'].includes(languageOf(result.title))
+            ? recommendedVideos
+            : onlySpanish(recommendedVideos, { trusted: spanishChannels([result]) })
+
           // place watched recommended videos last
-          this.recommendedVideos = recommendedVideos.sort(this.sortWatchedVideosLast)
+          this.recommendedVideos = suggestions.sort(this.sortWatchedVideosLast)
 
           this.isLive = result.liveNow
           this.isFamilyFriendly = result.isFamilyFriendly

@@ -1316,10 +1316,28 @@ function setPublishedTimestamp(video) {
 }
 
 /** Home-specific requests are bounded and do not replace the TV feed. */
-export async function searchHomeVideos(query) {
-  const items = await invidiousAPICall({ resource: 'search', params: { q: query, region: 'PR', type: 'video', hl: 'es', page: 1 }, timeoutMs: 10000, doLogError: false })
+export async function searchHomeVideos(query, page = 1) {
+  const items = await invidiousAPICall({ resource: 'search', params: { q: query, region: 'PR', type: 'video', hl: 'es', page }, timeoutMs: 10000, doLogError: false })
   for (const item of items) { normalizeOneInvidiousVideoAttributes(item); setPublishedTimestamp(item) }
   return items
+}
+/** Videos cortos para la pestaña Shorts. */
+export async function searchShortVideos(query, page = 1) {
+  const items = await invidiousAPICall({ resource: 'search', params: { q: query, region: 'PR', type: 'video', duration: 'short', hl: 'es', page }, timeoutMs: 10000, doLogError: false })
+  for (const item of items) { normalizeOneInvidiousVideoAttributes(item); setPublishedTimestamp(item) }
+  return items
+}
+/** Datos de reproducción de un Short: el formato combinado (video + audio) de mayor resolución. */
+export async function getShortPlayback(id) {
+  const video = await invidiousAPICall({ resource: 'videos', id, timeoutMs: 12000, doLogError: false })
+  const formats = (video.formatStreams || []).filter(format => format.url)
+  const best = formats.sort((a, b) => parseInt(b.resolution || b.qualityLabel || '0') - parseInt(a.resolution || a.qualityLabel || '0'))[0]
+  if (!best) throw new Error('Sin formato reproducible')
+  return {
+    url: getProxyUrl(best.url),
+    likeCount: Number(video.likeCount) || 0,
+    authorThumbnail: youtubeImageUrlToInvidious((video.authorThumbnails || []).find(thumbnail => thumbnail.width >= 88)?.url || video.authorThumbnails?.[0]?.url || '')
+  }
 }
 export async function relatedHomeVideos(id) {
   const video = await invidiousAPICall({ resource: 'videos', id, timeoutMs: 10000, doLogError: false })

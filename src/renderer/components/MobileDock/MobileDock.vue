@@ -13,7 +13,7 @@
       <YutuIcon name="home" />
     </RouterLink>
     <RouterLink
-      to="/search/m%C3%BAsica%20latina%20%23shorts"
+      to="/shorts"
       class="dockItem"
       :aria-label="t('Global.Shorts')"
       :title="t('Global.Shorts')"

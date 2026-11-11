@@ -62,6 +62,26 @@
         </p>
       </router-link>
       <router-link
+        v-if="IS_YUTU_WEB"
+        class="navOption mobileHidden"
+        role="button"
+        to="/shorts"
+        :title="SHORTS_LABEL"
+      >
+        <div
+          class="thumbnailContainer"
+        >
+          <FontAwesomeIcon
+            :icon="['fas', 'clapperboard']"
+            class="navIcon"
+            :class="applyNavIconExpand"
+          />
+        </div>
+        <p class="navLabel">
+          {{ SHORTS_LABEL }}
+        </p>
+      </router-link>
+      <router-link
         class="navOption mobileShow "
         role="button"
         to="/subscriptions"
@@ -276,6 +296,8 @@ const { locale, t } = useI18n()
 
 const SUPPORTS_LOCAL_API = process.env.SUPPORTS_LOCAL_API
 const IS_YUTU_TV = process.env.YUTU_TV
+const IS_YUTU_WEB = !process.env.YUTU_TV && !process.env.IS_ELECTRON
+const SHORTS_LABEL = 'Shorts'
 
 /** Versión TV: abre el teclado de búsqueda propio (tvSearch.js). */
 function openTvSearch() {

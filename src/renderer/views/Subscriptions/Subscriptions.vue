@@ -1,7 +1,83 @@
+<!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
 <template>
-  <div>
-    <FtCard class="card">
-      <h2>
+  <div class="subsPage">
+    <FtCard
+      class="card"
+      :class="{ yutuSubs: yutuWeb }"
+    >
+      <!-- Yutu web: cabecera como la de YouTube, con los canales arriba y filtros en fichas -->
+      <template v-if="yutuWeb">
+        <div
+          v-if="stripChannels.length > 0"
+          class="channelStripRow"
+        >
+          <div class="channelStrip">
+            <RouterLink
+              v-for="channel in stripChannels"
+              :key="channel.id"
+              :to="`/channel/${channel.id}`"
+              class="stripChannel"
+              :title="channel.name"
+            >
+              <span class="stripAvatar">
+                <img
+                  v-if="channel.thumbnail"
+                  :src="channel.thumbnail"
+                  alt=""
+                  loading="lazy"
+                  width="56"
+                  height="56"
+                >
+                <FontAwesomeIcon
+                  v-else
+                  :icon="['fas', 'circle-user']"
+                />
+                <span
+                  v-if="channel.hasNew"
+                  class="stripDot"
+                  title="Contenido nuevo"
+                />
+              </span>
+              <span class="stripName">{{ channel.name }}</span>
+            </RouterLink>
+          </div>
+          <RouterLink
+            to="/subscribedchannels"
+            class="stripAll"
+          >
+            Todos
+          </RouterLink>
+        </div>
+        <div
+          class="subsChips"
+          role="tablist"
+          :aria-label="$t('Subscriptions.Subscriptions Tabs')"
+        >
+          <button
+            v-for="chip in chips"
+            :key="chip.id"
+            type="button"
+            role="tab"
+            class="subsChip"
+            :class="{ selected: currentTab === chip.id }"
+            :aria-selected="currentTab === chip.id"
+            aria-controls="subscriptionsPanel"
+            @click="changeTab(chip.id)"
+          >
+            {{ chip.label }}
+          </button>
+          <button
+            type="button"
+            class="subsChip subsRefresh"
+            aria-label="Actualizar suscripciones"
+            title="Actualizar suscripciones"
+            @click="refreshSignal++"
+          >
+            <FontAwesomeIcon :icon="['fas', 'rotate-right']" />
+          </button>
+        </div>
+      </template>
+      <h2 v-if="!yutuWeb">
         <FontAwesomeIcon
           :icon="['fas', 'rss']"
           class="subscriptionIcon"
@@ -9,6 +85,7 @@
         {{ $t("Subscriptions.Subscriptions") }}
       </h2>
       <FtFlexBox
+        v-if="!yutuWeb"
         class="tabs"
         role="tablist"
         :aria-label="$t('Subscriptions.Subscriptions Tabs')"
@@ -95,9 +172,10 @@
         </div>
       </FtFlexBox>
       <SubscriptionsVideos
-        v-if="currentTab === 'videos'"
+        v-if="currentTab === 'videos' || currentTab === 'all' || currentTab === 'today'"
         id="subscriptionsPanel"
         role="tabpanel"
+        :filter="currentTab"
       />
       <SubscriptionsShorts
         v-else-if="currentTab === 'shorts'"
@@ -126,7 +204,8 @@
 
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { computed, ref, useTemplateRef, watch } from 'vue'
+import { computed, provide, ref, useTemplateRef, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import FtCard from '../../components/ft-card/ft-card.vue'
 import FtFlexBox from '../../components/ft-flex-box/ft-flex-box.vue'
@@ -136,6 +215,16 @@ import SubscriptionsShorts from '../../components/SubscriptionsShorts.vue'
 import SubscriptionsPosts from '../../components/SubscriptionPosts/SubscriptionsPosts.vue'
 
 import store from '../../store/index'
+import { youtubeImageUrlToInvidious } from '../../helpers/api/invidious'
+
+const { t } = useI18n()
+
+// La cabecera nueva es solo de la app web; Android TV y escritorio conservan las pestañas de siempre
+const yutuWeb = !process.env.IS_ELECTRON && !process.env.YUTU_TV
+
+// En el teléfono el botón de actualizar vive en la fila de fichas; la pestaña activa escucha este contador
+const refreshSignal = ref(0)
+provide('yutuSubscriptionsRefresh', refreshSignal)
 
 /** @type {import('vue').ComputedRef<boolean>} */
 const hideSubscriptionsVideos = computed(() => {
@@ -157,8 +246,8 @@ const hideSubscriptionsCommunity = computed(() => {
   return store.getters.getHideSubscriptionsCommunity
 })
 
-/** @type {import('vue').Ref<'videos' | 'shorts' | 'live' | 'community' | null>} */
-const currentTab = ref('videos')
+/** @type {import('vue').Ref<'all' | 'today' | 'videos' | 'shorts' | 'live' | 'community' | null>} */
+const currentTab = ref(yutuWeb ? 'all' : 'videos')
 
 watch(currentTab, (value) => {
   if (value !== null) {
@@ -174,6 +263,7 @@ const visibleTabs = computed(() => {
   const tabs = []
 
   if (!hideSubscriptionsVideos.value) {
+    if (yutuWeb) tabs.push('all', 'today')
     tabs.push('videos')
   }
 
@@ -227,6 +317,36 @@ function changeTab(tab) {
     currentTab.value = visibleTabs.value.length > 0 ? visibleTabs.value[0] : null
   }
 }
+
+const chips = computed(() => {
+  const labels = {
+    all: 'Todos',
+    today: 'Hoy',
+    videos: 'Videos',
+    shorts: 'Shorts',
+    live: 'En tiempo real',
+    community: t('Global.Posts')
+  }
+  return visibleTabs.value.map(id => ({ id, label: labels[id] }))
+})
+
+const DAY = 24 * 60 * 60 * 1000
+
+/** Canales suscritos para la tira de arriba: primero los que publicaron en las últimas 24 horas. */
+const stripChannels = computed(() => {
+  if (!yutuWeb) return []
+  const videoCache = store.getters.getVideoCache
+  const instance = store.getters.getCurrentInvidiousInstanceUrl
+  const since = Date.now() - DAY
+  return store.getters.getActiveProfile.subscriptions
+    .map(channel => ({
+      id: channel.id,
+      name: channel.name || '',
+      thumbnail: channel.thumbnail ? youtubeImageUrlToInvidious(channel.thumbnail, instance) : '',
+      hasNew: (videoCache[channel.id]?.videos ?? []).some(video => video.published >= since)
+    }))
+    .sort((a, b) => Number(b.hasNew) - Number(a.hasNew) || a.name.localeCompare(b.name))
+})
 
 const videosTab = useTemplateRef('videosTab')
 const liveTab = useTemplateRef('liveTab')

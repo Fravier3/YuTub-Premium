@@ -1,3 +1,21 @@
+# Yutu 1.0.26
+
+## Solo español, "Para ti" por búsquedas, Shorts y Suscripciones (app web)
+
+Nada de esto toca la versión de Android TV: todo queda detrás de `!process.env.YUTU_TV && !process.env.IS_ELECTRON`.
+
+**Solo español.** `helpers/spanishFilter.js` decide el idioma por el texto (letras propias del español y palabras frecuentes de cada idioma; la descripción solo desempata). Lo que la app sugiere por su cuenta —portada, Shorts y relacionados de un video— pasa por ese filtro. Un título sin pistas ("Bad Bunny - DtMF") solo se acepta si su canal ya publicó títulos en español o es un canal musical oficial. No se filtra lo que el usuario busca a propósito, ni los relacionados de un video que ya está en otro idioma, ni sus suscripciones. Es una heurística: puede colarse algún título ambiguo o descartarse uno válido.
+
+**Para ti.** La señal principal son las búsquedas del usuario (`identity.searches`, hasta 30, guardadas por usuario en el dispositivo; no se suben a la nube). Se eligen al azar hasta tres de las últimas ocho; a una búsqueda sin idioma claro se le añade "español" y una búsqueda escrita en inglés se respeta sin filtrar. Los relacionados de lo último visto completan la sección. Borrar el historial de búsqueda también borra estas señales.
+
+**Portada distinta cada vez.** `loadHomeRecommendations` devuelve reservas más grandes que lo que cabe en pantalla y `pickHomeSections` saca una selección al azar que evita lo mostrado en aperturas anteriores (se recuerdan 300 ids por usuario). Con reserva válida la portada aparece al instante y la reserva se renueva detrás; si cambian las búsquedas o ya salió casi todo, se pide una nueva. Volver a la app tras más de dos minutos cuenta como entrar otra vez.
+
+**Shorts** (`/shorts`, botón de la barra inferior y del menú lateral). Feed vertical a pantalla completa con ajuste por tarjeta, un único `<video>` que se muda a la tarjeta activa (así iOS conserva el sonido ya permitido), fondo desenfocado, acciones a la derecha y canal + Suscribirse + título abajo. Los videos salen de búsquedas `#shorts` en español mezcladas con las del usuario, con duración máxima de 3 minutos. Se reproduce el formato combinado de Invidious (normalmente 360p). "Me gusta" se guarda solo en el dispositivo; "Comentar" abre el video completo; no hay Remix.
+
+**Suscripciones.** Cabecera estilo YouTube: tira de canales (punto azul si publicaron en 24 h) con enlace "Todos" a la lista de canales, y fichas Todos / Hoy / Videos / Shorts / En tiempo real / Publicaciones. "Todos" y "Hoy" suman a los videos los shorts y directos que ya estén cargados.
+
+Validado con pruebas de Node y con un navegador automatizado (iPhone emulado y PC) contra una API simulada: el servidor de video real no es accesible desde el entorno de desarrollo, así que la reproducción real de Shorts y el autoplay con sonido en iPhone quedan por comprobar en el dispositivo.
+
 # Yutu 1.0.23
 
 ## Mobile playback

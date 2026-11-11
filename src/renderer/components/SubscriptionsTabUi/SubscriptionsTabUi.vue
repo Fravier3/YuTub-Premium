@@ -1,3 +1,4 @@
+<!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
 <template>
   <div>
     <FtLoader
@@ -39,7 +40,7 @@
           v-else
           class="message"
         >
-          {{ isCommunity ? $t("Subscriptions.Empty Posts") : $t("Subscriptions.Empty Channels") }}
+          {{ isCommunity ? $t("Subscriptions.Empty Posts") : (publishedAfter > 0 && videoList.length > 0 ? 'Tus canales no han publicado nada en las últimas 24 horas.' : $t("Subscriptions.Empty Channels")) }}
         </p>
       </FtFlexBox>
       <FtElementList
@@ -73,7 +74,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import FtAutoLoadNextPageWrapper from '../FtAutoLoadNextPageWrapper.vue'
 import FtButton from '../FtButton/FtButton.vue'
@@ -119,6 +120,16 @@ const props = defineProps({
   title: {
     type: String,
     required: true
+  },
+  // Entradas de otras pestañas (shorts, directos) que se mezclan con la lista por fecha
+  extraVideos: {
+    type: Array,
+    default: () => []
+  },
+  // Marca de tiempo mínima de publicación; 0 = sin límite
+  publishedAfter: {
+    type: Number,
+    default: 0
   }
 })
 
@@ -167,6 +178,18 @@ const filteredVideoList = computed(() => {
   }
 
   let videoList = props.videoList
+
+  if (props.extraVideos.length > 0) {
+    const unique = new Map()
+    for (const video of [...videoList, ...props.extraVideos]) {
+      if (!unique.has(video.videoId)) unique.set(video.videoId, video)
+    }
+    videoList = [...unique.values()].sort((a, b) => (b.published ?? 0) - (a.published ?? 0))
+  }
+
+  if (props.publishedAfter > 0) {
+    videoList = videoList.filter(video => (video.published ?? 0) >= props.publishedAfter)
+  }
 
   if (hideWatchedSubs.value) {
     videoList = videoList.filter((video) => {
@@ -236,6 +259,14 @@ onBeforeUnmount(() => {
 
 function refresh() {
   emit('refresh')
+}
+
+// Yutu web: la vista de Suscripciones puede pedir la actualización desde su fila de fichas
+const externalRefresh = inject('yutuSubscriptionsRefresh', null)
+if (externalRefresh) {
+  watch(externalRefresh, () => {
+    if (!props.isLoading && activeProfileHasSubscriptions.value) refresh()
+  })
 }
 </script>
 
