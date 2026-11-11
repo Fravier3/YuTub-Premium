@@ -51,6 +51,7 @@
           alt=""
           loading="lazy"
           @error="posterFallback($event, short.videoId)"
+          @load="posterLoaded($event, short.videoId)"
         >
         <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events, vuejs-accessibility/no-static-element-interactions -->
         <div
@@ -65,6 +66,7 @@
             alt=""
             loading="lazy"
             @error="posterFallback($event, short.videoId)"
+            @load="posterLoaded($event, short.videoId)"
           >
         </div>
         <div class="shortShade" />
@@ -215,7 +217,6 @@
         @playing="onPlaying"
         @pause="isPaused = true"
         @timeupdate="onTimeUpdate"
-        @error="onVideoError"
       />
     </Teleport>
   </div>
@@ -223,13 +224,15 @@
 
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import shaka from 'shaka-player'
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, shallowRef, useTemplateRef, watch } from 'vue'
 
 import FtLoader from '../../components/FtLoader/FtLoader.vue'
 
 import store from '../../store/index'
 import { MAIN_PROFILE_ID } from '../../../constants'
-import { getShortPlayback, searchShortVideos } from '../../helpers/api/invidious'
+import { getShortPlayback, invidiousFetch, searchShortVideos, shortManifestUrl } from '../../helpers/api/invidious'
+import { startWebManifest } from '../../helpers/webManifest'
 import { loadShortsFeed } from '../../helpers/shortsFeed'
 import { identity } from '../../helpers/yutuIdentity'
 import { copyToClipboard, formatNumber, showToast } from '../../helpers/utils'
@@ -254,13 +257,19 @@ const video = useTemplateRef('video')
 
 const instanceUrl = computed(() => store.getters.getCurrentInvidiousInstanceUrl)
 
-// La miniatura vertical del Short; si el video no la tiene, la normal.
-const posterUrl = id => `${instanceUrl.value}/vi/${id}/oar2.jpg`
+// La miniatura vertical del Short; si el video no la tiene, las normales de mayor a menor.
+const POSTERS = ['oar2.jpg', 'hq720.jpg', 'sddefault.jpg', 'hqdefault.jpg', 'mqdefault.jpg']
+const posterUrl = id => `${instanceUrl.value}/vi/${id}/${POSTERS[0]}`
 function posterFallback(event, id) {
   const img = event.target
-  if (img.dataset.fallback) return
-  img.dataset.fallback = '1'
-  img.src = `${instanceUrl.value}/vi/${id}/hqdefault.jpg`
+  const level = Number(img.dataset.poster ?? 0) + 1
+  if (!POSTERS[level]) return
+  img.dataset.poster = String(level)
+  img.src = `${instanceUrl.value}/vi/${id}/${POSTERS[level]}`
+}
+// Cuando una miniatura no existe, YouTube responde bien pero con un marcador gris de 120x90
+function posterLoaded(event, id) {
+  if (event.target.naturalWidth > 0 && event.target.naturalWidth <= 120) posterFallback(event, id)
 }
 
 const handle = author => '@' + String(author || '').replaceAll(/\s+/g, '')
@@ -328,31 +337,63 @@ async function loadMore() {
 
 /* ---------- Reproducción ---------- */
 
-const playbackCache = new Map()
-function playbackFor(id) {
-  if (!playbackCache.has(id)) {
-    playbackCache.set(id, getShortPlayback(id).catch((error) => {
-      playbackCache.delete(id)
-      throw error
+/*
+ * Mismo camino que el reproductor principal: manifiesto DASH del servidor reproducido con Shaka. El formato
+ * combinado de la API queda solo como respaldo, porque muchos servidores ya no lo ofrecen.
+ */
+const manifestCache = new Map()
+function manifestFor(id) {
+  if (!manifestCache.has(id)) {
+    manifestCache.set(id, startWebManifest(shortManifestUrl(id), invidiousFetch).ready.then((manifest) => {
+      if (!manifest) manifestCache.delete(id)
+      return manifest
     }))
   }
-  return playbackCache.get(id)
+  return manifestCache.get(id)
 }
 
-function remember(short, playback) {
-  if (playback.authorThumbnail) avatars[short.videoId] = playback.authorThumbnail
-  if (playback.likeCount) likeCounts[short.videoId] = playback.likeCount
+const infoCache = new Map()
+function infoFor(short) {
+  const id = short.videoId
+  if (!infoCache.has(id)) {
+    infoCache.set(id, getShortPlayback(id).then((info) => {
+      if (info.authorThumbnail) avatars[id] = info.authorThumbnail
+      if (info.likeCount) likeCounts[id] = info.likeCount
+      return info
+    }).catch(() => {
+      infoCache.delete(id)
+      return null
+    }))
+  }
+  return infoCache.get(id)
+}
+
+/** @type {shaka.Player | null} */
+let player = null
+let attachedElement = null
+async function playerFor(element) {
+  if (!player) {
+    player = new shaka.Player()
+    player.configure({
+      streaming: { bufferingGoal: 20, rebufferingGoal: 1, bufferBehind: 10 },
+      abr: { enabled: true, restrictToElementSize: true, defaultBandwidthEstimate: 3_000_000 },
+      // Como el reproductor principal: primero las variantes que el dispositivo decodifica con fluidez
+      preferredDecodingAttributes: ['smooth', 'powerEfficient']
+    })
+  }
+  if (attachedElement !== element) {
+    await player.attach(element)
+    attachedElement = element
+  }
+  return player
 }
 
 function stopVideo() {
-  const element = video.value
   isShowingVideo.value = false
   isPaused.value = false
   progress.value = 0
-  if (!element) return
-  element.pause()
-  element.removeAttribute('src')
-  element.load()
+  video.value?.pause()
+  player?.unload().catch(() => {})
 }
 
 let playToken = 0
@@ -363,25 +404,52 @@ async function playActive() {
   const short = shorts.value[index]
   if (!short) return
   const token = ++playToken
-  stopVideo()
+  isShowingVideo.value = false
+  isPaused.value = false
+  progress.value = 0
+  video.value?.pause()
   statusMessage.value = ''
   clearTimeout(shownTimer)
 
-  let playback
-  try {
-    playback = await playbackFor(short.videoId)
-  } catch {
-    if (token === playToken) statusMessage.value = 'Este Short no se pudo reproducir. Desliza al siguiente.'
-    return
-  }
-  if (token !== playToken) return
-  remember(short, playback)
-
+  // Los datos del canal y los me gusta no deben retrasar el video
+  const info = infoFor(short)
+  const manifest = await manifestFor(short.videoId)
   // El <video> tarda un instante en mudarse a la tarjeta nueva
   await nextTick()
   const element = video.value
   if (!element || token !== playToken) return
-  element.src = playback.url
+
+  let loaded = false
+  try {
+    const shakaPlayer = await playerFor(element)
+    if (token !== playToken) return
+    if (manifest) {
+      try {
+        await shakaPlayer.load(manifest, 0, 'application/dash+xml')
+        loaded = true
+      } catch (error) {
+        if (token !== playToken) return
+        console.warn('Short: el manifiesto DASH no cargó, se prueba el formato directo', error)
+      }
+    }
+    if (!loaded) {
+      const fallback = (await info)?.url
+      if (token !== playToken) return
+      if (fallback) {
+        await shakaPlayer.load(fallback, 0, 'video/mp4')
+        loaded = true
+      }
+    }
+  } catch (error) {
+    if (token !== playToken) return
+    console.warn('Short: no se pudo reproducir', error)
+  }
+  if (token !== playToken) return
+  if (!loaded) {
+    statusMessage.value = 'Este Short no se pudo reproducir. Desliza al siguiente.'
+    return
+  }
+
   try {
     await element.play()
   } catch (error) {
@@ -401,7 +469,10 @@ async function playActive() {
 
   // Preparar el siguiente para que el cambio sea inmediato
   const next = shorts.value[index + 1]
-  if (next) playbackFor(next.videoId).then(result => remember(next, result)).catch(() => {})
+  if (next) {
+    manifestFor(next.videoId)
+    infoFor(next)
+  }
   if (index >= shorts.value.length - 3) loadMore()
 }
 
@@ -414,10 +485,6 @@ function onPlaying() {
 function onTimeUpdate() {
   const element = video.value
   if (element?.duration > 0) progress.value = Math.min(1, element.currentTime / element.duration)
-}
-
-function onVideoError() {
-  if (video.value?.getAttribute('src')) statusMessage.value = 'Este Short no se pudo reproducir. Desliza al siguiente.'
 }
 
 function unmute() {
@@ -551,7 +618,10 @@ onBeforeUnmount(() => {
   clearTimeout(shownTimer)
   document.removeEventListener('keydown', onKeydown)
   document.removeEventListener('visibilitychange', onVisibility)
-  stopVideo()
+  video.value?.pause()
+  player?.destroy().catch(() => {})
+  player = null
+  attachedElement = null
 })
 </script>
 
