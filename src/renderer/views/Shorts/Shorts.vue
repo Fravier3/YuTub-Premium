@@ -672,7 +672,7 @@ function toggleSubscription(short) {
   const profileIds = [profile._id]
   if (profile._id !== MAIN_PROFILE_ID) profileIds.push(MAIN_PROFILE_ID)
   store.dispatch('addChannelToProfiles', {
-    channel: { id: short.authorId, name: short.author, thumbnail: avatars[short.videoId] || null },
+    channel: { id: short.authorId, name: short.author, thumbnail: avatars[short.videoId] || '' },
     profileIds
   })
   showToast(`Te suscribiste a ${short.author}`)

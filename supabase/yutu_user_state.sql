@@ -13,3 +13,14 @@ create policy yutu_read_own on public.yutu_user_state for select to authenticate
 create policy yutu_insert_own on public.yutu_user_state for insert to authenticated with check ((select auth.uid()) = user_id);
 create policy yutu_update_own on public.yutu_user_state for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
 create policy yutu_delete_own on public.yutu_user_state for delete to authenticated using ((select auth.uid()) = user_id);
+
+-- 1.0.30: suscripciones sincronizadas entre dispositivos. Cada entrada es
+-- { id, name, thumbnail, at, removed }; `removed` marca una baja para que se propague.
+alter table public.yutu_user_state
+  add column if not exists subscriptions jsonb not null default '[]'::jsonb;
+alter table public.yutu_user_state
+  add constraint yutu_subscriptions_array check (
+    jsonb_typeof(subscriptions) = 'array'
+    and jsonb_array_length(subscriptions) <= 3000
+    and octet_length(subscriptions::text) <= 900000
+  );

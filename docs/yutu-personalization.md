@@ -1,3 +1,15 @@
+# Yutu 1.0.30
+
+Mejoras tomadas de lo que ofrece Invidious, sin cambios de diseño (solo app web).
+
+**Suscripciones sincronizadas con la cuenta.** Con sesión iniciada, las suscripciones del perfil principal se guardan en la columna nueva `yutu_user_state.subscriptions` (mismas políticas: cada usuario solo lee y escribe su fila). Cada canal lleva la hora de su último cambio y una marca de baja; al fusionar gana el cambio más reciente por canal (`helpers/subscriptionMerge.js`), así una baja llega a los demás dispositivos y una suscripción nunca se pierde por faltar en una copia. Se sincroniza al iniciar sesión, al suscribirse o darse de baja, al volver a la app y al recuperar conexión. Si la app aparece sin suscripciones pero el registro tenía tres o más, se asume que se borraron los datos del navegador y la nube las devuelve. Sin sesión todo sigue en el dispositivo. En un dispositivo compartido, las suscripciones locales se suman a la cuenta que inicie sesión. Las listas de reproducción y los perfiles secundarios no se sincronizan.
+
+**Suscripciones al instante.** Si hay copia guardada de todos los canales, la pantalla la muestra de inmediato y la actualización ocurre detrás.
+
+Corrige además que suscribirse desde un Short sin foto de canal cargada no hacía nada.
+
+No incluido, porque necesita un servidor propio: instancia de Invidious propia, feed armado por el servidor y notificaciones de videos nuevos con la app cerrada.
+
 # Yutu 1.0.29
 
 Miniaturas más rápidas en la app web: cada tarjeta muestra primero `mqdefault` (ligera y siempre disponible) y, cuando ya está en pantalla, descarga la HD (`hq720`, luego `maxresdefault`) y la sustituye. Antes se pedía la HD directamente y, si no existía, se probaban calidades una tras otra antes de mostrar nada. Además se abre la conexión con el servidor al arrancar y las seis primeras miniaturas de la portada se piden antes de dibujar la lista. Las miniaturas siguen pasando por el servidor de Yutu, no por YouTube.

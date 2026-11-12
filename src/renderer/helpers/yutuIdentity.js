@@ -74,6 +74,8 @@ async function getClient() {
   }
   return clientPromise
 }
+/** Cliente de la cuenta para otros módulos (p. ej. la sincronización de suscripciones). */
+export const accountClient = () => getClient()
 export async function restoreAccount() {
   if (!localStorage.getItem(SESSION_KEY) && !pendingAuthReturn) return
   identity.sessionStatus = 'restoring'
