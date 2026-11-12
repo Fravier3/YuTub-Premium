@@ -32,6 +32,8 @@ import { parseYouTubeRSSFeed, updateVideoListAfterProcessing } from '../helpers/
 
 const { t } = useI18n()
 
+const yutuWeb = !process.env.IS_ELECTRON && !process.env.YUTU_TV
+
 const props = defineProps({
   // Yutu web: 'all' suma shorts y directos ya cargados; 'today' además deja solo las últimas 24 horas
   filter: {
@@ -141,6 +143,9 @@ if (!subscriptionCacheReady.value) {
   watch(subscriptionCacheReady, () => {
     if (!alreadyLoadedRemotely) {
       loadVideosFromCacheSometimes()
+    } else if (yutuWeb && isLoading.value && videoCacheForAllActiveProfileChannelsPresent.value) {
+      // La copia guardada llegó mientras se actualizaba: se enseña ya, sin esperar a la red
+      loadVideosFromCacheForAllActiveProfileChannels()
     }
   })
 }
@@ -204,7 +209,13 @@ async function loadVideosForSubscriptionsFromRemote() {
 
   const channelsToLoadFromRemote = activeSubscriptionList.value
   let channelCount = 0
-  isLoading.value = true
+  // Yutu web: si ya hay una copia guardada de todos los canales se muestra al momento y la actualización
+  // ocurre detrás; la lista se renueva sola cuando termina. Sin copia, se espera como siempre.
+  if (yutuWeb && subscriptionCacheReady.value && videoCacheForAllActiveProfileChannelsPresent.value) {
+    loadVideosFromCacheForAllActiveProfileChannels()
+  } else {
+    isLoading.value = true
+  }
 
   const useRss = useRssFeeds.value
 
