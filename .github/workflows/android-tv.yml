@@ -110,7 +110,7 @@ jobs:
           cp "$APK" YutuPremium-TV.apk
 
       - name: Guardar APK como archivo de la ejecución
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: YutuPremium-TV
           path: YutuPremium-TV.apk
