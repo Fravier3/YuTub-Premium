@@ -50,7 +50,7 @@ jobs:
           cp -r dist/tv android/app/src/main/assets/www
           test -f android/app/src/main/assets/www/index.html
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
