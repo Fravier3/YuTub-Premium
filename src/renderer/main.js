@@ -12,8 +12,6 @@ import { initTvRelated } from './helpers/tvRelated'
 // import the styles
 import '@fortawesome/fontawesome-svg-core/styles.css'
 
-import { register as registerSwiper } from 'swiper/element'
-
 // Please keep the list of constants sorted by name
 // to avoid code conflict and duplicate entries
 import {
@@ -275,8 +273,6 @@ library.add(
   faMastodon,
   faMatrix,
 )
-
-registerSwiper()
 
 const app = createApp(App)
 

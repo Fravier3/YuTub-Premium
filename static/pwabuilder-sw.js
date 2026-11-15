@@ -1,5 +1,5 @@
 // Service worker de Yutu Premium. Sube VERSION en cada publicación.
-const VERSION = '1.0.30'
+const VERSION = '1.0.31'
 const CACHE = `yutu-premium-${VERSION}`
 
 self.addEventListener('install', (event) => {
@@ -35,9 +35,10 @@ self.addEventListener('fetch', (event) => {
     )
     return
   }
-  // Recursos con hash y estáticos: caché primero, y se actualizan en segundo plano
+  // Los bundles con hash son inmutables. El resto de los recursos se revalida.
   event.respondWith(
     caches.match(req).then((cached) => {
+      if (cached && /\.[a-f0-9]{20}\.(?:js|css)$/.test(url.pathname)) return cached
       const network = fetch(req, { cache: 'no-cache' }).then((res) => {
         if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)) }
         return res

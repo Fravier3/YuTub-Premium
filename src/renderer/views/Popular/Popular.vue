@@ -126,21 +126,21 @@ function restoreHomeCache() {
   if (!personalizedHome) return false
   try {
     const cached = JSON.parse(localStorage.getItem(cacheKey()) || '{}')
-    // Si el usuario buscó o vio algo nuevo, la reserva vieja ya no refleja sus gustos: se espera a la nueva
-    // ...y si ya se mostró casi todo lo que tenía, tampoco sirve para enseñar algo distinto
-    if (Date.now() - cached.at < POOL_MAX_AGE && Array.isArray(cached.pools) && cached.signal === currentSignal() &&
-      hasFreshSelection(cached.pools, new Set(readShown()))) {
-      showSelection(cached.pools)
-      fetchedAt = cached.at
-      return Date.now() - cached.at < POOL_REFRESH_AFTER
-    }
+    const age = Date.now() - cached.at
+    if (!(age < POOL_MAX_AGE) || !Array.isArray(cached.pools)) return false
+
+    const matchesPreferences = cached.signal === currentSignal()
+    const hasUnseenVideos = hasFreshSelection(cached.pools, new Set(readShown()))
+    showSelection(cached.pools)
+    fetchedAt = cached.at
+    return matchesPreferences && hasUnseenVideos && age < POOL_REFRESH_AFTER
   } catch { /* A damaged cache should not block fresh recommendations. */ }
   return false
 }
 watch(() => identity.bucket, () => {
   homeSections.value = []
   shownResults.value = []
-  if (!restoreHomeCache()) fetchPopularInfo()
+  if (!restoreHomeCache()) fetchPopularInfo({ background: shownResults.value.length > 0 })
 })
 
 let hiddenAt = 0

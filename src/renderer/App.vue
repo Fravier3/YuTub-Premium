@@ -127,12 +127,11 @@ import { marked } from 'marked'
 import YutuAccount from './components/YutuAccount/YutuAccount.vue'
 import { restoreAccount } from './helpers/yutuIdentity'
 import { startSubscriptionSync } from './helpers/subscriptionSync'
-import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
+import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
 import FtFlexBox from './components/ft-flex-box/ft-flex-box.vue'
-import PersistentWatch from './components/PersistentWatch/PersistentWatch.vue'
 import { isWatchLocation, snapshotPlaybackRoute } from './helpers/persistentPlayback'
 import MobileDock from './components/MobileDock/MobileDock.vue'
 import TopNav from './components/TopNav/TopNav.vue'
@@ -163,6 +162,7 @@ const { locale, t } = useI18n()
 const persistentPlaybackEnabled = !process.env.IS_ELECTRON && !process.env.YUTU_TV
 const playbackRoute = shallowRef(null)
 const lastBrowseRoute = ref('/popular')
+const PersistentWatch = defineAsyncComponent(() => import('./components/PersistentWatch/PersistentWatch.vue'))
 const watchPageVisible = computed(() => isWatchLocation(route))
 watch(() => route.fullPath, () => {
   if (!persistentPlaybackEnabled) return

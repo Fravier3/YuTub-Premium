@@ -172,6 +172,7 @@
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import autolinker from 'autolinker'
+import { register as registerSwiper } from 'swiper/element'
 import swiperA11yCssUrl from 'swiper/element/css/a11y'
 import swiperNavigationCssUrl from 'swiper/element/css/navigation'
 import swiperPaginationCssUrl from 'swiper/element/css/pagination'
@@ -192,6 +193,8 @@ import {
   isNumberRounded,
 } from '../../helpers/utils'
 import { youtubeImageUrlToInvidious } from '../../helpers/api/invidious'
+
+registerSwiper()
 
 const props = defineProps({
   data: {

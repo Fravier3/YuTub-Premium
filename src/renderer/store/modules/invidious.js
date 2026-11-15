@@ -1,3 +1,4 @@
+import bundledInstances from '../../../../static/invidious-instances.json'
 import { base64EncodeUtf8, createWebURL, fetchWithTimeout, randomArrayItem } from '../../helpers/utils'
 
 const state = {
@@ -27,9 +28,9 @@ const getters = {
 
 const actions = {
   async fetchInvidiousInstancesFromFile({ commit }) {
-    const url = createWebURL('/static/invidious-instances.json')
-
-    const fileData = await (await fetch(url)).json()
+    const fileData = process.env.IS_ELECTRON || process.env.YUTU_TV
+      ? await (await fetch(createWebURL('/static/invidious-instances.json'))).json()
+      : bundledInstances
     const instances = fileData.filter(e => {
       return process.env.SUPPORTS_LOCAL_API || e.cors
     }).map(e => {
